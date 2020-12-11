@@ -1,5 +1,6 @@
 # Copyright (c) The Diem Core Contributors
 # SPDX-License-Identifier: Apache-2.0
+# Copyright (c) The starcoin Core Contributors
 
 """Utilities for data type converting, construction and hashing."""
 
@@ -12,8 +13,6 @@ import serde_types
 
 SUB_ADDRESS_LEN: int = 8
 DIEM_HASH_PREFIX: bytes = b"LIBRA::"
-ROOT_ADDRESS: str = "0000000000000000000000000a550c18"
-TREASURY_ADDRESS: str = "0000000000000000000000000b1e55ed"
 CORE_CODE_ADDRESS: str = "00000000000000000000000000000001"
 ACCOUNT_ADDRESS_LEN: int = 16
 
@@ -151,32 +150,3 @@ def hash(b1: bytes, b2: bytes) -> bytes:
     hash.update(b2)
 
     return hash.digest()
-
-
-# def decode_transaction_script(
-#     txn: typing.Union[str, jsonrpc.TransactionData, jsonrpc.Transaction]
-# ) -> stdlib.ScriptCall:
-#     """decode jsonrpc.Transaction#transaction#script_bytes
-
-#     Returns `stdlib.ScriptCall`, which is same object we created for `starcoin_types.RawTransaction`
-#     payload.
-#     You can find out script type by checking it's class name: `type(script_call).__name__`.
-#     See diem.stdlib documentation for more details.
-#     """
-
-#     if isinstance(txn, str):
-#         script = starcoin_types.Script.lcs_deserialize(bytes.fromhex(txn))
-#         return stdlib.decode_script(script)
-#     if isinstance(txn, jsonrpc.Transaction):
-#         return decode_transaction_script(txn.transaction.script_bytes)
-#     if isinstance(txn, jsonrpc.TransactionData):
-#         return decode_transaction_script(txn.script_bytes)
-
-#     raise TypeError(f"unknown transaction type: {txn}")
-
-
-# def balance(account: jsonrpc.Account, currency: str) -> int:
-#     for b in account.balances:
-#         if b.currency == currency:
-#             return b.amount
-#     return 0

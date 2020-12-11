@@ -1,3 +1,5 @@
+# Copyright (c) The starcoin Core Contributors
+
 from requests import Session, Request
 import starcoin_types
 import typing

@@ -1,5 +1,6 @@
 # Copyright (c) The Diem Core Contributors
 # SPDX-License-Identifier: Apache-2.0
+# Copyright (c) The starcoin Core Contributors
 
 """Provides AuthKey class for holding Diem authentication key and generating account address, prefix from it."""
 

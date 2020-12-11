@@ -1,6 +1,6 @@
 # Copyright (c) The Diem Core Contributors
 # SPDX-License-Identifier: Apache-2.0
-
+# Copyright (c) The starcoin Core Contributors
 """Provides LocalAccount class for holding local account private key.
 
 LocalAccount provides operations we need for creating auth key, account address and signing
