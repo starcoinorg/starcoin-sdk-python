@@ -5,13 +5,14 @@ from sdk.local_account import LocalAccount
 from sdk import (utils, client)
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 import time
+
+
 def transfer(sender: LocalAccount, payee: str, seq_num: st.uint64, amount: st.uint128):
     payee_account = utils.account_address(payee)
-    
     script = stdlib.encode_peer_to_peer_script(
         token_type=utils.currency_code("STC"),
         payee=payee_account,
-        payee_auth_key=b"",
+        payee_auth_key=b"",  # assert the payee address has been on chain
         amount=amount,
     )
 
@@ -20,7 +21,7 @@ def transfer(sender: LocalAccount, payee: str, seq_num: st.uint64, amount: st.ui
         sequence_number=seq_num,
         payload=types.TransactionPayload__Script(script),
         max_gas_amount=1_000_000,
-        gas_unit_price=0,
+        gas_unit_price=1,
         gas_token_code="0x1::STC::STC",
         expiration_timestamp_secs=int(time.time()) + 30,
         chain_id=types.ChainId(st.uint8(2)),
@@ -32,6 +33,7 @@ def transfer(sender: LocalAccount, payee: str, seq_num: st.uint64, amount: st.ui
 
 
 if __name__ == "__main__":
-    private_key = Ed25519PrivateKey.from_private_bytes(bytes.fromhex("27d6a5ee4d822a94f5455edd439da83e9fb5c37ac914b677fee1128d8c9b074a"))
+    private_key = Ed25519PrivateKey.from_private_bytes(bytes.fromhex(
+        "27d6a5ee4d822a94f5455edd439da83e9fb5c37ac914b677fee1128d8c9b074a"))
     sender = LocalAccount(private_key)
-    transfer(sender, "22cad4c80415fd0d56f8652785fcda35", 100_00_00, 100_00_00)
+    transfer(sender, "22cad4c80415fd0d56f8652785fcda35", 4, 100_00_00)

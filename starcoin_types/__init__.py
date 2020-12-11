@@ -4,6 +4,7 @@ import typing
 import serde_types as st
 import lcs
 
+
 @dataclass
 class AccessPath:
     address: "AccountAddress"
@@ -16,13 +17,14 @@ class AccessPath:
     def lcs_deserialize(input: bytes) -> 'AccessPath':
         v, buffer = lcs.deserialize(input, AccessPath)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
 @dataclass
 class AccountAddress:
-    value: typing.Tuple[st.uint8, st.uint8, st.uint8, st.uint8, st.uint8, st.uint8, st.uint8, st.uint8, st.uint8, st.uint8, st.uint8, st.uint8, st.uint8, st.uint8, st.uint8, st.uint8]
+    value: typing.Tuple[st.uint8, st.uint8, st.uint8, st.uint8, st.uint8, st.uint8, st.uint8,
+                        st.uint8, st.uint8, st.uint8, st.uint8, st.uint8, st.uint8, st.uint8, st.uint8, st.uint8]
 
     def lcs_serialize(self) -> bytes:
         return lcs.serialize(self, AccountAddress)
@@ -31,7 +33,7 @@ class AccountAddress:
     def lcs_deserialize(input: bytes) -> 'AccountAddress':
         v, buffer = lcs.deserialize(input, AccountAddress)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -52,7 +54,7 @@ class AccountResource:
     def lcs_deserialize(input: bytes) -> 'AccountResource':
         v, buffer = lcs.deserialize(input, AccountResource)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -67,7 +69,7 @@ class BalanceResource:
     def lcs_deserialize(input: bytes) -> 'BalanceResource':
         v, buffer = lcs.deserialize(input, BalanceResource)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -87,7 +89,7 @@ class BlockMetadata:
     def lcs_deserialize(input: bytes) -> 'BlockMetadata':
         v, buffer = lcs.deserialize(input, BlockMetadata)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -102,7 +104,7 @@ class ChainId:
     def lcs_deserialize(input: bytes) -> 'ChainId':
         v, buffer = lcs.deserialize(input, ChainId)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -118,7 +120,7 @@ class ChangeSet:
     def lcs_deserialize(input: bytes) -> 'ChangeSet':
         v, buffer = lcs.deserialize(input, ChangeSet)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -132,7 +134,7 @@ class ContractEvent:
     def lcs_deserialize(input: bytes) -> 'ContractEvent':
         v, buffer = lcs.deserialize(input, ContractEvent)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -140,6 +142,7 @@ class ContractEvent:
 class ContractEvent__V0(ContractEvent):
     INDEX = 0  # type: int
     value: "ContractEventV0"
+
 
 ContractEvent.VARIANTS = [
     ContractEvent__V0,
@@ -160,7 +163,7 @@ class ContractEventV0:
     def lcs_deserialize(input: bytes) -> 'ContractEventV0':
         v, buffer = lcs.deserialize(input, ContractEventV0)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -175,7 +178,7 @@ class Ed25519PublicKey:
     def lcs_deserialize(input: bytes) -> 'Ed25519PublicKey':
         v, buffer = lcs.deserialize(input, Ed25519PublicKey)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -190,7 +193,7 @@ class Ed25519Signature:
     def lcs_deserialize(input: bytes) -> 'Ed25519Signature':
         v, buffer = lcs.deserialize(input, Ed25519Signature)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -206,7 +209,7 @@ class EventHandle:
     def lcs_deserialize(input: bytes) -> 'EventHandle':
         v, buffer = lcs.deserialize(input, EventHandle)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -221,7 +224,7 @@ class EventKey:
     def lcs_deserialize(input: bytes) -> 'EventKey':
         v, buffer = lcs.deserialize(input, EventKey)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -235,7 +238,7 @@ class GeneralMetadata:
     def lcs_deserialize(input: bytes) -> 'GeneralMetadata':
         v, buffer = lcs.deserialize(input, GeneralMetadata)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -243,6 +246,7 @@ class GeneralMetadata:
 class GeneralMetadata__GeneralMetadataVersion0(GeneralMetadata):
     INDEX = 0  # type: int
     value: "GeneralMetadataV0"
+
 
 GeneralMetadata.VARIANTS = [
     GeneralMetadata__GeneralMetadataVersion0,
@@ -262,7 +266,7 @@ class GeneralMetadataV0:
     def lcs_deserialize(input: bytes) -> 'GeneralMetadataV0':
         v, buffer = lcs.deserialize(input, GeneralMetadataV0)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -277,7 +281,7 @@ class HashValue:
     def lcs_deserialize(input: bytes) -> 'HashValue':
         v, buffer = lcs.deserialize(input, HashValue)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -292,7 +296,7 @@ class Identifier:
     def lcs_deserialize(input: bytes) -> 'Identifier':
         v, buffer = lcs.deserialize(input, Identifier)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -307,7 +311,7 @@ class KeyRotationCapabilityResource:
     def lcs_deserialize(input: bytes) -> 'KeyRotationCapabilityResource':
         v, buffer = lcs.deserialize(input, KeyRotationCapabilityResource)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -321,7 +325,7 @@ class Kind:
     def lcs_deserialize(input: bytes) -> 'Kind':
         v, buffer = lcs.deserialize(input, Kind)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -348,6 +352,7 @@ class Kind__NewMintBlock(Kind):
     INDEX = 3  # type: int
     pass
 
+
 Kind.VARIANTS = [
     Kind__NewHeads,
     Kind__Events,
@@ -366,7 +371,7 @@ class Metadata:
     def lcs_deserialize(input: bytes) -> 'Metadata':
         v, buffer = lcs.deserialize(input, Metadata)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -393,6 +398,7 @@ class Metadata__UnstructuredBytesMetadata(Metadata):
     INDEX = 3  # type: int
     value: "UnstructuredBytesMetadata"
 
+
 Metadata.VARIANTS = [
     Metadata__Undefined,
     Metadata__GeneralMetadata,
@@ -412,7 +418,7 @@ class Module:
     def lcs_deserialize(input: bytes) -> 'Module':
         v, buffer = lcs.deserialize(input, Module)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -427,7 +433,7 @@ class MultiEd25519PublicKey:
     def lcs_deserialize(input: bytes) -> 'MultiEd25519PublicKey':
         v, buffer = lcs.deserialize(input, MultiEd25519PublicKey)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -442,7 +448,7 @@ class MultiEd25519Signature:
     def lcs_deserialize(input: bytes) -> 'MultiEd25519Signature':
         v, buffer = lcs.deserialize(input, MultiEd25519Signature)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -459,7 +465,7 @@ class Package:
     def lcs_deserialize(input: bytes) -> 'Package':
         v, buffer = lcs.deserialize(input, Package)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -481,7 +487,7 @@ class RawTransaction:
     def lcs_deserialize(input: bytes) -> 'RawTransaction':
         v, buffer = lcs.deserialize(input, RawTransaction)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -498,7 +504,7 @@ class Script:
     def lcs_deserialize(input: bytes) -> 'Script':
         v, buffer = lcs.deserialize(input, Script)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -514,7 +520,7 @@ class SignedUserTransaction:
     def lcs_deserialize(input: bytes) -> 'SignedUserTransaction':
         v, buffer = lcs.deserialize(input, SignedUserTransaction)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -532,7 +538,7 @@ class StructTag:
     def lcs_deserialize(input: bytes) -> 'StructTag':
         v, buffer = lcs.deserialize(input, StructTag)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -546,7 +552,7 @@ class Transaction:
     def lcs_deserialize(input: bytes) -> 'Transaction':
         v, buffer = lcs.deserialize(input, Transaction)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -560,6 +566,7 @@ class Transaction__UserTransaction(Transaction):
 class Transaction__BlockMetadata(Transaction):
     INDEX = 1  # type: int
     value: "BlockMetadata"
+
 
 Transaction.VARIANTS = [
     Transaction__UserTransaction,
@@ -577,7 +584,7 @@ class TransactionArgument:
     def lcs_deserialize(input: bytes) -> 'TransactionArgument':
         v, buffer = lcs.deserialize(input, TransactionArgument)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -616,6 +623,7 @@ class TransactionArgument__Bool(TransactionArgument):
     INDEX = 5  # type: int
     value: st.bool
 
+
 TransactionArgument.VARIANTS = [
     TransactionArgument__U8,
     TransactionArgument__U64,
@@ -636,7 +644,7 @@ class TransactionAuthenticator:
     def lcs_deserialize(input: bytes) -> 'TransactionAuthenticator':
         v, buffer = lcs.deserialize(input, TransactionAuthenticator)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -652,6 +660,7 @@ class TransactionAuthenticator__MultiEd25519(TransactionAuthenticator):
     INDEX = 1  # type: int
     public_key: "MultiEd25519PublicKey"
     signature: "MultiEd25519Signature"
+
 
 TransactionAuthenticator.VARIANTS = [
     TransactionAuthenticator__Ed25519,
@@ -669,7 +678,7 @@ class TransactionPayload:
     def lcs_deserialize(input: bytes) -> 'TransactionPayload':
         v, buffer = lcs.deserialize(input, TransactionPayload)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -683,6 +692,7 @@ class TransactionPayload__Script(TransactionPayload):
 class TransactionPayload__Package(TransactionPayload):
     INDEX = 1  # type: int
     value: "Package"
+
 
 TransactionPayload.VARIANTS = [
     TransactionPayload__Script,
@@ -700,7 +710,7 @@ class TravelRuleMetadata:
     def lcs_deserialize(input: bytes) -> 'TravelRuleMetadata':
         v, buffer = lcs.deserialize(input, TravelRuleMetadata)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -708,6 +718,7 @@ class TravelRuleMetadata:
 class TravelRuleMetadata__TravelRuleMetadataVersion0(TravelRuleMetadata):
     INDEX = 0  # type: int
     value: "TravelRuleMetadataV0"
+
 
 TravelRuleMetadata.VARIANTS = [
     TravelRuleMetadata__TravelRuleMetadataVersion0,
@@ -725,7 +736,7 @@ class TravelRuleMetadataV0:
     def lcs_deserialize(input: bytes) -> 'TravelRuleMetadataV0':
         v, buffer = lcs.deserialize(input, TravelRuleMetadataV0)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -739,7 +750,7 @@ class TypeTag:
     def lcs_deserialize(input: bytes) -> 'TypeTag':
         v, buffer = lcs.deserialize(input, TypeTag)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -790,6 +801,7 @@ class TypeTag__Struct(TypeTag):
     INDEX = 7  # type: int
     value: "StructTag"
 
+
 TypeTag.VARIANTS = [
     TypeTag__Bool,
     TypeTag__U8,
@@ -813,7 +825,7 @@ class UnstructuredBytesMetadata:
     def lcs_deserialize(input: bytes) -> 'UnstructuredBytesMetadata':
         v, buffer = lcs.deserialize(input, UnstructuredBytesMetadata)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -828,7 +840,7 @@ class WithdrawCapabilityResource:
     def lcs_deserialize(input: bytes) -> 'WithdrawCapabilityResource':
         v, buffer = lcs.deserialize(input, WithdrawCapabilityResource)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -842,7 +854,7 @@ class WriteOp:
     def lcs_deserialize(input: bytes) -> 'WriteOp':
         v, buffer = lcs.deserialize(input, WriteOp)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -856,6 +868,7 @@ class WriteOp__Deletion(WriteOp):
 class WriteOp__Value(WriteOp):
     INDEX = 1  # type: int
     value: bytes
+
 
 WriteOp.VARIANTS = [
     WriteOp__Deletion,
@@ -874,7 +887,7 @@ class WriteSet:
     def lcs_deserialize(input: bytes) -> 'WriteSet':
         v, buffer = lcs.deserialize(input, WriteSet)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -889,7 +902,7 @@ class WriteSetMut:
     def lcs_deserialize(input: bytes) -> 'WriteSetMut':
         v, buffer = lcs.deserialize(input, WriteSetMut)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -903,7 +916,7 @@ class WriteSetPayload:
     def lcs_deserialize(input: bytes) -> 'WriteSetPayload':
         v, buffer = lcs.deserialize(input, WriteSetPayload)
         if buffer:
-            raise ValueError("Some input bytes were not read");
+            raise ValueError("Some input bytes were not read")
         return v
 
 
@@ -919,8 +932,8 @@ class WriteSetPayload__Script(WriteSetPayload):
     execute_as: "AccountAddress"
     script: "Script"
 
+
 WriteSetPayload.VARIANTS = [
     WriteSetPayload__Direct,
     WriteSetPayload__Script,
 ]
-

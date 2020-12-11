@@ -4,7 +4,7 @@
 """Utilities for data type converting, construction and hashing."""
 
 from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import  ed25519
+from cryptography.hazmat.primitives.asymmetric import ed25519
 import hashlib
 import typing
 import starcoin_types
@@ -17,6 +17,7 @@ TREASURY_ADDRESS: str = "0000000000000000000000000b1e55ed"
 CORE_CODE_ADDRESS: str = "00000000000000000000000000000001"
 ACCOUNT_ADDRESS_LEN: int = 16
 
+
 class InvalidAccountAddressError(Exception):
     pass
 
@@ -24,8 +25,10 @@ class InvalidAccountAddressError(Exception):
 class InvalidSubAddressError(Exception):
     pass
 
+
 def hex_to_tuple(input: str) -> tuple:
     return tuple(serde_types.uint8(x) for x in bytes.fromhex(input))
+
 
 def account_address(addr: typing.Union[starcoin_types.AccountAddress, bytes, str]) -> starcoin_types.AccountAddress:
     """convert an account address from hex-encoded or bytes into `starcoin_types.AccountAddress`
@@ -85,7 +88,6 @@ def public_key_bytes(public_key: ed25519.Ed25519PublicKey) -> bytes:
 
 
 def currency_code(code: str) -> starcoin_types.TypeTag:
-    
     """converts currency code string to starcoin_types.TypeTag"""
     if isinstance(code, str):
         return starcoin_types.TypeTag__Struct(
@@ -121,6 +123,7 @@ def create_signed_transaction(
             signature=starcoin_types.Ed25519Signature(value=signature),
         ),
     )
+
 
 def raw_transaction_signing_msg(txn: starcoin_types.RawTransaction) -> bytes:
     """create signing message from given `starcoin_types.RawTransaction`"""

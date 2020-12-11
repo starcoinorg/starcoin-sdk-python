@@ -21,10 +21,12 @@ def decode_uleb128_as_u32(content: bytes) -> typing.Tuple[int, bytes]:
         digit = byte & 0x7F
         value |= digit << shift
         if value > LCS_MAX_U32:
-            raise ValueError("Overflow while parsing uleb128-encoded uint32 value")
+            raise ValueError(
+                "Overflow while parsing uleb128-encoded uint32 value")
         if digit == byte:
             if shift > 0 and digit == 0:
-                raise ValueError("Invalid uleb128 number (unexpected zero digit)")
+                raise ValueError(
+                    "Invalid uleb128 number (unexpected zero digit)")
             return value, content
 
     raise ValueError("Overflow while parsing uleb128-encoded uint32 value")
@@ -110,23 +112,28 @@ primitive_decode_map = {
         content[1:],
     ),
     st.uint8: lambda content: (
-        st.uint8(int.from_bytes(content[:1], byteorder="little", signed=False)),
+        st.uint8(int.from_bytes(
+            content[:1], byteorder="little", signed=False)),
         content[1:],
     ),
     st.uint16: lambda content: (
-        st.uint16(int.from_bytes(content[:2], byteorder="little", signed=False)),
+        st.uint16(int.from_bytes(
+            content[:2], byteorder="little", signed=False)),
         content[2:],
     ),
     st.uint32: lambda content: (
-        st.uint32(int.from_bytes(content[:4], byteorder="little", signed=False)),
+        st.uint32(int.from_bytes(
+            content[:4], byteorder="little", signed=False)),
         content[4:],
     ),
     st.uint64: lambda content: (
-        st.uint64(int.from_bytes(content[:8], byteorder="little", signed=False)),
+        st.uint64(int.from_bytes(
+            content[:8], byteorder="little", signed=False)),
         content[8:],
     ),
     st.uint128: lambda content: (
-        st.uint128(int.from_bytes(content[:16], byteorder="little", signed=False)),
+        st.uint128(int.from_bytes(
+            content[:16], byteorder="little", signed=False)),
         content[16:],
     ),
     st.int8: lambda content: (
@@ -146,7 +153,8 @@ primitive_decode_map = {
         content[8:],
     ),
     st.int128: lambda content: (
-        st.int128(int.from_bytes(content[:16], byteorder="little", signed=True)),
+        st.int128(int.from_bytes(content[:16],
+                                 byteorder="little", signed=True)),
         content[16:],
     ),
     st.float32: lambda content: not_implemented(),
@@ -158,6 +166,8 @@ primitive_decode_map = {
 }
 
 # noqa: C901
+
+
 def serialize(obj: typing.Any, obj_type) -> bytes:
     result = b""
 

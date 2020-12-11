@@ -1,6 +1,8 @@
 from requests import Session, Request
 import starcoin_types
 import typing
+
+
 class InvalidServerResponse(Exception):
     pass
 
