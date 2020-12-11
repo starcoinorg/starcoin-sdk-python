@@ -1,6 +1,6 @@
 from requests import Session, Request
-
-
+import starcoin_types
+import typing
 class InvalidServerResponse(Exception):
     pass
 
@@ -27,6 +27,16 @@ class Client():
         }
         return self.__execute(operation)
 
+    def submit(self, txn: typing.Union[starcoin_types.SignedUserTransaction, str]):
+        if isinstance(txn, starcoin_types.SignedUserTransaction):
+            return self.submit(txn.lcs_serialize().hex())
+
+        operation = {
+            "rpc_method": "txpool.submit_hex_transaction",
+            "params": [txn]
+        }
+        return self.__execute(operation)
+
     def __execute(self, operation):
         req = self.request.prepare(
             rpc_method=operation["rpc_method"], params=operation["params"])
@@ -37,7 +47,7 @@ class Client():
         except ValueError as e:
             raise InvalidServerResponse(
                 f"Parse response as json failed: {e}, response: {resp.text}")
-        return json["result"]
+        return json
 
 
 class RpcRequest():
