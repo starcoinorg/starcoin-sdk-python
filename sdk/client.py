@@ -3,9 +3,18 @@
 from requests import Session, Request
 import starcoin_types
 import typing
+from . import utils
 
 
 class InvalidServerResponse(Exception):
+    pass
+
+
+class StateNotFoundError(ValueError):
+    pass
+
+
+class JsonResponseError(Exception):
     pass
 
 
@@ -17,19 +26,36 @@ class Client():
         self.request = RpcRequest(url)
         self.session = Session()
 
-    def node_info(self,):
+    def node_info(self,) -> dict:
         operation = {
             "rpc_method": "node.info",
             "params": None,
         }
         return self.__execute(operation)
 
-    def node_status(self,):
+    def node_status(self,) -> bool:
         operation = {
             "rpc_method": "node.status",
             "params": None,
         }
-        return self.__execute(operation)
+        ret = self.__execute(operation)
+        return ret
+
+    def get_transaction(self, txn_hash: str) -> dict:
+        operation = {
+            "rpc_method": "chain.get_transaction",
+            "params": [txn_hash],
+        }
+        ret = self.__execute(operation)
+        return ret
+
+    def get_block_by_number(self, number: int) -> dict:
+        operation = {
+            "rpc_method": "chain.get_block_by_number",
+            "params": [number],
+        }
+        ret = self.__execute(operation)
+        return ret
 
     def submit(self, txn: typing.Union[starcoin_types.SignedUserTransaction, str]):
         if isinstance(txn, starcoin_types.SignedUserTransaction):
@@ -41,7 +67,61 @@ class Client():
         }
         return self.__execute(operation)
 
-    def __execute(self, operation):
+    def state_get(self, access_path: starcoin_types.AccessPath) -> bytes:
+        operation = {
+            "rpc_method": "state_hex.get",
+            "params": [access_path.lcs_serialize().hex()]
+        }
+        ret = self.__execute(operation)
+        if ret is None:
+            raise StateNotFoundError("State not found")
+        return ret
+
+    def get_account_token(self, addr: typing.Union[starcoin_types.AccountAddress, bytes, str], module: str, name: str) -> int:
+        account_address = utils.account_address(addr)
+        struct_tag = starcoin_types.StructTag(
+            address=utils.account_address(utils.CORE_CODE_ADDRESS),
+            module=starcoin_types.Identifier("Account"),
+            name=starcoin_types.Identifier("Balance"),
+            type_params=[starcoin_types.TypeTag__Struct(starcoin_types.StructTag(
+                address=utils.account_address(utils.CORE_CODE_ADDRESS),
+                module=starcoin_types.Identifier(module),
+                name=starcoin_types.Identifier(name),
+                type_params=[]))],
+        )
+        struct_tag_hash = utils.hash(utils.starcoin_hash_seed(
+            b"StructTag"), struct_tag.lcs_serialize())
+        path = []
+        path.append(utils.RESOURCE_TAG)
+        path.extend(struct_tag_hash)
+        access_path = starcoin_types.AccessPath(
+            address=account_address, path=bytes(path))
+        state = self.state_get(access_path)
+        balance = starcoin_types.BalanceResource.lcs_deserialize(state)
+        return int(balance.token)
+
+    def get_account_sequence(self, addr: typing.Union[starcoin_types.AccountAddress, bytes, str]) -> int:
+        account_address = utils.account_address(addr)
+        struct_tag = starcoin_types.StructTag(
+            address=utils.account_address(utils.CORE_CODE_ADDRESS),
+            module=starcoin_types.Identifier("Account"),
+            name=starcoin_types.Identifier("Account"),
+            type_params=[],
+        )
+        struct_tag_hash = utils.hash(utils.starcoin_hash_seed(
+            b"StructTag"), struct_tag.lcs_serialize())
+        path = []
+        path.append(utils.RESOURCE_TAG)
+        path.extend(struct_tag_hash)
+        access_path = starcoin_types.AccessPath(
+            address=account_address, path=bytes(path))
+        state = self.state_get(access_path)
+        account_resource = starcoin_types.AccountResource.lcs_deserialize(
+            state)
+        return int(account_resource.sequence_number)
+
+    # todo: error code handle
+    def __execute(self, operation) -> str:
         req = self.request.prepare(
             rpc_method=operation["rpc_method"], params=operation["params"])
         resp = self.session.send(req)
@@ -51,7 +131,9 @@ class Client():
         except ValueError as e:
             raise InvalidServerResponse(
                 f"Parse response as json failed: {e}, response: {resp.text}")
-        return json
+        if json.get("error") is not None:
+            raise JsonResponseError(f"Response:{resp.text}")
+        return json.get("result")
 
 
 class RpcRequest():
