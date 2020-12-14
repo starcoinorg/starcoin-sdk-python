@@ -1,6 +1,6 @@
 import typing
-import serde_types as st
-from starcoin_types import Script, TypeTag, AccountAddress, TransactionArgument__Bool, TransactionArgument__U8, TransactionArgument__U64, TransactionArgument__U128, TransactionArgument__Address, TransactionArgument__U8Vector
+from starcoin import serde_types as st
+from starcoin.starcoin_types import Script, TypeTag, AccountAddress, TransactionArgument__Bool, TransactionArgument__U8, TransactionArgument__U64, TransactionArgument__U128, TransactionArgument__Address, TransactionArgument__U8Vector
 
 
 def encode_accept_token_script(token_type: TypeTag) -> Script:

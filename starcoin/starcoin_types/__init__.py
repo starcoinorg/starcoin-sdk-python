@@ -1,8 +1,8 @@
 # pyre-strict
 from dataclasses import dataclass
 import typing
-import serde_types as st
-import lcs
+from starcoin import serde_types as st
+from starcoin import lcs
 
 
 @dataclass

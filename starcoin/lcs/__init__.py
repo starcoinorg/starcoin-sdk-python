@@ -4,7 +4,7 @@
 import dataclasses
 import collections
 
-import serde_types as st
+from starcoin import serde_types as st
 import typing
 from typing import get_type_hints
 

@@ -6,7 +6,7 @@
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 from . import utils
-import starcoin_types
+from starcoin import starcoin_types
 
 
 class AuthKey:

@@ -1,13 +1,12 @@
-import starcoin_types as types
-import starcoin_stdlib as stdlib
-import serde_types as st
-from sdk.local_account import LocalAccount
-from sdk import (utils, client)
+from starcoin import starcoin_types as types
+from starcoin import starcoin_stdlib as stdlib
+from starcoin import serde_types as st
+from starcoin.sdk import (utils, client, local_account)
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 import time
 
 
-def transfer(cli: client.Client, sender: LocalAccount, payee: str, amount: st.uint128):
+def transfer(cli: client.Client, sender: local_account.LocalAccount, payee: str, amount: st.uint128):
     seq_num = cli.get_account_sequence(sender.account_address)
     payee_account = utils.account_address(payee)
     script = stdlib.encode_peer_to_peer_script(
@@ -27,7 +26,6 @@ def transfer(cli: client.Client, sender: LocalAccount, payee: str, amount: st.ui
         chain_id=types.ChainId(st.uint8(2)),
     )
     txn = sender.sign(raw_txn)
-
     print(cli.submit(txn))
 
 
@@ -35,6 +33,6 @@ if __name__ == "__main__":
     cli = client.Client("http://sanlee1:9850")
     private_key = Ed25519PrivateKey.from_private_bytes(bytes.fromhex(
         "27d6a5ee4d822a94f5455edd439da83e9fb5c37ac914b677fee1128d8c9b074a"))
-    sender = LocalAccount(private_key)
-    transfer(cli, sender, "22cad4c80415fd0d56f8652785fcda35", 100_00_00)
-    print(cli.get_account_token(sender.account_address, "STC", "STC"))
+    sender = local_account.LocalAccount(private_key)
+    transfer(cli, sender, "0x22cad4c80415fd0d56f8652785fcda35", 100_00_00)
+    print(cli.get_account_token("0x22cad4c80415fd0d56f8652785fcda35", "STC", "STC"))

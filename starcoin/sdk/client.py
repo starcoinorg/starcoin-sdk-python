@@ -1,9 +1,9 @@
 # Copyright (c) The starcoin Core Contributors
 
 from requests import Session, Request
-import starcoin_types
-import typing
+from starcoin import starcoin_types
 from . import utils
+import typing
 
 
 class InvalidServerResponse(Exception):

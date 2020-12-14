@@ -8,14 +8,15 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ed25519
 import hashlib
 import typing
-import starcoin_types
-import serde_types
+from starcoin import starcoin_types
+from starcoin import serde_types
+from starcoin import lcs
 
 SUB_ADDRESS_LEN: int = 8
 DIEM_HASH_PREFIX: bytes = b"LIBRA::"
 CORE_CODE_ADDRESS: str = "00000000000000000000000000000001"
 ACCOUNT_ADDRESS_LEN: int = 16
-RESOURCE_TAG = 1
+RESOURCE_TAG: int = 1
 
 
 class InvalidAccountAddressError(Exception):
@@ -27,6 +28,8 @@ class InvalidSubAddressError(Exception):
 
 
 def hex_to_tuple(input: str) -> tuple:
+    if input.startswith("0x"):
+        input = input[2:]
     return tuple(serde_types.uint8(x) for x in bytes.fromhex(input))
 
 
@@ -133,8 +136,6 @@ def raw_transaction_signing_msg(txn: starcoin_types.RawTransaction) -> bytes:
 
 def transaction_hash(txn: starcoin_types.SignedUserTransaction) -> str:
     """create transaction hash from given `starcoin_types.SignedTransaction`
-
-    This hash string matches jsonrpc.Transaction#hash returned from Diem JSON-RPC API.
     """
 
     user_txn = starcoin_types.Transaction__UserTransaction(value=txn)
@@ -149,5 +150,10 @@ def hash(b1: bytes, b2: bytes) -> bytes:
     hash = hashlib.sha3_256()
     hash.update(b1)
     hash.update(b2)
-
     return hash.digest()
+
+
+def payload_lcs_decode(payload: str) -> typing.Union[starcoin_types.Script, starcoin_types.Package]:
+    payload = starcoin_types.TransactionPayload.lcs_deserialize(
+        bytes.fromhex(payload[2:])).value
+    return payload

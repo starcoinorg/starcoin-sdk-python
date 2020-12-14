@@ -7,7 +7,7 @@ LocalAccount provides operations we need for creating auth key, account address 
 raw transaction.
 """
 
-import starcoin_types
+from starcoin import starcoin_types
 from . import utils
 from .auth_key import AuthKey
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey, Ed25519PublicKey
