@@ -77,6 +77,17 @@ class Client():
             raise StateNotFoundError("State not found")
         return ret
 
+    def is_account_exist(self, addr: typing.Union[starcoin_types.AccountAddress, bytes, str]) -> bool:
+        try:
+            self.get_account_resource(addr)
+        except StateNotFoundError:
+            return False
+        return True
+
+    def get_account_sequence(self, addr: typing.Union[starcoin_types.AccountAddress, bytes, str]) -> int:
+        account_resource = self.get_account_resource(addr)
+        return int(account_resource.sequence_number)
+
     def get_account_token(self, addr: typing.Union[starcoin_types.AccountAddress, bytes, str], module: str, name: str) -> int:
         account_address = utils.account_address(addr)
         struct_tag = starcoin_types.StructTag(
@@ -100,7 +111,7 @@ class Client():
         balance = starcoin_types.BalanceResource.lcs_deserialize(state)
         return int(balance.token)
 
-    def get_account_sequence(self, addr: typing.Union[starcoin_types.AccountAddress, bytes, str]) -> int:
+    def get_account_resource(self, addr: typing.Union[starcoin_types.AccountAddress, bytes, str]) -> starcoin_types.AccountResource:
         account_address = utils.account_address(addr)
         struct_tag = starcoin_types.StructTag(
             address=utils.account_address(utils.CORE_CODE_ADDRESS),
@@ -118,9 +129,10 @@ class Client():
         state = self.state_get(access_path)
         account_resource = starcoin_types.AccountResource.lcs_deserialize(
             state)
-        return int(account_resource.sequence_number)
+        return account_resource
 
     # todo: error code handle
+
     def __execute(self, operation) -> str:
         req = self.request.prepare(
             rpc_method=operation["rpc_method"], params=operation["params"])
