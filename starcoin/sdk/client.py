@@ -85,7 +85,10 @@ class Client():
         return True
 
     def get_account_sequence(self, addr: typing.Union[starcoin_types.AccountAddress, bytes, str]) -> int:
-        account_resource = self.get_account_resource(addr)
+        try:
+            account_resource = self.get_account_resource(addr)
+        except StateNotFoundError:
+            return 0
         return int(account_resource.sequence_number)
 
     def get_account_token(self, addr: typing.Union[starcoin_types.AccountAddress, bytes, str], module: str, name: str) -> int:

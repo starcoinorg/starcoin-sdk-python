@@ -16,3 +16,4 @@ def test_chain_api():
     payload = utils.payload_lcs_decode(payload_raw)
     assert type(payload) == starcoin_types.Script
     assert cli.is_account_exist("0x22cad4c80415fd0d56f8652785fcda35") is True
+    cli.get_account_sequence("0x66b017225d6303dafcff9de1157c943c")
