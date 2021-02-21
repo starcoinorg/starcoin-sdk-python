@@ -66,74 +66,54 @@ class Client():
             "params": [txn]
         }
         return self.__execute(operation)
-
-    def state_get(self, access_path: starcoin_types.AccessPath) -> bytes:
+    
+    def state_get(self, access_path: str) -> bytes:
         operation = {
-            "rpc_method": "state_hex.get",
-            "params": [access_path.lcs_serialize().hex()]
+            "rpc_method": "state.get",
+            "params": [access_path]
         }
+        print(operation)
         ret = self.__execute(operation)
         if ret is None:
             raise StateNotFoundError("State not found")
         return ret
-
-    def is_account_exist(self, addr: typing.Union[starcoin_types.AccountAddress, bytes, str]) -> bool:
+    
+    def is_account_exist(self, addr: str) -> bool:
         try:
             self.get_account_resource(addr)
         except StateNotFoundError:
             return False
         return True
 
-    def get_account_sequence(self, addr: typing.Union[starcoin_types.AccountAddress, bytes, str]) -> int:
+    def get_account_sequence(self, addr: str) -> int:
         try:
             account_resource = self.get_account_resource(addr)
         except StateNotFoundError:
             return 0
         return int(account_resource.sequence_number)
 
-    def get_account_token(self, addr: typing.Union[starcoin_types.AccountAddress, bytes, str], module: str, name: str) -> int:
-        account_address = utils.account_address(addr)
-        struct_tag = starcoin_types.StructTag(
-            address=utils.account_address(utils.CORE_CODE_ADDRESS),
-            module=starcoin_types.Identifier("Account"),
-            name=starcoin_types.Identifier("Balance"),
-            type_params=[starcoin_types.TypeTag__Struct(starcoin_types.StructTag(
-                address=utils.account_address(utils.CORE_CODE_ADDRESS),
-                module=starcoin_types.Identifier(module),
-                name=starcoin_types.Identifier(name),
-                type_params=[]))],
-        )
-        struct_tag_hash = utils.hash(utils.starcoin_hash_seed(
-            b"StructTag"), struct_tag.lcs_serialize())
-        path = []
-        path.append(utils.RESOURCE_TAG)
-        path.extend(struct_tag_hash)
-        access_path = starcoin_types.AccessPath(
-            address=account_address, path=bytes(path))
-        state = self.state_get(access_path)
+    def get_account_token(self, str, module: str, name: str) -> int:
+        type_parm = "{}::{}::{}".format(utils.CORE_CODE_ADDRESS, module, name)
+        
+        struct_tag = "{}::{}::{}<{}>".format(utils.CORE_CODE_ADDRESS,
+                                             "Account", "Balance", type_parm)
+        path = "{}/{}/{}".format(utils.CORE_CODE_ADDRESS,
+                                 utils.RESOURCE_TAG, struct_tag)
+        state = self.state_get(path)
         balance = starcoin_types.BalanceResource.lcs_deserialize(state)
         return int(balance.token)
 
-    def get_account_resource(self, addr: typing.Union[starcoin_types.AccountAddress, bytes, str]) -> starcoin_types.AccountResource:
-        account_address = utils.account_address(addr)
-        struct_tag = starcoin_types.StructTag(
-            address=utils.account_address(utils.CORE_CODE_ADDRESS),
-            module=starcoin_types.Identifier("Account"),
-            name=starcoin_types.Identifier("Account"),
-            type_params=[],
-        )
-        struct_tag_hash = utils.hash(utils.starcoin_hash_seed(
-            b"StructTag"), struct_tag.lcs_serialize())
-        path = []
-        path.append(utils.RESOURCE_TAG)
-        path.extend(struct_tag_hash)
-        access_path = starcoin_types.AccessPath(
-            address=account_address, path=bytes(path))
-        state = self.state_get(access_path)
+    def get_account_resource(self, addr: str) -> starcoin_types.AccountResource:
+        struct_tag = "{}::{}::{}".format(utils.CORE_CODE_ADDRESS, "Account", "Account")
+        path = "{}/{}/{}".format(addr, utils.RESOURCE_TAG, struct_tag)
+        state = self.state_get(path)
         account_resource = starcoin_types.AccountResource.lcs_deserialize(
             state)
         return account_resource
 
+    def sign_txn(self, raw_txn, signer):
+        pass
+    
     # todo: error code handle
 
     def __execute(self, operation) -> str:

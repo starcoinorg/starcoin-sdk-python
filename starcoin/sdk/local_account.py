@@ -64,3 +64,4 @@ class LocalAccount:
         signature = self.private_key.sign(
             utils.raw_transaction_signing_msg(txn))
         return utils.create_signed_transaction(txn, self.public_key_bytes, signature)
+    

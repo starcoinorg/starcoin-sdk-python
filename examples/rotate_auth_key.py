@@ -26,7 +26,7 @@ def rotate_key(cli: client.Client, account: local_account.LocalAccount, auth_key
 
 if __name__ == "__main__":
 
-    cli = client.Client("http://proxima1.seed.starcoin.org:9850")
+    cli = client.Client("http://barnard1.seed.starcoin.org:9850")
     private_key_hex = "set your private key here"
     new_public_key_hex = "set your new private key here"
     # sender
