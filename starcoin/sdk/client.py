@@ -92,12 +92,12 @@ class Client():
             return 0
         return int(account_resource.sequence_number)
 
-    def get_account_token(self, str, module: str, name: str) -> int:
+    def get_account_token(self, addr: str, module: str, name: str) -> int:
         type_parm = "{}::{}::{}".format(utils.CORE_CODE_ADDRESS, module, name)
         
         struct_tag = "{}::{}::{}<{}>".format(utils.CORE_CODE_ADDRESS,
                                              "Account", "Balance", type_parm)
-        path = "{}/{}/{}".format(utils.CORE_CODE_ADDRESS,
+        path = "{}/{}/{}".format(addr,
                                  utils.RESOURCE_TAG, struct_tag)
         state = self.state_get(path)
         balance = starcoin_types.BalanceResource.lcs_deserialize(state)
