@@ -72,7 +72,23 @@ class BalanceResource:
             raise ValueError("Some input bytes were not read")
         return v
 
+@dataclass
+class BlockRewardEvent:
+    block_number: st.uint64
+    block_reward: st.uint128
+    gas_fees: st.uint128
+    miner: "AccountAddress"
 
+    def lcs_serialize(self) -> bytes:
+        return lcs.serialize(self, BlockRewardEvent)
+
+    @staticmethod
+    def lcs_deserialize(input: bytes) -> 'BlockMetadata':
+        v, buffer = lcs.deserialize(input, BlockRewardEvent)
+        if buffer:
+            raise ValueError("Some input bytes were not read")
+        return v
+    
 @dataclass
 class BlockMetadata:
     parent_hash: "HashValue"
