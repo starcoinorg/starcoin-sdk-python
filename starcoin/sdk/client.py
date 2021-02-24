@@ -72,7 +72,6 @@ class Client():
             "rpc_method": "state.get",
             "params": [access_path]
         }
-        print(operation)
         ret = self.__execute(operation)
         if ret is None:
             raise StateNotFoundError("State not found")
