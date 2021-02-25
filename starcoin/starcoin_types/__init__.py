@@ -72,6 +72,7 @@ class BalanceResource:
             raise ValueError("Some input bytes were not read")
         return v
 
+
 @dataclass
 class BlockRewardEvent:
     block_number: st.uint64
@@ -88,7 +89,8 @@ class BlockRewardEvent:
         if buffer:
             raise ValueError("Some input bytes were not read")
         return v
-    
+
+
 @dataclass
 class BlockMetadata:
     parent_hash: "HashValue"

@@ -19,6 +19,9 @@ class JsonResponseError(Exception):
 
 
 class Client():
+    """Starcoin sdk client
+    """
+
     def __init__(
             self,
             url,
@@ -27,6 +30,10 @@ class Client():
         self.session = Session()
 
     def node_info(self,) -> dict:
+        """Starcoin node information
+
+        Return the node information
+        """
         operation = {
             "rpc_method": "node.info",
             "params": None,
@@ -66,7 +73,7 @@ class Client():
             "params": [txn]
         }
         return self.__execute(operation)
-    
+
     def state_get(self, access_path: str) -> bytes:
         operation = {
             "rpc_method": "state.get",
@@ -76,7 +83,7 @@ class Client():
         if ret is None:
             raise StateNotFoundError("State not found")
         return ret
-    
+
     def is_account_exist(self, addr: str) -> bool:
         try:
             self.get_account_resource(addr)
@@ -93,7 +100,7 @@ class Client():
 
     def get_account_token(self, addr: str, module: str, name: str) -> int:
         type_parm = "{}::{}::{}".format(utils.CORE_CODE_ADDRESS, module, name)
-        
+
         struct_tag = "{}::{}::{}<{}>".format(utils.CORE_CODE_ADDRESS,
                                              "Account", "Balance", type_parm)
         path = "{}/{}/{}".format(addr,
@@ -103,7 +110,8 @@ class Client():
         return int(balance.token)
 
     def get_account_resource(self, addr: str) -> starcoin_types.AccountResource:
-        struct_tag = "{}::{}::{}".format(utils.CORE_CODE_ADDRESS, "Account", "Account")
+        struct_tag = "{}::{}::{}".format(
+            utils.CORE_CODE_ADDRESS, "Account", "Account")
         path = "{}/{}/{}".format(addr, utils.RESOURCE_TAG, struct_tag)
         state = self.state_get(path)
         account_resource = starcoin_types.AccountResource.lcs_deserialize(
@@ -112,7 +120,7 @@ class Client():
 
     def sign_txn(self, raw_txn, signer):
         pass
-    
+
     # todo: error code handle
 
     def __execute(self, operation) -> str:
