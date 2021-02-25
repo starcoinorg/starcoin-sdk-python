@@ -17,9 +17,3 @@ def test_apis():
         "0x00000000000000000000000000000001"), int) == True
     assert cli.get_account_token(
         "0x00000000000000000000000000000001", "STC", "STC") == 0
-
-
-def test():
-    reward = starcoin_types.BlockRewardEvent.lcs_deserialize(bytes.fromhex(
-        "f90300000000000030e5b278000000000000000000000000f0ba040000000000000000000000000078dfdd5c4072752d83a2d0082b079762"))
-    print(reward)

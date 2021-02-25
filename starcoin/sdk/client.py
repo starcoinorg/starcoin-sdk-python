@@ -29,6 +29,32 @@ class Client():
         self.request = RpcRequest(url)
         self.session = Session()
 
+    def execute(self, operation) -> str:
+        """ Execute a rpc request operation
+        operation = {
+            "rpc_method": $rpc_method,
+            "params": $params,
+        }
+        such as:
+        operation = {
+            "rpc_method": "node.info",
+            "params": None,
+        }
+
+        """
+        req = self.request.prepare(
+            rpc_method=operation["rpc_method"], params=operation["params"])
+        resp = self.session.send(req)
+        resp.raise_for_status()
+        try:
+            json = resp.json()
+        except ValueError as e:
+            raise InvalidServerResponse(
+                f"Parse response as json failed: {e}, response: {resp.text}")
+        if json.get("error") is not None:
+            raise JsonResponseError(f"Response:{resp.text}")
+        return json.get("result")
+
     def node_info(self,) -> dict:
         """Starcoin node information
 
@@ -38,14 +64,17 @@ class Client():
             "rpc_method": "node.info",
             "params": None,
         }
-        return self.__execute(operation)
+        return self.execute(operation)
 
     def node_status(self,) -> bool:
+        """ Starcoin node status
+
+        """
         operation = {
             "rpc_method": "node.status",
             "params": None,
         }
-        ret = self.__execute(operation)
+        ret = self.execute(operation)
         return ret
 
     def get_transaction(self, txn_hash: str) -> dict:
@@ -53,7 +82,7 @@ class Client():
             "rpc_method": "chain.get_transaction",
             "params": [txn_hash],
         }
-        ret = self.__execute(operation)
+        ret = self.execute(operation)
         return ret
 
     def get_block_by_number(self, number: int) -> dict:
@@ -61,7 +90,7 @@ class Client():
             "rpc_method": "chain.get_block_by_number",
             "params": [number],
         }
-        ret = self.__execute(operation)
+        ret = self.execute(operation)
         return ret
 
     def submit(self, txn: typing.Union[starcoin_types.SignedUserTransaction, str]):
@@ -72,14 +101,14 @@ class Client():
             "rpc_method": "txpool.submit_hex_transaction",
             "params": [txn]
         }
-        return self.__execute(operation)
+        return self.execute(operation)
 
     def state_get(self, access_path: str) -> bytes:
         operation = {
             "rpc_method": "state.get",
             "params": [access_path]
         }
-        ret = self.__execute(operation)
+        ret = self.execute(operation)
         if ret is None:
             raise StateNotFoundError("State not found")
         return ret
@@ -117,25 +146,6 @@ class Client():
         account_resource = starcoin_types.AccountResource.lcs_deserialize(
             state)
         return account_resource
-
-    def sign_txn(self, raw_txn, signer):
-        pass
-
-    # todo: error code handle
-
-    def __execute(self, operation) -> str:
-        req = self.request.prepare(
-            rpc_method=operation["rpc_method"], params=operation["params"])
-        resp = self.session.send(req)
-        resp.raise_for_status()
-        try:
-            json = resp.json()
-        except ValueError as e:
-            raise InvalidServerResponse(
-                f"Parse response as json failed: {e}, response: {resp.text}")
-        if json.get("error") is not None:
-            raise JsonResponseError(f"Response:{resp.text}")
-        return json.get("result")
 
 
 class RpcRequest():
