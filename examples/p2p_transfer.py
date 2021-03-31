@@ -22,11 +22,11 @@ def transfer(cli: client.Client, sender: local_account.LocalAccount, payee: str,
         sender=sender.account_address,
         sequence_number=seq_num,
         payload=script,
-        max_gas_amount=800,
-        gas_unit_price=2,
+        max_gas_amount=1000000,
+        gas_unit_price=1,
         gas_token_code="0x1::STC::STC",
-        expiration_timestamp_secs=int(time.time()) + 3000,
-        chain_id=types.ChainId(st.uint8(251)),
+        expiration_timestamp_secs=int(time.time()) + 300,
+        chain_id=types.ChainId(st.uint8(253)),
     )
 
     txn = sender.sign(raw_txn)
@@ -34,21 +34,20 @@ def transfer(cli: client.Client, sender: local_account.LocalAccount, payee: str,
 
 
 if __name__ == "__main__":
-    cli = client.Client("http://barnard1.seed.starcoin.org:9850")
+    cli = client.Client("http://halley1.seed.starcoin.org:9850")
     # sender
     private_key = Ed25519PrivateKey.from_private_bytes(bytes.fromhex(
-        "bc62c0ba19e1dc50f40c5d5cfb3a057cc6647d2a5c58be03c9c158384f81af23"))
+        "75e9bee7e0474926cb6cfd5d4eefea4d56a4c9fdc518c8425e53aac23059f4f6"))
     sender = local_account.LocalAccount(private_key)
 
     # reciver
-    payee_public_key_hex = "d8cc9bcd0c845013642d7b7986746be03e3b4d02ca5434d3550424eec1aedfb5"
+    payee_public_key_hex = "cdf17852b92695569943b0681e3c23934c73d041eaee1190236840e70dc4a6e6"
     pk = Ed25519PublicKey.from_public_bytes(
         bytes.fromhex(payee_public_key_hex))
     payee_auth_key = auth_key.AuthKey.from_public_key(pk)
     payee_address = payee_auth_key.account_address()
-    if not cli.is_account_exist("0x"+payee_address.bcs_serialize().hex()):
-        payee_auth_key = payee_auth_key.data
-    else:
-        payee_auth_key = b""
-    transfer(cli, sender, payee_address, 100_00, payee_auth_key)
-    print(cli.get_account_token(utils.account_address_hex(payee_address), "STC", "STC"))
+    if cli.is_account_exist("0x"+payee_address.bcs_serialize().hex()):
+        payee_auth_key = auth_key.AuthKey(b"")
+    transfer(cli, sender, payee_address, 1024, payee_auth_key.data)
+    print(cli.get_account_token(
+        utils.account_address_hex(payee_address), "STC", "STC"))

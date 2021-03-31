@@ -5,6 +5,7 @@ from dataclasses import dataclass
 import typing
 from starcoin import serde_types as st
 from starcoin import starcoin_types
+from starcoin import bcs
 
 
 class ScriptCall:
@@ -421,8 +422,8 @@ def encode_cast_vote_script_function(token: TypeTag, action_t: TypeTag, proposer
                 "00000000000000000000000000000001"), name=Identifier("DaoVoteScripts")),
             function=Identifier("cast_vote"),
             ty_args=[token, action_t],
-            args=[TransactionArgument__Address(value=proposer_address), TransactionArgument__U64(
-                value=proposal_id), TransactionArgument__Bool(value=agree), TransactionArgument__U128(value=votes)],
+            args=[proposer_address.bcs_serialize(), bcs.serialize(
+                proposal_id, st.uint64), bcs.serialize(agree, st.bool), bcs.serialize(votes, st.uint128)],
         )
     )
 
@@ -436,8 +437,8 @@ def encode_create_account_with_initial_amount_script_function(token_type: TypeTa
                 "00000000000000000000000000000001"), name=Identifier("Account")),
             function=Identifier("create_account_with_initial_amount"),
             ty_args=[token_type],
-            args=[TransactionArgument__Address(value=fresh_address), TransactionArgument__U8Vector(
-                value=auth_key), TransactionArgument__U128(value=initial_amount)],
+            args=[fresh_address.bcs_serialize(), bcs.serialize(
+                auth_key, bytes), bcs.serialize(initial_amount, st.uint128)],
         )
     )
 
@@ -451,8 +452,8 @@ def encode_destroy_terminated_proposal_script_function(token_t: TypeTag, action_
                 "00000000000000000000000000000001"), name=Identifier("Dao")),
             function=Identifier("destroy_terminated_proposal"),
             ty_args=[token_t, action_t],
-            args=[TransactionArgument__Address(
-                value=proposer_address), TransactionArgument__U64(value=proposal_id)],
+            args=[proposer_address.bcs_serialize(
+            ), bcs.serialize(proposal_id, st.uint64)],
         )
     )
 
@@ -480,8 +481,8 @@ def encode_execute_script_function(token_t: TypeTag, proposer_address: AccountAd
                 "00000000000000000000000000000001"), name=Identifier("ModifyDaoConfigProposal")),
             function=Identifier("execute"),
             ty_args=[token_t],
-            args=[TransactionArgument__Address(
-                value=proposer_address), TransactionArgument__U64(value=proposal_id)],
+            args=[proposer_address.bcs_serialize(
+            ), bcs.serialize(proposal_id, st.uint64)],
         )
     )
 
@@ -495,7 +496,7 @@ def encode_execute_on_chain_config_proposal_script_function(config_t: TypeTag, p
                 "00000000000000000000000000000001"), name=Identifier("OnChainConfigScripts")),
             function=Identifier("execute_on_chain_config_proposal"),
             ty_args=[config_t],
-            args=[TransactionArgument__U64(value=proposal_id)],
+            args=[bcs.serialize(proposal_id, st.uint64)],
         )
     )
 
@@ -509,8 +510,8 @@ def encode_initialize_script_function(stdlib_version: st.uint64, reward_delay: s
                 "00000000000000000000000000000001"), name=Identifier("Genesis")),
             function=Identifier("initialize"),
             ty_args=[],
-            args=[TransactionArgument__U64(value=stdlib_version), TransactionArgument__U64(value=reward_delay), TransactionArgument__U128(value=pre_mine_amount), TransactionArgument__U128(value=time_mint_amount), TransactionArgument__U64(value=time_mint_period), TransactionArgument__U8Vector(value=parent_hash), TransactionArgument__U8Vector(value=association_auth_key), TransactionArgument__U8Vector(value=genesis_auth_key), TransactionArgument__U8(value=chain_id), TransactionArgument__U64(value=genesis_timestamp), TransactionArgument__U64(value=uncle_rate_target), TransactionArgument__U64(value=epoch_block_count), TransactionArgument__U64(value=base_block_time_target), TransactionArgument__U64(value=base_block_difficulty_window), TransactionArgument__U128(value=base_reward_per_block), TransactionArgument__U64(value=base_reward_per_uncle_percent), TransactionArgument__U64(value=min_block_time_target), TransactionArgument__U64(value=max_block_time_target), TransactionArgument__U64(value=base_max_uncles_per_block), TransactionArgument__U64(value=base_block_gas_limit), TransactionArgument__U8(value=strategy), TransactionArgument__Bool(
-                value=script_allowed), TransactionArgument__Bool(value=module_publishing_allowed), TransactionArgument__U8Vector(value=instruction_schedule), TransactionArgument__U8Vector(value=native_schedule), TransactionArgument__U64(value=global_memory_per_byte_cost), TransactionArgument__U64(value=global_memory_per_byte_write_cost), TransactionArgument__U64(value=min_transaction_gas_units), TransactionArgument__U64(value=large_transaction_cutoff), TransactionArgument__U64(value=instrinsic_gas_per_byte), TransactionArgument__U64(value=maximum_number_of_gas_units), TransactionArgument__U64(value=min_price_per_gas_unit), TransactionArgument__U64(value=max_price_per_gas_unit), TransactionArgument__U64(value=max_transaction_size_in_bytes), TransactionArgument__U64(value=gas_unit_scaling_factor), TransactionArgument__U64(value=default_account_size), TransactionArgument__U64(value=voting_delay), TransactionArgument__U64(value=voting_period), TransactionArgument__U8(value=voting_quorum_rate), TransactionArgument__U64(value=min_action_delay), TransactionArgument__U64(value=transaction_timeout)],
+            args=[bcs.serialize(stdlib_version, st.uint64), bcs.serialize(reward_delay, st.uint64), bcs.serialize(pre_mine_amount, st.uint128), bcs.serialize(time_mint_amount, st.uint128), bcs.serialize(time_mint_period, st.uint64), bcs.serialize(parent_hash, bytes), bcs.serialize(association_auth_key, bytes), bcs.serialize(genesis_auth_key, bytes), bcs.serialize(chain_id, st.uint8), bcs.serialize(genesis_timestamp, st.uint64), bcs.serialize(uncle_rate_target, st.uint64), bcs.serialize(epoch_block_count, st.uint64), bcs.serialize(base_block_time_target, st.uint64), bcs.serialize(base_block_difficulty_window, st.uint64), bcs.serialize(base_reward_per_block, st.uint128), bcs.serialize(base_reward_per_uncle_percent, st.uint64), bcs.serialize(min_block_time_target, st.uint64), bcs.serialize(max_block_time_target, st.uint64), bcs.serialize(base_max_uncles_per_block, st.uint64), bcs.serialize(base_block_gas_limit, st.uint64), bcs.serialize(strategy, st.uint8), bcs.serialize(
+                script_allowed, st.bool), bcs.serialize(module_publishing_allowed, st.bool), bcs.serialize(instruction_schedule, bytes), bcs.serialize(native_schedule, bytes), bcs.serialize(global_memory_per_byte_cost, st.uint64), bcs.serialize(global_memory_per_byte_write_cost, st.uint64), bcs.serialize(min_transaction_gas_units, st.uint64), bcs.serialize(large_transaction_cutoff, st.uint64), bcs.serialize(instrinsic_gas_per_byte, st.uint64), bcs.serialize(maximum_number_of_gas_units, st.uint64), bcs.serialize(min_price_per_gas_unit, st.uint64), bcs.serialize(max_price_per_gas_unit, st.uint64), bcs.serialize(max_transaction_size_in_bytes, st.uint64), bcs.serialize(gas_unit_scaling_factor, st.uint64), bcs.serialize(default_account_size, st.uint64), bcs.serialize(voting_delay, st.uint64), bcs.serialize(voting_period, st.uint64), bcs.serialize(voting_quorum_rate, st.uint8), bcs.serialize(min_action_delay, st.uint64), bcs.serialize(transaction_timeout, st.uint64)],
         )
     )
 
@@ -524,8 +525,8 @@ def encode_mint_and_split_by_linear_key_script_function(token: TypeTag, for_addr
                 "00000000000000000000000000000001"), name=Identifier("MintScripts")),
             function=Identifier("mint_and_split_by_linear_key"),
             ty_args=[token],
-            args=[TransactionArgument__Address(value=for_address), TransactionArgument__U128(
-                value=amount), TransactionArgument__U64(value=lock_period)],
+            args=[for_address.bcs_serialize(), bcs.serialize(
+                amount, st.uint128), bcs.serialize(lock_period, st.uint64)],
         )
     )
 
@@ -567,8 +568,8 @@ def encode_peer_to_peer_script_function(token_type: TypeTag, payee: AccountAddre
                 "00000000000000000000000000000001"), name=Identifier("TransferScripts")),
             function=Identifier("peer_to_peer"),
             ty_args=[token_type],
-            args=[TransactionArgument__Address(value=payee).bcs_serialize(), TransactionArgument__U8Vector(
-                value=payee_auth_key).bcs_serialize(), TransactionArgument__U128(value=amount).bcs_serialize()],
+            args=[payee.bcs_serialize(), bcs.serialize(
+                payee_auth_key, bytes), bcs.serialize(amount, st.uint128)],
         )
     )
 
@@ -582,8 +583,8 @@ def encode_peer_to_peer_batch_script_function(token_type: TypeTag, payeees: byte
                 "00000000000000000000000000000001"), name=Identifier("TransferScripts")),
             function=Identifier("peer_to_peer_batch"),
             ty_args=[token_type],
-            args=[TransactionArgument__U8Vector(value=payeees), TransactionArgument__U8Vector(
-                value=payee_auth_keys), TransactionArgument__U128(value=amount)],
+            args=[bcs.serialize(payeees, bytes), bcs.serialize(
+                payee_auth_keys, bytes), bcs.serialize(amount, st.uint128)],
         )
     )
 
@@ -597,8 +598,8 @@ def encode_peer_to_peer_with_metadata_script_function(token_type: TypeTag, payee
                 "00000000000000000000000000000001"), name=Identifier("TransferScripts")),
             function=Identifier("peer_to_peer_with_metadata"),
             ty_args=[token_type],
-            args=[TransactionArgument__Address(value=payee), TransactionArgument__U8Vector(
-                value=payee_auth_key), TransactionArgument__U128(value=amount), TransactionArgument__U8Vector(value=metadata)],
+            args=[payee.bcs_serialize(), bcs.serialize(payee_auth_key, bytes), bcs.serialize(
+                amount, st.uint128), bcs.serialize(metadata, bytes)],
         )
     )
 
@@ -612,8 +613,8 @@ def encode_propose_script_function(token_t: TypeTag, voting_delay: st.uint64, vo
                 "00000000000000000000000000000001"), name=Identifier("ModifyDaoConfigProposal")),
             function=Identifier("propose"),
             ty_args=[token_t],
-            args=[TransactionArgument__U64(value=voting_delay), TransactionArgument__U64(value=voting_period), TransactionArgument__U8(
-                value=voting_quorum_rate), TransactionArgument__U64(value=min_action_delay), TransactionArgument__U64(value=exec_delay)],
+            args=[bcs.serialize(voting_delay, st.uint64), bcs.serialize(voting_period, st.uint64), bcs.serialize(
+                voting_quorum_rate, st.uint8), bcs.serialize(min_action_delay, st.uint64), bcs.serialize(exec_delay, st.uint64)],
         )
     )
 
@@ -627,8 +628,8 @@ def encode_propose_module_upgrade_script_function(token: TypeTag, module_address
                 "00000000000000000000000000000001"), name=Identifier("ModuleUpgradeScripts")),
             function=Identifier("propose_module_upgrade"),
             ty_args=[token],
-            args=[TransactionArgument__Address(value=module_address), TransactionArgument__U8Vector(
-                value=package_hash), TransactionArgument__U64(value=version), TransactionArgument__U64(value=exec_delay)],
+            args=[module_address.bcs_serialize(), bcs.serialize(package_hash, bytes), bcs.serialize(
+                version, st.uint64), bcs.serialize(exec_delay, st.uint64)],
         )
     )
 
@@ -642,8 +643,8 @@ def encode_propose_update_consensus_config_script_function(uncle_rate_target: st
                 "00000000000000000000000000000001"), name=Identifier("OnChainConfigScripts")),
             function=Identifier("propose_update_consensus_config"),
             ty_args=[],
-            args=[TransactionArgument__U64(value=uncle_rate_target), TransactionArgument__U64(value=base_block_time_target), TransactionArgument__U128(value=base_reward_per_block), TransactionArgument__U64(value=base_reward_per_uncle_percent), TransactionArgument__U64(value=epoch_block_count), TransactionArgument__U64(
-                value=base_block_difficulty_window), TransactionArgument__U64(value=min_block_time_target), TransactionArgument__U64(value=max_block_time_target), TransactionArgument__U64(value=base_max_uncles_per_block), TransactionArgument__U64(value=base_block_gas_limit), TransactionArgument__U8(value=strategy), TransactionArgument__U64(value=exec_delay)],
+            args=[bcs.serialize(uncle_rate_target, st.uint64), bcs.serialize(base_block_time_target, st.uint64), bcs.serialize(base_reward_per_block, st.uint128), bcs.serialize(base_reward_per_uncle_percent, st.uint64), bcs.serialize(epoch_block_count, st.uint64), bcs.serialize(
+                base_block_difficulty_window, st.uint64), bcs.serialize(min_block_time_target, st.uint64), bcs.serialize(max_block_time_target, st.uint64), bcs.serialize(base_max_uncles_per_block, st.uint64), bcs.serialize(base_block_gas_limit, st.uint64), bcs.serialize(strategy, st.uint8), bcs.serialize(exec_delay, st.uint64)],
         )
     )
 
@@ -657,8 +658,8 @@ def encode_propose_update_reward_config_script_function(reward_delay: st.uint64,
                 "00000000000000000000000000000001"), name=Identifier("OnChainConfigScripts")),
             function=Identifier("propose_update_reward_config"),
             ty_args=[],
-            args=[TransactionArgument__U64(
-                value=reward_delay), TransactionArgument__U64(value=exec_delay)],
+            args=[bcs.serialize(reward_delay, st.uint64),
+                  bcs.serialize(exec_delay, st.uint64)],
         )
     )
 
@@ -672,8 +673,8 @@ def encode_propose_update_txn_publish_option_script_function(script_allowed: boo
                 "00000000000000000000000000000001"), name=Identifier("OnChainConfigScripts")),
             function=Identifier("propose_update_txn_publish_option"),
             ty_args=[],
-            args=[TransactionArgument__Bool(value=script_allowed), TransactionArgument__Bool(
-                value=module_publishing_allowed), TransactionArgument__U64(value=exec_delay)],
+            args=[bcs.serialize(script_allowed, st.bool), bcs.serialize(
+                module_publishing_allowed, st.bool), bcs.serialize(exec_delay, st.uint64)],
         )
     )
 
@@ -687,8 +688,8 @@ def encode_propose_update_txn_timeout_config_script_function(duration_seconds: s
                 "00000000000000000000000000000001"), name=Identifier("OnChainConfigScripts")),
             function=Identifier("propose_update_txn_timeout_config"),
             ty_args=[],
-            args=[TransactionArgument__U64(
-                value=duration_seconds), TransactionArgument__U64(value=exec_delay)],
+            args=[bcs.serialize(duration_seconds, st.uint64),
+                  bcs.serialize(exec_delay, st.uint64)],
         )
     )
 
@@ -702,8 +703,8 @@ def encode_propose_update_vm_config_script_function(instruction_schedule: bytes,
                 "00000000000000000000000000000001"), name=Identifier("OnChainConfigScripts")),
             function=Identifier("propose_update_vm_config"),
             ty_args=[],
-            args=[TransactionArgument__U8Vector(value=instruction_schedule), TransactionArgument__U8Vector(value=native_schedule), TransactionArgument__U64(value=global_memory_per_byte_cost), TransactionArgument__U64(value=global_memory_per_byte_write_cost), TransactionArgument__U64(value=min_transaction_gas_units), TransactionArgument__U64(value=large_transaction_cutoff), TransactionArgument__U64(
-                value=instrinsic_gas_per_byte), TransactionArgument__U64(value=maximum_number_of_gas_units), TransactionArgument__U64(value=min_price_per_gas_unit), TransactionArgument__U64(value=max_price_per_gas_unit), TransactionArgument__U64(value=max_transaction_size_in_bytes), TransactionArgument__U64(value=gas_unit_scaling_factor), TransactionArgument__U64(value=default_account_size), TransactionArgument__U64(value=exec_delay)],
+            args=[bcs.serialize(instruction_schedule, bytes), bcs.serialize(native_schedule, bytes), bcs.serialize(global_memory_per_byte_cost, st.uint64), bcs.serialize(global_memory_per_byte_write_cost, st.uint64), bcs.serialize(min_transaction_gas_units, st.uint64), bcs.serialize(large_transaction_cutoff, st.uint64), bcs.serialize(instrinsic_gas_per_byte, st.uint64), bcs.serialize(
+                maximum_number_of_gas_units, st.uint64), bcs.serialize(min_price_per_gas_unit, st.uint64), bcs.serialize(max_price_per_gas_unit, st.uint64), bcs.serialize(max_transaction_size_in_bytes, st.uint64), bcs.serialize(gas_unit_scaling_factor, st.uint64), bcs.serialize(default_account_size, st.uint64), bcs.serialize(exec_delay, st.uint64)],
         )
     )
 
@@ -717,8 +718,8 @@ def encode_queue_proposal_action_script_function(token_t: TypeTag, action_t: Typ
                 "00000000000000000000000000000001"), name=Identifier("Dao")),
             function=Identifier("queue_proposal_action"),
             ty_args=[token_t, action_t],
-            args=[TransactionArgument__Address(
-                value=proposer_address), TransactionArgument__U64(value=proposal_id)],
+            args=[proposer_address.bcs_serialize(
+            ), bcs.serialize(proposal_id, st.uint64)],
         )
     )
 
@@ -732,8 +733,8 @@ def encode_revoke_vote_script_function(token: TypeTag, action: TypeTag, proposer
                 "00000000000000000000000000000001"), name=Identifier("DaoVoteScripts")),
             function=Identifier("revoke_vote"),
             ty_args=[token, action],
-            args=[TransactionArgument__Address(
-                value=proposer_address), TransactionArgument__U64(value=proposal_id)],
+            args=[proposer_address.bcs_serialize(
+            ), bcs.serialize(proposal_id, st.uint64)],
         )
     )
 
@@ -747,7 +748,7 @@ def encode_rotate_authentication_key_script_function(new_key: bytes) -> Transact
                 "00000000000000000000000000000001"), name=Identifier("Account")),
             function=Identifier("rotate_authentication_key"),
             ty_args=[],
-            args=[TransactionArgument__U8Vector(value=new_key)],
+            args=[bcs.serialize(new_key, bytes)],
         )
     )
 
@@ -761,8 +762,8 @@ def encode_split_fixed_key_script_function(token: TypeTag, for_address: AccountA
                 "00000000000000000000000000000001"), name=Identifier("MintScripts")),
             function=Identifier("split_fixed_key"),
             ty_args=[token],
-            args=[TransactionArgument__Address(value=for_address), TransactionArgument__U128(
-                value=amount), TransactionArgument__U64(value=lock_period)],
+            args=[for_address.bcs_serialize(), bcs.serialize(
+                amount, st.uint128), bcs.serialize(lock_period, st.uint64)],
         )
     )
 
@@ -776,8 +777,8 @@ def encode_submit_module_upgrade_plan_script_function(token: TypeTag, proposer_a
                 "00000000000000000000000000000001"), name=Identifier("ModuleUpgradeScripts")),
             function=Identifier("submit_module_upgrade_plan"),
             ty_args=[token],
-            args=[TransactionArgument__Address(
-                value=proposer_address), TransactionArgument__U64(value=proposal_id)],
+            args=[proposer_address.bcs_serialize(
+            ), bcs.serialize(proposal_id, st.uint64)],
         )
     )
 
@@ -791,7 +792,7 @@ def encode_take_offer_script_function(offered: TypeTag, offer_address: AccountAd
                 "00000000000000000000000000000001"), name=Identifier("Offer")),
             function=Identifier("take_offer"),
             ty_args=[offered],
-            args=[TransactionArgument__Address(value=offer_address)],
+            args=[offer_address.bcs_serialize()],
         )
     )
 
@@ -805,8 +806,8 @@ def encode_unstake_vote_script_function(token: TypeTag, action: TypeTag, propose
                 "00000000000000000000000000000001"), name=Identifier("DaoVoteScripts")),
             function=Identifier("unstake_vote"),
             ty_args=[token, action],
-            args=[TransactionArgument__Address(
-                value=proposer_address), TransactionArgument__U64(value=proposal_id)],
+            args=[proposer_address.bcs_serialize(
+            ), bcs.serialize(proposal_id, st.uint64)],
         )
     )
 
@@ -820,7 +821,7 @@ def encode_update_module_upgrade_strategy_script_function(strategy: st.uint8) ->
                 "00000000000000000000000000000001"), name=Identifier("ModuleUpgradeScripts")),
             function=Identifier("update_module_upgrade_strategy"),
             ty_args=[],
-            args=[TransactionArgument__U8(value=strategy)],
+            args=[bcs.serialize(strategy, st.uint8)],
         )
     )
 
