@@ -10,10 +10,10 @@ import hashlib
 import typing
 from starcoin import starcoin_types
 from starcoin import serde_types
-from starcoin import lcs
+from starcoin import bcs
 
 SUB_ADDRESS_LEN: int = 8
-DIEM_HASH_PREFIX: bytes = b"STARCOIN::"
+STARCOIN_HASH_PREFIX: bytes = b"STARCOIN::"
 CORE_CODE_ADDRESS: str = "0x00000000000000000000000000000001"
 ACCOUNT_ADDRESS_LEN: int = 16
 RESOURCE_TAG: int = 1
@@ -130,8 +130,7 @@ def create_signed_transaction(
 
 def raw_transaction_signing_msg(txn: starcoin_types.RawTransaction) -> bytes:
     """create signing message from given `starcoin_types.RawTransaction`"""
-
-    return starcoin_hash_seed(b"RawUserTransaction") + txn.lcs_serialize()
+    return starcoin_hash_seed(b"RawUserTransaction") + txn.bcs_serialize()
 
 
 def transaction_hash(txn: starcoin_types.SignedUserTransaction) -> str:
@@ -139,11 +138,11 @@ def transaction_hash(txn: starcoin_types.SignedUserTransaction) -> str:
     """
 
     user_txn = starcoin_types.Transaction__UserTransaction(value=txn)
-    return hash(starcoin_hash_seed(b"Transaction"), user_txn.lcs_serialize()).hex()
+    return hash(starcoin_hash_seed(b"Transaction"), user_txn.bcs_serialize()).hex()
 
 
 def starcoin_hash_seed(typ: bytes) -> bytes:
-    return hash(DIEM_HASH_PREFIX, typ)
+    return hash(STARCOIN_HASH_PREFIX, typ)
 
 
 def hash(b1: bytes, b2: bytes) -> bytes:
@@ -153,7 +152,7 @@ def hash(b1: bytes, b2: bytes) -> bytes:
     return hash.digest()
 
 
-def payload_lcs_decode(payload: str) -> typing.Union[starcoin_types.Script, starcoin_types.Package]:
-    payload = starcoin_types.TransactionPayload.lcs_deserialize(
+def payload_bcs_decode(payload: str) -> typing.Union[starcoin_types.Script, starcoin_types.Package]:
+    payload = starcoin_types.TransactionPayload.bcs_deserialize(
         bytes.fromhex(payload[2:])).value
     return payload

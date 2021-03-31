@@ -1,297 +1,1296 @@
+# pyre-strict
+from starcoin.starcoin_types import (Script, ScriptFunction, TransactionPayload, TransactionPayload__ScriptFunction, Identifier, ModuleId, TypeTag, AccountAddress, TransactionArgument,
+                                     TransactionArgument__Bool, TransactionArgument__U8, TransactionArgument__U64, TransactionArgument__U128, TransactionArgument__Address, TransactionArgument__U8Vector)
+from dataclasses import dataclass
 import typing
 from starcoin import serde_types as st
-from starcoin.starcoin_types import Script, TypeTag, AccountAddress, TransactionArgument__Bool, TransactionArgument__U8, TransactionArgument__U64, TransactionArgument__U128, TransactionArgument__Address, TransactionArgument__U8Vector
+from starcoin import starcoin_types
 
 
-def encode_accept_token_script(token_type: TypeTag) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x06\x01\x00\x02\x03\x02\x06\x04\x08\x02\x05\x0a\x07\x07\x11\x15\x08\x26\x10\x00\x00\x00\x01\x00\x01\x01\x01\x00\x02\x01\x06\x0c\x00\x01\x09\x00\x07\x41\x63\x63\x6f\x75\x6e\x74\x0c\x61\x63\x63\x65\x70\x74\x5f\x74\x6f\x6b\x65\x6e\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x01\x01\x00\x01\x03\x0b\x00\x38\x00\x02",
-        ty_args=[token_type],
-        args=[],
-    )
-
-
-def encode_cancel_upgrade_plan_script() -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x05\x01\x00\x02\x03\x02\x05\x05\x07\x04\x07\x0b\x26\x08\x31\x10\x00\x00\x00\x01\x00\x01\x00\x01\x06\x0c\x00\x11\x50\x61\x63\x6b\x61\x67\x65\x54\x78\x6e\x4d\x61\x6e\x61\x67\x65\x72\x13\x63\x61\x6e\x63\x65\x6c\x5f\x75\x70\x67\x72\x61\x64\x65\x5f\x70\x6c\x61\x6e\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x01\x03\x0b\x00\x11\x00\x02",
-        ty_args=[],
-        args=[],
-    )
-
-
-def encode_cast_vote_script(token: TypeTag, action_t: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64, agree: st.bool, votes: st.uint128) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x07\x01\x00\x06\x02\x06\x05\x03\x0b\x0d\x04\x18\x04\x05\x1c\x25\x07\x41\x25\x08\x66\x10\x00\x00\x00\x01\x00\x02\x02\x02\x01\x01\x01\x00\x03\x00\x01\x01\x01\x01\x04\x02\x03\x02\x02\x02\x00\x05\x01\x06\x02\x06\x0c\x04\x01\x0b\x00\x01\x09\x00\x05\x06\x0c\x05\x03\x0b\x00\x01\x09\x00\x01\x00\x05\x06\x0c\x05\x03\x01\x04\x01\x09\x00\x02\x09\x00\x09\x01\x07\x41\x63\x63\x6f\x75\x6e\x74\x03\x44\x61\x6f\x05\x54\x6f\x6b\x65\x6e\x08\x77\x69\x74\x68\x64\x72\x61\x77\x09\x63\x61\x73\x74\x5f\x76\x6f\x74\x65\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x02\x02\x02\x04\x01\x0b\x0a\x00\x0a\x04\x38\x00\x0c\x05\x0b\x00\x0a\x01\x0a\x02\x0b\x05\x0a\x03\x38\x01\x02",
-        ty_args=[token, action_t],
-        args=[TransactionArgument__Address(proposer_address), TransactionArgument__U64(
-            proposal_id), TransactionArgument__Bool(agree), TransactionArgument__U128(votes)],
-    )
-
-
-def encode_create_account_script(token_type: TypeTag, fresh_address: AccountAddress, auth_key: bytes, initial_amount: st.uint128) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x07\x01\x00\x04\x03\x04\x11\x04\x15\x04\x05\x19\x1b\x07\x34\x38\x08\x6c\x10\x06\x7c\x0a\x00\x00\x00\x01\x01\x02\x00\x00\x00\x00\x03\x01\x02\x01\x01\x00\x04\x03\x04\x01\x01\x01\x07\x02\x07\x01\x03\x01\x0a\x02\x01\x05\x03\x06\x0c\x05\x04\x00\x04\x06\x0c\x05\x0a\x02\x04\x03\x05\x01\x03\x01\x09\x00\x07\x41\x63\x63\x6f\x75\x6e\x74\x06\x45\x72\x72\x6f\x72\x73\x10\x69\x6e\x76\x61\x6c\x69\x64\x5f\x61\x72\x67\x75\x6d\x65\x6e\x74\x0e\x63\x72\x65\x61\x74\x65\x5f\x61\x63\x63\x6f\x75\x6e\x74\x08\x70\x61\x79\x5f\x66\x72\x6f\x6d\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x03\x08\x65\x00\x00\x00\x00\x00\x00\x00\x01\x01\x05\x06\x1d\x0b\x02\x38\x00\x0c\x04\x0a\x01\x0a\x04\x21\x07\x00\x11\x00\x0c\x06\x0c\x05\x0b\x05\x03\x10\x0b\x00\x01\x0b\x06\x27\x0a\x03\x32\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x24\x03\x15\x05\x1a\x0b\x00\x0a\x01\x0a\x03\x38\x01\x05\x1c\x0b\x00\x01\x02",
-        ty_args=[token_type],
-        args=[TransactionArgument__Address(fresh_address), TransactionArgument__U8Vector(
-            auth_key), TransactionArgument__U128(initial_amount)],
-    )
-
-
-def encode_destroy_terminated_proposal_script(token: TypeTag, action: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x06\x01\x00\x02\x03\x02\x07\x04\x09\x02\x05\x0b\x0e\x07\x19\x20\x08\x39\x10\x00\x00\x00\x01\x00\x01\x02\x02\x02\x00\x03\x02\x05\x03\x00\x03\x06\x0c\x05\x03\x02\x09\x00\x09\x01\x03\x44\x61\x6f\x1b\x64\x65\x73\x74\x72\x6f\x79\x5f\x74\x65\x72\x6d\x69\x6e\x61\x74\x65\x64\x5f\x70\x72\x6f\x70\x6f\x73\x61\x6c\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x02\x02\x02\x02\x01\x04\x0a\x01\x0a\x02\x38\x00\x02",
-        ty_args=[token, action],
-        args=[TransactionArgument__Address(
-            proposer_address), TransactionArgument__U64(proposal_id)],
-    )
-
-
-def encode_empty_script_script() -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x01\x05\x00\x01\x00\x00\x00\x00\x01\x02",
-        ty_args=[],
-        args=[],
-    )
-
-
-def encode_execute_modify_dao_config_proposal_script(token: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x06\x01\x00\x02\x03\x02\x06\x04\x08\x02\x05\x0a\x0c\x07\x16\x20\x08\x36\x10\x00\x00\x00\x01\x00\x01\x01\x02\x00\x03\x02\x05\x03\x00\x03\x06\x0c\x05\x03\x01\x09\x00\x17\x4d\x6f\x64\x69\x66\x79\x44\x61\x6f\x43\x6f\x6e\x66\x69\x67\x50\x72\x6f\x70\x6f\x73\x61\x6c\x07\x65\x78\x65\x63\x75\x74\x65\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x01\x02\x02\x01\x04\x0a\x01\x0a\x02\x38\x00\x02",
-        ty_args=[token],
-        args=[TransactionArgument__Address(
-            proposer_address), TransactionArgument__U64(proposal_id)],
-    )
-
-
-def encode_execute_on_chain_config_proposal_script(config_t: TypeTag, proposal_id: st.uint64) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x07\x01\x00\x06\x02\x06\x04\x03\x0a\x0c\x04\x16\x02\x05\x18\x12\x07\x2a\x2f\x08\x59\x10\x00\x00\x00\x01\x00\x02\x01\x01\x02\x00\x00\x03\x00\x01\x02\x02\x02\x02\x04\x02\x03\x00\x00\x05\x02\x05\x03\x00\x01\x06\x0c\x01\x05\x02\x06\x0c\x03\x02\x08\x00\x09\x00\x10\x4f\x6e\x43\x68\x61\x69\x6e\x43\x6f\x6e\x66\x69\x67\x44\x61\x6f\x03\x53\x54\x43\x06\x53\x69\x67\x6e\x65\x72\x07\x65\x78\x65\x63\x75\x74\x65\x0a\x61\x64\x64\x72\x65\x73\x73\x5f\x6f\x66\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x01\x02\x04\x01\x05\x0b\x00\x11\x01\x0a\x01\x38\x00\x02",
-        ty_args=[config_t],
-        args=[TransactionArgument__U64(proposal_id)],
-    )
-
-
-def encode_mint_and_split_by_linear_key_script(token: TypeTag, for_address: AccountAddress, amount: st.uint128, lock_period: st.uint64) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x07\x01\x00\x08\x02\x08\x0a\x03\x12\x2a\x04\x3c\x0e\x05\x4a\x53\x07\x9d\x01\x7a\x08\x97\x02\x10\x00\x00\x00\x01\x00\x02\x00\x03\x03\x07\x01\x01\x01\x03\x03\x01\x01\x01\x01\x04\x00\x01\x01\x01\x01\x05\x02\x03\x01\x01\x02\x06\x04\x01\x01\x01\x03\x08\x05\x01\x01\x01\x03\x09\x06\x07\x01\x01\x03\x0a\x08\x09\x01\x01\x00\x0b\x0a\x01\x01\x01\x01\x05\x05\x03\x06\x03\x04\x03\x03\x03\x00\x05\x02\x05\x02\x06\x0c\x09\x00\x00\x01\x06\x0c\x01\x09\x00\x04\x06\x0c\x09\x00\x05\x03\x01\x0b\x00\x01\x09\x00\x01\x06\x0b\x00\x01\x09\x00\x01\x01\x02\x07\x0b\x00\x01\x09\x00\x04\x02\x0b\x01\x01\x09\x00\x0b\x00\x01\x09\x00\x02\x06\x0c\x0b\x01\x01\x09\x00\x04\x06\x0c\x05\x04\x03\x03\x0b\x00\x01\x09\x00\x0b\x00\x01\x09\x00\x0b\x01\x01\x09\x00\x07\x41\x63\x63\x6f\x75\x6e\x74\x03\x42\x6f\x78\x05\x4f\x66\x66\x65\x72\x05\x54\x6f\x6b\x65\x6e\x03\x70\x75\x74\x04\x74\x61\x6b\x65\x06\x63\x72\x65\x61\x74\x65\x11\x4c\x69\x6e\x65\x61\x72\x54\x69\x6d\x65\x4d\x69\x6e\x74\x4b\x65\x79\x11\x64\x65\x73\x74\x72\x6f\x79\x5f\x65\x6d\x70\x74\x79\x5f\x6b\x65\x79\x0c\x69\x73\x5f\x65\x6d\x70\x74\x79\x5f\x6b\x65\x79\x10\x73\x70\x6c\x69\x74\x5f\x6c\x69\x6e\x65\x61\x72\x5f\x6b\x65\x79\x0f\x64\x65\x70\x6f\x73\x69\x74\x5f\x74\x6f\x5f\x73\x65\x6c\x66\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x01\x01\x0b\x0c\x1b\x0a\x00\x38\x00\x0c\x04\x0d\x04\x0a\x02\x38\x01\x0c\x05\x0c\x06\x0a\x00\x0b\x06\x38\x02\x0e\x04\x38\x03\x03\x0f\x05\x12\x0b\x04\x38\x04\x05\x15\x0a\x00\x0b\x04\x38\x05\x0b\x00\x0b\x05\x0a\x01\x0a\x03\x38\x06\x02",
-        ty_args=[token],
-        args=[TransactionArgument__Address(for_address), TransactionArgument__U128(
-            amount), TransactionArgument__U64(lock_period)],
-    )
-
-
-def encode_mint_token_by_fixed_key_script(token: TypeTag) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x07\x01\x00\x06\x02\x06\x0a\x03\x10\x12\x04\x22\x06\x05\x28\x26\x07\x4e\x4c\x08\x9a\x01\x10\x00\x00\x00\x01\x00\x02\x02\x04\x01\x01\x01\x02\x02\x01\x01\x01\x01\x03\x00\x01\x01\x01\x02\x05\x02\x03\x01\x01\x00\x06\x04\x05\x01\x01\x00\x02\x01\x01\x02\x01\x01\x06\x0c\x01\x09\x00\x01\x0b\x00\x01\x09\x00\x01\x0b\x01\x01\x09\x00\x02\x06\x0c\x0b\x01\x01\x09\x00\x00\x02\x0b\x00\x01\x09\x00\x0b\x01\x01\x09\x00\x07\x41\x63\x63\x6f\x75\x6e\x74\x03\x42\x6f\x78\x05\x54\x6f\x6b\x65\x6e\x04\x74\x61\x6b\x65\x10\x46\x69\x78\x65\x64\x54\x69\x6d\x65\x4d\x69\x6e\x74\x4b\x65\x79\x13\x6d\x69\x6e\x74\x5f\x77\x69\x74\x68\x5f\x66\x69\x78\x65\x64\x5f\x6b\x65\x79\x0f\x64\x65\x70\x6f\x73\x69\x74\x5f\x74\x6f\x5f\x73\x65\x6c\x66\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x01\x01\x00\x06\x0a\x0a\x00\x38\x00\x0c\x01\x0b\x01\x38\x01\x0c\x02\x0b\x00\x0b\x02\x38\x02\x02",
-        ty_args=[token],
-        args=[],
-    )
-
-
-def encode_mint_token_by_linear_key_script(token: TypeTag) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x07\x01\x00\x06\x02\x06\x0a\x03\x10\x24\x04\x34\x0c\x05\x40\x3b\x07\x7b\x71\x08\xec\x01\x10\x00\x00\x00\x01\x00\x02\x02\x05\x01\x01\x01\x02\x02\x01\x01\x01\x01\x03\x00\x01\x01\x01\x01\x04\x02\x03\x01\x01\x02\x06\x04\x01\x01\x01\x02\x07\x05\x06\x01\x01\x02\x08\x07\x08\x01\x01\x00\x09\x09\x01\x01\x01\x01\x04\x04\x03\x05\x03\x03\x03\x02\x03\x00\x04\x02\x06\x0c\x09\x00\x00\x01\x06\x0c\x01\x09\x00\x01\x0b\x00\x01\x09\x00\x01\x06\x0b\x00\x01\x09\x00\x01\x01\x01\x07\x0b\x00\x01\x09\x00\x01\x0b\x01\x01\x09\x00\x02\x06\x0c\x0b\x01\x01\x09\x00\x02\x0b\x00\x01\x09\x00\x0b\x01\x01\x09\x00\x07\x41\x63\x63\x6f\x75\x6e\x74\x03\x42\x6f\x78\x05\x54\x6f\x6b\x65\x6e\x03\x70\x75\x74\x04\x74\x61\x6b\x65\x11\x4c\x69\x6e\x65\x61\x72\x54\x69\x6d\x65\x4d\x69\x6e\x74\x4b\x65\x79\x11\x64\x65\x73\x74\x72\x6f\x79\x5f\x65\x6d\x70\x74\x79\x5f\x6b\x65\x79\x0c\x69\x73\x5f\x65\x6d\x70\x74\x79\x5f\x6b\x65\x79\x14\x6d\x69\x6e\x74\x5f\x77\x69\x74\x68\x5f\x6c\x69\x6e\x65\x61\x72\x5f\x6b\x65\x79\x0f\x64\x65\x70\x6f\x73\x69\x74\x5f\x74\x6f\x5f\x73\x65\x6c\x66\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x01\x01\x02\x0a\x16\x0a\x00\x38\x00\x0c\x01\x0d\x01\x38\x01\x0c\x02\x0a\x00\x0b\x02\x38\x02\x0e\x01\x38\x03\x03\x0d\x05\x12\x0b\x00\x01\x0b\x01\x38\x04\x05\x15\x0b\x00\x0b\x01\x38\x05\x02",
-        ty_args=[token],
-        args=[],
-    )
-
-
-def encode_peer_to_peer_script(token_type: TypeTag, payee: AccountAddress, payee_auth_key: bytes, amount: st.uint128) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x07\x01\x00\x04\x03\x04\x16\x04\x1a\x04\x05\x1e\x1d\x07\x3b\x42\x08\x7d\x10\x06\x8d\x01\x0a\x00\x00\x00\x01\x01\x02\x00\x00\x00\x00\x03\x01\x02\x01\x01\x00\x04\x02\x03\x00\x00\x05\x04\x05\x01\x01\x01\x08\x03\x08\x01\x03\x01\x0a\x02\x01\x05\x01\x01\x03\x06\x0c\x05\x04\x00\x04\x06\x0c\x05\x0a\x02\x04\x03\x05\x01\x03\x01\x09\x00\x07\x41\x63\x63\x6f\x75\x6e\x74\x06\x45\x72\x72\x6f\x72\x73\x10\x69\x6e\x76\x61\x6c\x69\x64\x5f\x61\x72\x67\x75\x6d\x65\x6e\x74\x0e\x63\x72\x65\x61\x74\x65\x5f\x61\x63\x63\x6f\x75\x6e\x74\x09\x65\x78\x69\x73\x74\x73\x5f\x61\x74\x08\x70\x61\x79\x5f\x66\x72\x6f\x6d\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x03\x08\x65\x00\x00\x00\x00\x00\x00\x00\x01\x01\x06\x07\x1a\x0a\x01\x11\x02\x20\x03\x05\x05\x15\x0b\x02\x38\x00\x0c\x04\x0a\x01\x0a\x04\x21\x07\x00\x11\x00\x0c\x06\x0c\x05\x0b\x05\x03\x15\x0b\x00\x01\x0b\x06\x27\x0b\x00\x0a\x01\x0a\x03\x38\x01\x02",
-        ty_args=[token_type],
-        args=[TransactionArgument__Address(payee), TransactionArgument__U8Vector(
-            payee_auth_key), TransactionArgument__U128(amount)],
-    )
-
-
-def encode_peer_to_peer_with_metadata_script(token_type: TypeTag, payee: AccountAddress, payee_auth_key: bytes, amount: st.uint128, metadata: bytes) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x07\x01\x00\x04\x03\x04\x16\x04\x1a\x04\x05\x1e\x21\x07\x3f\x50\x08\x8f\x01\x10\x06\x9f\x01\x0a\x00\x00\x00\x01\x01\x02\x00\x00\x00\x00\x03\x01\x02\x01\x01\x00\x04\x02\x03\x00\x00\x05\x04\x05\x01\x01\x01\x08\x03\x08\x01\x03\x01\x0a\x02\x01\x05\x01\x01\x04\x06\x0c\x05\x04\x0a\x02\x00\x05\x06\x0c\x05\x0a\x02\x04\x0a\x02\x03\x05\x01\x03\x01\x09\x00\x07\x41\x63\x63\x6f\x75\x6e\x74\x06\x45\x72\x72\x6f\x72\x73\x10\x69\x6e\x76\x61\x6c\x69\x64\x5f\x61\x72\x67\x75\x6d\x65\x6e\x74\x0e\x63\x72\x65\x61\x74\x65\x5f\x61\x63\x63\x6f\x75\x6e\x74\x09\x65\x78\x69\x73\x74\x73\x5f\x61\x74\x16\x70\x61\x79\x5f\x66\x72\x6f\x6d\x5f\x77\x69\x74\x68\x5f\x6d\x65\x74\x61\x64\x61\x74\x61\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x03\x08\x65\x00\x00\x00\x00\x00\x00\x00\x01\x01\x06\x07\x1b\x0a\x01\x11\x02\x20\x03\x05\x05\x15\x0b\x02\x38\x00\x0c\x05\x0a\x01\x0a\x05\x21\x07\x00\x11\x00\x0c\x07\x0c\x06\x0b\x06\x03\x15\x0b\x00\x01\x0b\x07\x27\x0b\x00\x0a\x01\x0a\x03\x0b\x04\x38\x01\x02",
-        ty_args=[token_type],
-        args=[TransactionArgument__Address(payee), TransactionArgument__U8Vector(
-            payee_auth_key), TransactionArgument__U128(amount), TransactionArgument__U8Vector(metadata)],
-    )
-
-
-def encode_propose_modify_dao_config_script(token: TypeTag, voting_delay: st.uint64, voting_period: st.uint64, voting_quorum_rate: st.uint8, min_action_delay: st.uint64, exec_delay: st.uint64) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x06\x01\x00\x02\x03\x02\x06\x04\x08\x02\x05\x0a\x0c\x07\x16\x20\x08\x36\x10\x00\x00\x00\x01\x00\x01\x01\x02\x00\x02\x06\x06\x0c\x03\x03\x02\x03\x03\x00\x01\x09\x00\x17\x4d\x6f\x64\x69\x66\x79\x44\x61\x6f\x43\x6f\x6e\x66\x69\x67\x50\x72\x6f\x70\x6f\x73\x61\x6c\x07\x70\x72\x6f\x70\x6f\x73\x65\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x01\x02\x00\x01\x08\x0b\x00\x0a\x01\x0a\x02\x0a\x03\x0a\x04\x0a\x05\x38\x00\x02",
-        ty_args=[token],
-        args=[TransactionArgument__U64(voting_delay), TransactionArgument__U64(voting_period), TransactionArgument__U8(
-            voting_quorum_rate), TransactionArgument__U64(min_action_delay), TransactionArgument__U64(exec_delay)],
-    )
-
-
-def encode_propose_module_upgrade_script(token: TypeTag, module_address: AccountAddress, package_hash: bytes, version: st.uint64, exec_delay: st.uint64) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x06\x01\x00\x02\x03\x02\x06\x04\x08\x02\x05\x0a\x0c\x07\x16\x30\x08\x46\x10\x00\x00\x00\x01\x00\x01\x01\x02\x00\x02\x05\x06\x0c\x05\x0a\x02\x03\x03\x00\x01\x09\x00\x18\x55\x70\x67\x72\x61\x64\x65\x4d\x6f\x64\x75\x6c\x65\x44\x61\x6f\x50\x72\x6f\x70\x6f\x73\x61\x6c\x16\x70\x72\x6f\x70\x6f\x73\x65\x5f\x6d\x6f\x64\x75\x6c\x65\x5f\x75\x70\x67\x72\x61\x64\x65\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x01\x02\x00\x01\x07\x0b\x00\x0a\x01\x0b\x02\x0a\x03\x0a\x04\x38\x00\x02",
-        ty_args=[token],
-        args=[TransactionArgument__Address(module_address), TransactionArgument__U8Vector(
-            package_hash), TransactionArgument__U64(version), TransactionArgument__U64(exec_delay)],
-    )
-
-
-def encode_propose_update_consensus_config_script(uncle_rate_target: st.uint64, base_block_time_target: st.uint64, base_reward_per_block: st.uint128, base_reward_per_uncle_percent: st.uint64, epoch_block_count: st.uint64, base_block_difficulty_window: st.uint64, min_block_time_target: st.uint64, max_block_time_target: st.uint64, base_max_uncles_per_block: st.uint64, base_block_gas_limit: st.uint64, strategy: st.uint8, exec_delay: st.uint64) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x07\x01\x00\x06\x02\x06\x08\x03\x0e\x0c\x04\x1a\x02\x05\x1c\x2a\x07\x46\x49\x08\x8f\x01\x10\x00\x00\x00\x01\x00\x02\x00\x00\x02\x00\x02\x02\x02\x00\x01\x03\x00\x01\x02\x02\x02\x00\x04\x02\x03\x00\x00\x05\x03\x06\x0c\x09\x01\x03\x00\x0b\x03\x03\x04\x03\x03\x03\x03\x03\x03\x03\x02\x01\x08\x00\x0d\x06\x0c\x03\x03\x04\x03\x03\x03\x03\x03\x03\x03\x02\x03\x02\x08\x01\x08\x00\x0f\x43\x6f\x6e\x73\x65\x6e\x73\x75\x73\x43\x6f\x6e\x66\x69\x67\x10\x4f\x6e\x43\x68\x61\x69\x6e\x43\x6f\x6e\x66\x69\x67\x44\x61\x6f\x03\x53\x54\x43\x0e\x70\x72\x6f\x70\x6f\x73\x65\x5f\x75\x70\x64\x61\x74\x65\x14\x6e\x65\x77\x5f\x63\x6f\x6e\x73\x65\x6e\x73\x75\x73\x5f\x63\x6f\x6e\x66\x69\x67\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x04\x03\x12\x0a\x01\x0a\x02\x0a\x03\x0a\x04\x0a\x05\x0a\x06\x0a\x07\x0a\x08\x0a\x09\x0a\x0a\x0a\x0b\x11\x01\x0c\x0d\x0b\x00\x0b\x0d\x0a\x0c\x38\x00\x02",
-        ty_args=[],
-        args=[TransactionArgument__U64(uncle_rate_target), TransactionArgument__U64(base_block_time_target), TransactionArgument__U128(base_reward_per_block), TransactionArgument__U64(base_reward_per_uncle_percent), TransactionArgument__U64(epoch_block_count), TransactionArgument__U64(
-            base_block_difficulty_window), TransactionArgument__U64(min_block_time_target), TransactionArgument__U64(max_block_time_target), TransactionArgument__U64(base_max_uncles_per_block), TransactionArgument__U64(base_block_gas_limit), TransactionArgument__U8(strategy), TransactionArgument__U64(exec_delay)],
-    )
-
-
-def encode_propose_update_reward_config_script(reward_delay: st.uint64, exec_delay: st.uint64) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x07\x01\x00\x06\x02\x06\x08\x03\x0e\x0c\x04\x1a\x02\x05\x1c\x16\x07\x32\x43\x08\x75\x10\x00\x00\x00\x01\x00\x02\x01\x01\x02\x00\x02\x02\x02\x00\x00\x03\x00\x01\x02\x02\x02\x01\x04\x02\x03\x00\x00\x05\x03\x06\x0c\x09\x01\x03\x00\x01\x03\x01\x08\x00\x03\x06\x0c\x03\x03\x02\x08\x01\x08\x00\x10\x4f\x6e\x43\x68\x61\x69\x6e\x43\x6f\x6e\x66\x69\x67\x44\x61\x6f\x0c\x52\x65\x77\x61\x72\x64\x43\x6f\x6e\x66\x69\x67\x03\x53\x54\x43\x0e\x70\x72\x6f\x70\x6f\x73\x65\x5f\x75\x70\x64\x61\x74\x65\x11\x6e\x65\x77\x5f\x72\x65\x77\x61\x72\x64\x5f\x63\x6f\x6e\x66\x69\x67\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x04\x03\x08\x0a\x01\x11\x01\x0c\x03\x0b\x00\x0b\x03\x0a\x02\x38\x00\x02",
-        ty_args=[],
-        args=[TransactionArgument__U64(
-            reward_delay), TransactionArgument__U64(exec_delay)],
-    )
-
-
-def encode_propose_update_txn_publish_option_script(script_allow_list: bytes, module_publishing_allowed: st.bool, exec_delay: st.uint64) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x07\x01\x00\x06\x02\x06\x08\x03\x0e\x0c\x04\x1a\x02\x05\x1c\x1a\x07\x36\x5c\x08\x92\x01\x10\x00\x00\x00\x01\x00\x02\x02\x02\x02\x00\x01\x01\x02\x00\x00\x03\x00\x01\x02\x02\x02\x02\x04\x02\x03\x00\x00\x05\x03\x06\x0c\x09\x01\x03\x00\x02\x0a\x02\x01\x01\x08\x00\x04\x06\x0c\x0a\x02\x01\x03\x02\x08\x01\x08\x00\x10\x4f\x6e\x43\x68\x61\x69\x6e\x43\x6f\x6e\x66\x69\x67\x44\x61\x6f\x03\x53\x54\x43\x18\x54\x72\x61\x6e\x73\x61\x63\x74\x69\x6f\x6e\x50\x75\x62\x6c\x69\x73\x68\x4f\x70\x74\x69\x6f\x6e\x0e\x70\x72\x6f\x70\x6f\x73\x65\x5f\x75\x70\x64\x61\x74\x65\x1e\x6e\x65\x77\x5f\x74\x72\x61\x6e\x73\x61\x63\x74\x69\x6f\x6e\x5f\x70\x75\x62\x6c\x69\x73\x68\x5f\x6f\x70\x74\x69\x6f\x6e\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x04\x03\x09\x0b\x01\x0a\x02\x11\x01\x0c\x04\x0b\x00\x0b\x04\x0a\x03\x38\x00\x02",
-        ty_args=[],
-        args=[TransactionArgument__U8Vector(script_allow_list), TransactionArgument__Bool(
-            module_publishing_allowed), TransactionArgument__U64(exec_delay)],
-    )
-
-
-def encode_propose_update_txn_timeout_config_script(duration_seconds: st.uint64, exec_delay: st.uint64) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x07\x01\x00\x06\x02\x06\x08\x03\x0e\x0c\x04\x1a\x02\x05\x1c\x16\x07\x32\x5c\x08\x8e\x01\x10\x00\x00\x00\x01\x00\x02\x02\x02\x02\x00\x01\x01\x02\x00\x00\x03\x00\x01\x02\x02\x02\x02\x04\x02\x03\x00\x00\x05\x03\x06\x0c\x09\x01\x03\x00\x01\x03\x01\x08\x00\x03\x06\x0c\x03\x03\x02\x08\x01\x08\x00\x10\x4f\x6e\x43\x68\x61\x69\x6e\x43\x6f\x6e\x66\x69\x67\x44\x61\x6f\x03\x53\x54\x43\x18\x54\x72\x61\x6e\x73\x61\x63\x74\x69\x6f\x6e\x54\x69\x6d\x65\x6f\x75\x74\x43\x6f\x6e\x66\x69\x67\x0e\x70\x72\x6f\x70\x6f\x73\x65\x5f\x75\x70\x64\x61\x74\x65\x1e\x6e\x65\x77\x5f\x74\x72\x61\x6e\x73\x61\x63\x74\x69\x6f\x6e\x5f\x74\x69\x6d\x65\x6f\x75\x74\x5f\x63\x6f\x6e\x66\x69\x67\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x04\x03\x08\x0a\x01\x11\x01\x0c\x03\x0b\x00\x0b\x03\x0a\x02\x38\x00\x02",
-        ty_args=[],
-        args=[TransactionArgument__U64(
-            duration_seconds), TransactionArgument__U64(exec_delay)],
-    )
-
-
-def encode_propose_update_vm_config_script(instruction_schedule: bytes, native_schedule: bytes, global_memory_per_byte_cost: st.uint64, global_memory_per_byte_write_cost: st.uint64, min_transaction_gas_units: st.uint64, large_transaction_cutoff: st.uint64, instrinsic_gas_per_byte: st.uint64, maximum_number_of_gas_units: st.uint64, min_price_per_gas_unit: st.uint64, max_price_per_gas_unit: st.uint64, max_transaction_size_in_bytes: st.uint64, gas_unit_scaling_factor: st.uint64, default_account_size: st.uint64, exec_delay: st.uint64) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x07\x01\x00\x06\x02\x06\x08\x03\x0e\x0c\x04\x1a\x02\x05\x1c\x32\x07\x4e\x3b\x08\x89\x01\x10\x00\x00\x00\x01\x00\x02\x02\x02\x02\x00\x01\x01\x02\x00\x00\x03\x00\x01\x02\x02\x02\x02\x04\x02\x03\x00\x00\x05\x03\x06\x0c\x09\x01\x03\x00\x0d\x0a\x02\x0a\x02\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x01\x08\x00\x0f\x06\x0c\x0a\x02\x0a\x02\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x02\x08\x01\x08\x00\x10\x4f\x6e\x43\x68\x61\x69\x6e\x43\x6f\x6e\x66\x69\x67\x44\x61\x6f\x03\x53\x54\x43\x08\x56\x4d\x43\x6f\x6e\x66\x69\x67\x0e\x70\x72\x6f\x70\x6f\x73\x65\x5f\x75\x70\x64\x61\x74\x65\x0d\x6e\x65\x77\x5f\x76\x6d\x5f\x63\x6f\x6e\x66\x69\x67\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x04\x03\x14\x0b\x01\x0b\x02\x0a\x03\x0a\x04\x0a\x05\x0a\x06\x0a\x07\x0a\x08\x0a\x09\x0a\x0a\x0a\x0b\x0a\x0c\x0a\x0d\x11\x01\x0c\x0f\x0b\x00\x0b\x0f\x0a\x0e\x38\x00\x02",
-        ty_args=[],
-        args=[TransactionArgument__U8Vector(instruction_schedule), TransactionArgument__U8Vector(native_schedule), TransactionArgument__U64(global_memory_per_byte_cost), TransactionArgument__U64(global_memory_per_byte_write_cost), TransactionArgument__U64(min_transaction_gas_units), TransactionArgument__U64(large_transaction_cutoff), TransactionArgument__U64(
-            instrinsic_gas_per_byte), TransactionArgument__U64(maximum_number_of_gas_units), TransactionArgument__U64(min_price_per_gas_unit), TransactionArgument__U64(max_price_per_gas_unit), TransactionArgument__U64(max_transaction_size_in_bytes), TransactionArgument__U64(gas_unit_scaling_factor), TransactionArgument__U64(default_account_size), TransactionArgument__U64(exec_delay)],
-    )
-
-
-def encode_publish_shared_ed25519_public_key_script(public_key: bytes) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x05\x01\x00\x02\x03\x02\x05\x05\x07\x06\x07\x0d\x1f\x08\x2c\x10\x00\x00\x00\x01\x00\x01\x00\x02\x06\x0c\x0a\x02\x00\x16\x53\x68\x61\x72\x65\x64\x45\x64\x32\x35\x35\x31\x39\x50\x75\x62\x6c\x69\x63\x4b\x65\x79\x07\x70\x75\x62\x6c\x69\x73\x68\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x01\x04\x0b\x00\x0b\x01\x11\x00\x02",
-        ty_args=[],
-        args=[TransactionArgument__U8Vector(public_key)],
-    )
-
-
-def encode_queue_proposal_action_script(token: TypeTag, action: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x06\x01\x00\x02\x03\x02\x07\x04\x09\x02\x05\x0b\x0e\x07\x19\x1a\x08\x33\x10\x00\x00\x00\x01\x00\x01\x02\x02\x02\x00\x03\x02\x05\x03\x00\x03\x06\x0c\x05\x03\x02\x09\x00\x09\x01\x03\x44\x61\x6f\x15\x71\x75\x65\x75\x65\x5f\x70\x72\x6f\x70\x6f\x73\x61\x6c\x5f\x61\x63\x74\x69\x6f\x6e\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x02\x02\x02\x02\x01\x04\x0a\x01\x0a\x02\x38\x00\x02",
-        ty_args=[token, action],
-        args=[TransactionArgument__Address(
-            proposer_address), TransactionArgument__U64(proposal_id)],
-    )
-
-
-def encode_revoke_vote_script(token: TypeTag, action: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x07\x01\x00\x08\x02\x08\x05\x03\x0d\x18\x04\x25\x06\x05\x2b\x35\x07\x60\x40\x08\xa0\x01\x10\x00\x00\x00\x01\x00\x02\x00\x03\x03\x03\x01\x01\x01\x02\x04\x00\x01\x00\x00\x05\x02\x03\x01\x01\x01\x06\x04\x05\x02\x02\x02\x01\x07\x06\x07\x01\x02\x03\x0a\x02\x0b\x01\x0a\x01\x06\x0c\x01\x05\x02\x05\x0b\x00\x01\x09\x00\x00\x04\x06\x0c\x05\x03\x04\x01\x0b\x00\x01\x09\x00\x03\x05\x05\x03\x02\x01\x04\x03\x06\x0c\x05\x03\x03\x0b\x00\x01\x09\x00\x04\x05\x01\x09\x00\x02\x09\x00\x09\x01\x07\x41\x63\x63\x6f\x75\x6e\x74\x03\x44\x61\x6f\x06\x53\x69\x67\x6e\x65\x72\x05\x54\x6f\x6b\x65\x6e\x0a\x61\x64\x64\x72\x65\x73\x73\x5f\x6f\x66\x07\x64\x65\x70\x6f\x73\x69\x74\x0b\x72\x65\x76\x6f\x6b\x65\x5f\x76\x6f\x74\x65\x07\x76\x6f\x74\x65\x5f\x6f\x66\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x02\x02\x02\x08\x09\x13\x0a\x00\x11\x00\x0c\x05\x0a\x05\x0a\x01\x0a\x02\x38\x00\x0c\x04\x01\x0b\x00\x0a\x01\x0a\x02\x0a\x04\x38\x01\x0c\x03\x0a\x05\x0b\x03\x38\x02\x02",
-        ty_args=[token, action],
-        args=[TransactionArgument__Address(
-            proposer_address), TransactionArgument__U64(proposal_id)],
-    )
-
-
-def encode_rotate_authentication_key_script(new_key: bytes) -> Script:
-    """# Summary Rotates the transaction sender's authentication key to the supplied new authentication key.
-
-    May be sent by any account. # Technical Description Rotate the `account`'s
-    `Account::Account` `authentication_key` field to `new_key`. `new_key` must be a
-    valid ed25519 public key, and `account` must not have previously delegated its
-    `Account::KeyRotationCapability`. # Parameters | Name | Type | Description | |
-    ------ | ------ | ------------- | | `account` | `&signer` | Signer reference of
-    the sending account of the transaction. | | `new_key` | `vector<u8>` | New ed25519
-    public key to be used for `account`. | # Common Abort Conditions | Error Category |
-    Error Reason | Description | | ---------------- | -------------- | ------------- |
-    | `Errors::INVALID_STATE` | `Account::EKEY_ROTATION_CAPABILITY_ALREADY_EXTRACTED` |
-    `account` has already delegated/extracted its `Account::KeyRotationCapability`. | |
-    `Errors::INVALID_ARGUMENT` | `Account::EMALFORMED_AUTHENTICATION_KEY` | `new_key` was
-    an invalid length. |
+class ScriptCall:
+    """Structured representation of a call into a known Move script.
     """
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x06\x01\x00\x02\x02\x02\x04\x03\x06\x0f\x05\x15\x12\x07\x27\x78\x08\x9f\x01\x10\x00\x00\x00\x01\x01\x00\x00\x02\x00\x01\x00\x00\x03\x01\x02\x00\x00\x04\x03\x02\x00\x01\x06\x0c\x01\x08\x00\x00\x02\x06\x08\x00\x0a\x02\x02\x06\x0c\x0a\x02\x07\x41\x63\x63\x6f\x75\x6e\x74\x15\x4b\x65\x79\x52\x6f\x74\x61\x74\x69\x6f\x6e\x43\x61\x70\x61\x62\x69\x6c\x69\x74\x79\x1f\x65\x78\x74\x72\x61\x63\x74\x5f\x6b\x65\x79\x5f\x72\x6f\x74\x61\x74\x69\x6f\x6e\x5f\x63\x61\x70\x61\x62\x69\x6c\x69\x74\x79\x1f\x72\x65\x73\x74\x6f\x72\x65\x5f\x6b\x65\x79\x5f\x72\x6f\x74\x61\x74\x69\x6f\x6e\x5f\x63\x61\x70\x61\x62\x69\x6c\x69\x74\x79\x19\x72\x6f\x74\x61\x74\x65\x5f\x61\x75\x74\x68\x65\x6e\x74\x69\x63\x61\x74\x69\x6f\x6e\x5f\x6b\x65\x79\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x04\x01\x09\x0b\x00\x11\x00\x0c\x02\x0e\x02\x0b\x01\x11\x02\x0b\x02\x11\x01\x02",
-        ty_args=[],
-        args=[TransactionArgument__U8Vector(new_key)],
+    pass
+
+
+class ScriptFunctionCall:
+    """Structured representation of a call into a known Move script function.
+    """
+    pass
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__AcceptToken(ScriptFunctionCall):
+    """.
+    """
+    token_type: starcoin_types.TypeTag
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__CancelUpgradePlan(ScriptFunctionCall):
+    """.
+    """
+    pass
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__CastVote(ScriptFunctionCall):
+    """.
+    """
+    token: starcoin_types.TypeTag
+    action_t: starcoin_types.TypeTag
+    proposer_address: starcoin_types.AccountAddress
+    proposal_id: st.uint64
+    agree: st.bool
+    votes: st.uint128
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__CreateAccountWithInitialAmount(ScriptFunctionCall):
+    """.
+    """
+    token_type: starcoin_types.TypeTag
+    fresh_address: starcoin_types.AccountAddress
+    auth_key: bytes
+    initial_amount: st.uint128
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__DestroyTerminatedProposal(ScriptFunctionCall):
+    """remove terminated proposal from proposer.
+    """
+    token_t: starcoin_types.TypeTag
+    action_t: starcoin_types.TypeTag
+    proposer_address: starcoin_types.AccountAddress
+    proposal_id: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__EmptyScript(ScriptFunctionCall):
+    """.
+    """
+    pass
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__Execute(ScriptFunctionCall):
+    """Once the proposal is agreed, anyone can call the method to make the proposal happen.
+    """
+    token_t: starcoin_types.TypeTag
+    proposer_address: starcoin_types.AccountAddress
+    proposal_id: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__ExecuteOnChainConfigProposal(ScriptFunctionCall):
+    """.
+    """
+    config_t: starcoin_types.TypeTag
+    proposal_id: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__Initialize(ScriptFunctionCall):
+    """.
+    """
+    stdlib_version: st.uint64
+    reward_delay: st.uint64
+    pre_mine_amount: st.uint128
+    time_mint_amount: st.uint128
+    time_mint_period: st.uint64
+    parent_hash: bytes
+    association_auth_key: bytes
+    genesis_auth_key: bytes
+    chain_id: st.uint8
+    genesis_timestamp: st.uint64
+    uncle_rate_target: st.uint64
+    epoch_block_count: st.uint64
+    base_block_time_target: st.uint64
+    base_block_difficulty_window: st.uint64
+    base_reward_per_block: st.uint128
+    base_reward_per_uncle_percent: st.uint64
+    min_block_time_target: st.uint64
+    max_block_time_target: st.uint64
+    base_max_uncles_per_block: st.uint64
+    base_block_gas_limit: st.uint64
+    strategy: st.uint8
+    script_allowed: st.bool
+    module_publishing_allowed: st.bool
+    instruction_schedule: bytes
+    native_schedule: bytes
+    global_memory_per_byte_cost: st.uint64
+    global_memory_per_byte_write_cost: st.uint64
+    min_transaction_gas_units: st.uint64
+    large_transaction_cutoff: st.uint64
+    instrinsic_gas_per_byte: st.uint64
+    maximum_number_of_gas_units: st.uint64
+    min_price_per_gas_unit: st.uint64
+    max_price_per_gas_unit: st.uint64
+    max_transaction_size_in_bytes: st.uint64
+    gas_unit_scaling_factor: st.uint64
+    default_account_size: st.uint64
+    voting_delay: st.uint64
+    voting_period: st.uint64
+    voting_quorum_rate: st.uint8
+    min_action_delay: st.uint64
+    transaction_timeout: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__MintAndSplitByLinearKey(ScriptFunctionCall):
+    """.
+    """
+    token: starcoin_types.TypeTag
+    for_address: starcoin_types.AccountAddress
+    amount: st.uint128
+    lock_period: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__MintTokenByFixedKey(ScriptFunctionCall):
+    """.
+    """
+    token: starcoin_types.TypeTag
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__MintTokenByLinearKey(ScriptFunctionCall):
+    """.
+    """
+    token: starcoin_types.TypeTag
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__PeerToPeer(ScriptFunctionCall):
+    """.
+    """
+    token_type: starcoin_types.TypeTag
+    payee: starcoin_types.AccountAddress
+    payee_auth_key: bytes
+    amount: st.uint128
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__PeerToPeerBatch(ScriptFunctionCall):
+    """.
+    """
+    token_type: starcoin_types.TypeTag
+    payeees: bytes
+    payee_auth_keys: bytes
+    amount: st.uint128
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__PeerToPeerWithMetadata(ScriptFunctionCall):
+    """.
+    """
+    token_type: starcoin_types.TypeTag
+    payee: starcoin_types.AccountAddress
+    payee_auth_key: bytes
+    amount: st.uint128
+    metadata: bytes
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__Propose(ScriptFunctionCall):
+    """Entrypoint for the proposal.
+    """
+    token_t: starcoin_types.TypeTag
+    voting_delay: st.uint64
+    voting_period: st.uint64
+    voting_quorum_rate: st.uint8
+    min_action_delay: st.uint64
+    exec_delay: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__ProposeModuleUpgrade(ScriptFunctionCall):
+    """.
+    """
+    token: starcoin_types.TypeTag
+    module_address: starcoin_types.AccountAddress
+    package_hash: bytes
+    version: st.uint64
+    exec_delay: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__ProposeUpdateConsensusConfig(ScriptFunctionCall):
+    """.
+    """
+    uncle_rate_target: st.uint64
+    base_block_time_target: st.uint64
+    base_reward_per_block: st.uint128
+    base_reward_per_uncle_percent: st.uint64
+    epoch_block_count: st.uint64
+    base_block_difficulty_window: st.uint64
+    min_block_time_target: st.uint64
+    max_block_time_target: st.uint64
+    base_max_uncles_per_block: st.uint64
+    base_block_gas_limit: st.uint64
+    strategy: st.uint8
+    exec_delay: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__ProposeUpdateRewardConfig(ScriptFunctionCall):
+    """.
+    """
+    reward_delay: st.uint64
+    exec_delay: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__ProposeUpdateTxnPublishOption(ScriptFunctionCall):
+    """.
+    """
+    script_allowed: st.bool
+    module_publishing_allowed: st.bool
+    exec_delay: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__ProposeUpdateTxnTimeoutConfig(ScriptFunctionCall):
+    """.
+    """
+    duration_seconds: st.uint64
+    exec_delay: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__ProposeUpdateVmConfig(ScriptFunctionCall):
+    """.
+    """
+    instruction_schedule: bytes
+    native_schedule: bytes
+    global_memory_per_byte_cost: st.uint64
+    global_memory_per_byte_write_cost: st.uint64
+    min_transaction_gas_units: st.uint64
+    large_transaction_cutoff: st.uint64
+    instrinsic_gas_per_byte: st.uint64
+    maximum_number_of_gas_units: st.uint64
+    min_price_per_gas_unit: st.uint64
+    max_price_per_gas_unit: st.uint64
+    max_transaction_size_in_bytes: st.uint64
+    gas_unit_scaling_factor: st.uint64
+    default_account_size: st.uint64
+    exec_delay: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__QueueProposalAction(ScriptFunctionCall):
+    """queue agreed proposal to execute.
+    """
+    token_t: starcoin_types.TypeTag
+    action_t: starcoin_types.TypeTag
+    proposer_address: starcoin_types.AccountAddress
+    proposal_id: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__RevokeVote(ScriptFunctionCall):
+    """.
+    """
+    token: starcoin_types.TypeTag
+    action: starcoin_types.TypeTag
+    proposer_address: starcoin_types.AccountAddress
+    proposal_id: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__RotateAuthenticationKey(ScriptFunctionCall):
+    """.
+    """
+    new_key: bytes
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__SplitFixedKey(ScriptFunctionCall):
+    """.
+    """
+    token: starcoin_types.TypeTag
+    for_address: starcoin_types.AccountAddress
+    amount: st.uint128
+    lock_period: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__SubmitModuleUpgradePlan(ScriptFunctionCall):
+    """.
+    """
+    token: starcoin_types.TypeTag
+    proposer_address: starcoin_types.AccountAddress
+    proposal_id: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__TakeOffer(ScriptFunctionCall):
+    """.
+    """
+    offered: starcoin_types.TypeTag
+    offer_address: starcoin_types.AccountAddress
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__UnstakeVote(ScriptFunctionCall):
+    """.
+    """
+    token: starcoin_types.TypeTag
+    action: starcoin_types.TypeTag
+    proposer_address: starcoin_types.AccountAddress
+    proposal_id: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__UpdateModuleUpgradeStrategy(ScriptFunctionCall):
+    """.
+    """
+    strategy: st.uint8
+
+
+def encode_script(call: ScriptCall) -> Script:
+    """Build a Diem `Script` from a structured object `ScriptCall`.
+    """
+    helper = TRANSACTION_SCRIPT_ENCODER_MAP[call.__class__]
+    return helper(call)
+
+
+def encode_script_function(call: ScriptFunctionCall) -> TransactionPayload:
+    """Build a Diem `ScriptFunction` `TransactionPayload` from a structured object `ScriptFunctionCall`.
+    """
+    helper = SCRIPT_FUNCTION_ENCODER_MAP[call.__class__]
+    return helper(call)
+
+
+def decode_script(script: Script) -> ScriptCall:
+    """Try to recognize a Diem `Script` and convert it into a structured object `ScriptCall`.
+    """
+    helper = TRANSACTION_SCRIPT_DECODER_MAP.get(script.code)
+    if helper is None:
+        raise ValueError("Unknown script bytecode")
+    return helper(script)
+
+
+def decode_script_function_payload(payload: TransactionPayload) -> ScriptFunctionCall:
+    """Try to recognize a Diem `TransactionPayload` and convert it into a structured object `ScriptFunctionCall`.
+    """
+    if not isinstance(payload, TransactionPayload__ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    script = payload.value
+    helper = SCRIPT_FUNCTION_DECODER_MAP.get(
+        script.module.name.value + script.function.value)
+    if helper is None:
+        raise ValueError("Unknown script bytecode")
+    return helper(script)
+
+
+def encode_accept_token_script_function(token_type: TypeTag) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("Account")),
+            function=Identifier("accept_token"),
+            ty_args=[token_type],
+            args=[],
+        )
     )
 
 
-def encode_split_fixed_key_script(token: TypeTag, for_address: AccountAddress, amount: st.uint128, lock_period: st.uint64) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x07\x01\x00\x06\x02\x06\x05\x03\x0b\x18\x04\x23\x08\x05\x2b\x32\x07\x5d\x41\x08\x9e\x01\x10\x00\x00\x00\x01\x00\x02\x02\x06\x01\x01\x01\x00\x03\x00\x01\x01\x01\x00\x04\x02\x03\x01\x01\x01\x05\x04\x01\x01\x01\x02\x07\x05\x06\x01\x01\x01\x06\x03\x03\x00\x06\x02\x06\x02\x06\x0c\x09\x00\x00\x01\x06\x0c\x01\x09\x00\x04\x06\x0c\x09\x00\x05\x03\x02\x07\x0b\x00\x01\x09\x00\x04\x01\x0b\x00\x01\x09\x00\x04\x06\x0c\x05\x04\x03\x02\x0b\x00\x01\x09\x00\x0b\x00\x01\x09\x00\x03\x42\x6f\x78\x05\x4f\x66\x66\x65\x72\x05\x54\x6f\x6b\x65\x6e\x03\x70\x75\x74\x04\x74\x61\x6b\x65\x06\x63\x72\x65\x61\x74\x65\x10\x46\x69\x78\x65\x64\x54\x69\x6d\x65\x4d\x69\x6e\x74\x4b\x65\x79\x0f\x73\x70\x6c\x69\x74\x5f\x66\x69\x78\x65\x64\x5f\x6b\x65\x79\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x01\x01\x07\x08\x10\x0a\x00\x38\x00\x0c\x04\x0d\x04\x0a\x02\x38\x01\x0c\x05\x0a\x00\x0b\x04\x38\x02\x0b\x00\x0b\x05\x0a\x01\x0a\x03\x38\x03\x02",
-        ty_args=[token],
-        args=[TransactionArgument__Address(for_address), TransactionArgument__U128(
-            amount), TransactionArgument__U64(lock_period)],
+def encode_cancel_upgrade_plan_script_function() -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("ModuleUpgradeScripts")),
+            function=Identifier("cancel_upgrade_plan"),
+            ty_args=[],
+            args=[],
+        )
     )
 
 
-def encode_submit_module_upgrade_plan_script(token: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x06\x01\x00\x02\x03\x02\x06\x04\x08\x02\x05\x0a\x0c\x07\x16\x34\x08\x4a\x10\x00\x00\x00\x01\x00\x01\x01\x02\x00\x03\x02\x05\x03\x00\x03\x06\x0c\x05\x03\x01\x09\x00\x18\x55\x70\x67\x72\x61\x64\x65\x4d\x6f\x64\x75\x6c\x65\x44\x61\x6f\x50\x72\x6f\x70\x6f\x73\x61\x6c\x1a\x73\x75\x62\x6d\x69\x74\x5f\x6d\x6f\x64\x75\x6c\x65\x5f\x75\x70\x67\x72\x61\x64\x65\x5f\x70\x6c\x61\x6e\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x01\x02\x02\x01\x04\x0a\x01\x0a\x02\x38\x00\x02",
-        ty_args=[token],
-        args=[TransactionArgument__Address(
-            proposer_address), TransactionArgument__U64(proposal_id)],
+def encode_cast_vote_script_function(token: TypeTag, action_t: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64, agree: bool, votes: st.uint128) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("DaoVoteScripts")),
+            function=Identifier("cast_vote"),
+            ty_args=[token, action_t],
+            args=[TransactionArgument__Address(value=proposer_address), TransactionArgument__U64(
+                value=proposal_id), TransactionArgument__Bool(value=agree), TransactionArgument__U128(value=votes)],
+        )
     )
 
 
-def encode_take_offer_script(offered: TypeTag, offer_address: AccountAddress) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x06\x01\x00\x04\x03\x04\x0c\x04\x10\x04\x05\x14\x0d\x07\x21\x15\x08\x36\x10\x00\x00\x00\x01\x00\x02\x00\x01\x01\x01\x01\x03\x02\x03\x01\x01\x01\x03\x00\x03\x02\x06\x0c\x09\x00\x00\x02\x06\x0c\x05\x01\x09\x00\x03\x42\x6f\x78\x05\x4f\x66\x66\x65\x72\x03\x70\x75\x74\x06\x72\x65\x64\x65\x65\x6d\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x01\x01\x02\x03\x08\x0a\x00\x0a\x01\x38\x00\x0c\x02\x0b\x00\x0b\x02\x38\x01\x02",
-        ty_args=[offered],
-        args=[TransactionArgument__Address(offer_address)],
+def encode_create_account_with_initial_amount_script_function(token_type: TypeTag, fresh_address: AccountAddress, auth_key: bytes, initial_amount: st.uint128) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("Account")),
+            function=Identifier("create_account_with_initial_amount"),
+            ty_args=[token_type],
+            args=[TransactionArgument__Address(value=fresh_address), TransactionArgument__U8Vector(
+                value=auth_key), TransactionArgument__U128(value=initial_amount)],
+        )
     )
 
 
-def encode_unstake_vote_script(token: TypeTag, action: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x07\x01\x00\x08\x02\x08\x05\x03\x0d\x12\x04\x1f\x04\x05\x23\x20\x07\x43\x3a\x08\x7d\x10\x00\x00\x00\x01\x00\x02\x00\x03\x03\x03\x01\x01\x01\x02\x04\x00\x01\x00\x00\x05\x02\x03\x01\x01\x01\x06\x04\x05\x02\x02\x02\x02\x06\x01\x07\x01\x06\x0c\x01\x05\x02\x05\x0b\x00\x01\x09\x00\x00\x03\x06\x0c\x05\x03\x01\x0b\x00\x01\x09\x00\x02\x09\x00\x09\x01\x01\x09\x00\x07\x41\x63\x63\x6f\x75\x6e\x74\x03\x44\x61\x6f\x06\x53\x69\x67\x6e\x65\x72\x05\x54\x6f\x6b\x65\x6e\x0a\x61\x64\x64\x72\x65\x73\x73\x5f\x6f\x66\x07\x64\x65\x70\x6f\x73\x69\x74\x0d\x75\x6e\x73\x74\x61\x6b\x65\x5f\x76\x6f\x74\x65\x73\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x02\x02\x02\x04\x05\x0a\x0a\x00\x0a\x01\x0a\x02\x38\x00\x0c\x03\x0b\x00\x11\x00\x0b\x03\x38\x01\x02",
-        ty_args=[token, action],
-        args=[TransactionArgument__Address(
-            proposer_address), TransactionArgument__U64(proposal_id)],
+def encode_destroy_terminated_proposal_script_function(token_t: TypeTag, action_t: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> TransactionPayload:
+    """remove terminated proposal from proposer.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("Dao")),
+            function=Identifier("destroy_terminated_proposal"),
+            ty_args=[token_t, action_t],
+            args=[TransactionArgument__Address(
+                value=proposer_address), TransactionArgument__U64(value=proposal_id)],
+        )
     )
 
 
-def encode_update_module_upgrade_strategy_script(strategy: st.uint8) -> Script:
-    """."""
-    return Script(
-        code=b"\xa1\x1c\xeb\x0b\x01\x00\x00\x00\x07\x01\x00\x08\x02\x08\x04\x03\x0c\x20\x04\x2c\x04\x05\x30\x18\x07\x48\xa0\x01\x08\xe8\x01\x10\x00\x00\x00\x01\x00\x02\x00\x03\x03\x03\x02\x00\x02\x04\x00\x01\x00\x03\x05\x02\x03\x00\x00\x06\x01\x04\x01\x02\x00\x07\x05\x06\x01\x02\x01\x08\x06\x07\x00\x01\x09\x08\x06\x00\x02\x03\x03\x03\x01\x06\x0c\x01\x05\x01\x03\x01\x08\x00\x01\x01\x02\x06\x0c\x09\x00\x00\x01\x02\x02\x06\x0c\x02\x06\x43\x6f\x6e\x66\x69\x67\x11\x50\x61\x63\x6b\x61\x67\x65\x54\x78\x6e\x4d\x61\x6e\x61\x67\x65\x72\x06\x53\x69\x67\x6e\x65\x72\x07\x56\x65\x72\x73\x69\x6f\x6e\x0a\x61\x64\x64\x72\x65\x73\x73\x5f\x6f\x66\x0b\x6e\x65\x77\x5f\x76\x65\x72\x73\x69\x6f\x6e\x17\x63\x6f\x6e\x66\x69\x67\x5f\x65\x78\x69\x73\x74\x5f\x62\x79\x5f\x61\x64\x64\x72\x65\x73\x73\x12\x70\x75\x62\x6c\x69\x73\x68\x5f\x6e\x65\x77\x5f\x63\x6f\x6e\x66\x69\x67\x16\x67\x65\x74\x5f\x73\x74\x72\x61\x74\x65\x67\x79\x5f\x74\x77\x6f\x5f\x70\x68\x61\x73\x65\x1e\x75\x70\x64\x61\x74\x65\x5f\x6d\x6f\x64\x75\x6c\x65\x5f\x75\x70\x67\x72\x61\x64\x65\x5f\x73\x74\x72\x61\x74\x65\x67\x79\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x08\x06\x13\x0a\x01\x11\x04\x21\x03\x05\x05\x0f\x0a\x00\x11\x00\x38\x00\x20\x03\x0b\x05\x0f\x0a\x00\x06\x01\x00\x00\x00\x00\x00\x00\x00\x11\x01\x38\x01\x0b\x00\x0a\x01\x11\x05\x02",
-        ty_args=[],
-        args=[TransactionArgument__U8(strategy)],
+def encode_empty_script_script_function() -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("EmptyScripts")),
+            function=Identifier("empty_script"),
+            ty_args=[],
+            args=[],
+        )
     )
+
+
+def encode_execute_script_function(token_t: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> TransactionPayload:
+    """Once the proposal is agreed, anyone can call the method to make the proposal happen.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("ModifyDaoConfigProposal")),
+            function=Identifier("execute"),
+            ty_args=[token_t],
+            args=[TransactionArgument__Address(
+                value=proposer_address), TransactionArgument__U64(value=proposal_id)],
+        )
+    )
+
+
+def encode_execute_on_chain_config_proposal_script_function(config_t: TypeTag, proposal_id: st.uint64) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("OnChainConfigScripts")),
+            function=Identifier("execute_on_chain_config_proposal"),
+            ty_args=[config_t],
+            args=[TransactionArgument__U64(value=proposal_id)],
+        )
+    )
+
+
+def encode_initialize_script_function(stdlib_version: st.uint64, reward_delay: st.uint64, pre_mine_amount: st.uint128, time_mint_amount: st.uint128, time_mint_period: st.uint64, parent_hash: bytes, association_auth_key: bytes, genesis_auth_key: bytes, chain_id: st.uint8, genesis_timestamp: st.uint64, uncle_rate_target: st.uint64, epoch_block_count: st.uint64, base_block_time_target: st.uint64, base_block_difficulty_window: st.uint64, base_reward_per_block: st.uint128, base_reward_per_uncle_percent: st.uint64, min_block_time_target: st.uint64, max_block_time_target: st.uint64, base_max_uncles_per_block: st.uint64, base_block_gas_limit: st.uint64, strategy: st.uint8, script_allowed: bool, module_publishing_allowed: bool, instruction_schedule: bytes, native_schedule: bytes, global_memory_per_byte_cost: st.uint64, global_memory_per_byte_write_cost: st.uint64, min_transaction_gas_units: st.uint64, large_transaction_cutoff: st.uint64, instrinsic_gas_per_byte: st.uint64, maximum_number_of_gas_units: st.uint64, min_price_per_gas_unit: st.uint64, max_price_per_gas_unit: st.uint64, max_transaction_size_in_bytes: st.uint64, gas_unit_scaling_factor: st.uint64, default_account_size: st.uint64, voting_delay: st.uint64, voting_period: st.uint64, voting_quorum_rate: st.uint8, min_action_delay: st.uint64, transaction_timeout: st.uint64) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("Genesis")),
+            function=Identifier("initialize"),
+            ty_args=[],
+            args=[TransactionArgument__U64(value=stdlib_version), TransactionArgument__U64(value=reward_delay), TransactionArgument__U128(value=pre_mine_amount), TransactionArgument__U128(value=time_mint_amount), TransactionArgument__U64(value=time_mint_period), TransactionArgument__U8Vector(value=parent_hash), TransactionArgument__U8Vector(value=association_auth_key), TransactionArgument__U8Vector(value=genesis_auth_key), TransactionArgument__U8(value=chain_id), TransactionArgument__U64(value=genesis_timestamp), TransactionArgument__U64(value=uncle_rate_target), TransactionArgument__U64(value=epoch_block_count), TransactionArgument__U64(value=base_block_time_target), TransactionArgument__U64(value=base_block_difficulty_window), TransactionArgument__U128(value=base_reward_per_block), TransactionArgument__U64(value=base_reward_per_uncle_percent), TransactionArgument__U64(value=min_block_time_target), TransactionArgument__U64(value=max_block_time_target), TransactionArgument__U64(value=base_max_uncles_per_block), TransactionArgument__U64(value=base_block_gas_limit), TransactionArgument__U8(value=strategy), TransactionArgument__Bool(
+                value=script_allowed), TransactionArgument__Bool(value=module_publishing_allowed), TransactionArgument__U8Vector(value=instruction_schedule), TransactionArgument__U8Vector(value=native_schedule), TransactionArgument__U64(value=global_memory_per_byte_cost), TransactionArgument__U64(value=global_memory_per_byte_write_cost), TransactionArgument__U64(value=min_transaction_gas_units), TransactionArgument__U64(value=large_transaction_cutoff), TransactionArgument__U64(value=instrinsic_gas_per_byte), TransactionArgument__U64(value=maximum_number_of_gas_units), TransactionArgument__U64(value=min_price_per_gas_unit), TransactionArgument__U64(value=max_price_per_gas_unit), TransactionArgument__U64(value=max_transaction_size_in_bytes), TransactionArgument__U64(value=gas_unit_scaling_factor), TransactionArgument__U64(value=default_account_size), TransactionArgument__U64(value=voting_delay), TransactionArgument__U64(value=voting_period), TransactionArgument__U8(value=voting_quorum_rate), TransactionArgument__U64(value=min_action_delay), TransactionArgument__U64(value=transaction_timeout)],
+        )
+    )
+
+
+def encode_mint_and_split_by_linear_key_script_function(token: TypeTag, for_address: AccountAddress, amount: st.uint128, lock_period: st.uint64) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("MintScripts")),
+            function=Identifier("mint_and_split_by_linear_key"),
+            ty_args=[token],
+            args=[TransactionArgument__Address(value=for_address), TransactionArgument__U128(
+                value=amount), TransactionArgument__U64(value=lock_period)],
+        )
+    )
+
+
+def encode_mint_token_by_fixed_key_script_function(token: TypeTag) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("MintScripts")),
+            function=Identifier("mint_token_by_fixed_key"),
+            ty_args=[token],
+            args=[],
+        )
+    )
+
+
+def encode_mint_token_by_linear_key_script_function(token: TypeTag) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("MintScripts")),
+            function=Identifier("mint_token_by_linear_key"),
+            ty_args=[token],
+            args=[],
+        )
+    )
+
+
+def encode_peer_to_peer_script_function(token_type: TypeTag, payee: AccountAddress, payee_auth_key: bytes, amount: st.uint128) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("TransferScripts")),
+            function=Identifier("peer_to_peer"),
+            ty_args=[token_type],
+            args=[TransactionArgument__Address(value=payee).bcs_serialize(), TransactionArgument__U8Vector(
+                value=payee_auth_key).bcs_serialize(), TransactionArgument__U128(value=amount).bcs_serialize()],
+        )
+    )
+
+
+def encode_peer_to_peer_batch_script_function(token_type: TypeTag, payeees: bytes, payee_auth_keys: bytes, amount: st.uint128) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("TransferScripts")),
+            function=Identifier("peer_to_peer_batch"),
+            ty_args=[token_type],
+            args=[TransactionArgument__U8Vector(value=payeees), TransactionArgument__U8Vector(
+                value=payee_auth_keys), TransactionArgument__U128(value=amount)],
+        )
+    )
+
+
+def encode_peer_to_peer_with_metadata_script_function(token_type: TypeTag, payee: AccountAddress, payee_auth_key: bytes, amount: st.uint128, metadata: bytes) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("TransferScripts")),
+            function=Identifier("peer_to_peer_with_metadata"),
+            ty_args=[token_type],
+            args=[TransactionArgument__Address(value=payee), TransactionArgument__U8Vector(
+                value=payee_auth_key), TransactionArgument__U128(value=amount), TransactionArgument__U8Vector(value=metadata)],
+        )
+    )
+
+
+def encode_propose_script_function(token_t: TypeTag, voting_delay: st.uint64, voting_period: st.uint64, voting_quorum_rate: st.uint8, min_action_delay: st.uint64, exec_delay: st.uint64) -> TransactionPayload:
+    """Entrypoint for the proposal.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("ModifyDaoConfigProposal")),
+            function=Identifier("propose"),
+            ty_args=[token_t],
+            args=[TransactionArgument__U64(value=voting_delay), TransactionArgument__U64(value=voting_period), TransactionArgument__U8(
+                value=voting_quorum_rate), TransactionArgument__U64(value=min_action_delay), TransactionArgument__U64(value=exec_delay)],
+        )
+    )
+
+
+def encode_propose_module_upgrade_script_function(token: TypeTag, module_address: AccountAddress, package_hash: bytes, version: st.uint64, exec_delay: st.uint64) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("ModuleUpgradeScripts")),
+            function=Identifier("propose_module_upgrade"),
+            ty_args=[token],
+            args=[TransactionArgument__Address(value=module_address), TransactionArgument__U8Vector(
+                value=package_hash), TransactionArgument__U64(value=version), TransactionArgument__U64(value=exec_delay)],
+        )
+    )
+
+
+def encode_propose_update_consensus_config_script_function(uncle_rate_target: st.uint64, base_block_time_target: st.uint64, base_reward_per_block: st.uint128, base_reward_per_uncle_percent: st.uint64, epoch_block_count: st.uint64, base_block_difficulty_window: st.uint64, min_block_time_target: st.uint64, max_block_time_target: st.uint64, base_max_uncles_per_block: st.uint64, base_block_gas_limit: st.uint64, strategy: st.uint8, exec_delay: st.uint64) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("OnChainConfigScripts")),
+            function=Identifier("propose_update_consensus_config"),
+            ty_args=[],
+            args=[TransactionArgument__U64(value=uncle_rate_target), TransactionArgument__U64(value=base_block_time_target), TransactionArgument__U128(value=base_reward_per_block), TransactionArgument__U64(value=base_reward_per_uncle_percent), TransactionArgument__U64(value=epoch_block_count), TransactionArgument__U64(
+                value=base_block_difficulty_window), TransactionArgument__U64(value=min_block_time_target), TransactionArgument__U64(value=max_block_time_target), TransactionArgument__U64(value=base_max_uncles_per_block), TransactionArgument__U64(value=base_block_gas_limit), TransactionArgument__U8(value=strategy), TransactionArgument__U64(value=exec_delay)],
+        )
+    )
+
+
+def encode_propose_update_reward_config_script_function(reward_delay: st.uint64, exec_delay: st.uint64) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("OnChainConfigScripts")),
+            function=Identifier("propose_update_reward_config"),
+            ty_args=[],
+            args=[TransactionArgument__U64(
+                value=reward_delay), TransactionArgument__U64(value=exec_delay)],
+        )
+    )
+
+
+def encode_propose_update_txn_publish_option_script_function(script_allowed: bool, module_publishing_allowed: bool, exec_delay: st.uint64) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("OnChainConfigScripts")),
+            function=Identifier("propose_update_txn_publish_option"),
+            ty_args=[],
+            args=[TransactionArgument__Bool(value=script_allowed), TransactionArgument__Bool(
+                value=module_publishing_allowed), TransactionArgument__U64(value=exec_delay)],
+        )
+    )
+
+
+def encode_propose_update_txn_timeout_config_script_function(duration_seconds: st.uint64, exec_delay: st.uint64) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("OnChainConfigScripts")),
+            function=Identifier("propose_update_txn_timeout_config"),
+            ty_args=[],
+            args=[TransactionArgument__U64(
+                value=duration_seconds), TransactionArgument__U64(value=exec_delay)],
+        )
+    )
+
+
+def encode_propose_update_vm_config_script_function(instruction_schedule: bytes, native_schedule: bytes, global_memory_per_byte_cost: st.uint64, global_memory_per_byte_write_cost: st.uint64, min_transaction_gas_units: st.uint64, large_transaction_cutoff: st.uint64, instrinsic_gas_per_byte: st.uint64, maximum_number_of_gas_units: st.uint64, min_price_per_gas_unit: st.uint64, max_price_per_gas_unit: st.uint64, max_transaction_size_in_bytes: st.uint64, gas_unit_scaling_factor: st.uint64, default_account_size: st.uint64, exec_delay: st.uint64) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("OnChainConfigScripts")),
+            function=Identifier("propose_update_vm_config"),
+            ty_args=[],
+            args=[TransactionArgument__U8Vector(value=instruction_schedule), TransactionArgument__U8Vector(value=native_schedule), TransactionArgument__U64(value=global_memory_per_byte_cost), TransactionArgument__U64(value=global_memory_per_byte_write_cost), TransactionArgument__U64(value=min_transaction_gas_units), TransactionArgument__U64(value=large_transaction_cutoff), TransactionArgument__U64(
+                value=instrinsic_gas_per_byte), TransactionArgument__U64(value=maximum_number_of_gas_units), TransactionArgument__U64(value=min_price_per_gas_unit), TransactionArgument__U64(value=max_price_per_gas_unit), TransactionArgument__U64(value=max_transaction_size_in_bytes), TransactionArgument__U64(value=gas_unit_scaling_factor), TransactionArgument__U64(value=default_account_size), TransactionArgument__U64(value=exec_delay)],
+        )
+    )
+
+
+def encode_queue_proposal_action_script_function(token_t: TypeTag, action_t: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> TransactionPayload:
+    """queue agreed proposal to execute.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("Dao")),
+            function=Identifier("queue_proposal_action"),
+            ty_args=[token_t, action_t],
+            args=[TransactionArgument__Address(
+                value=proposer_address), TransactionArgument__U64(value=proposal_id)],
+        )
+    )
+
+
+def encode_revoke_vote_script_function(token: TypeTag, action: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("DaoVoteScripts")),
+            function=Identifier("revoke_vote"),
+            ty_args=[token, action],
+            args=[TransactionArgument__Address(
+                value=proposer_address), TransactionArgument__U64(value=proposal_id)],
+        )
+    )
+
+
+def encode_rotate_authentication_key_script_function(new_key: bytes) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("Account")),
+            function=Identifier("rotate_authentication_key"),
+            ty_args=[],
+            args=[TransactionArgument__U8Vector(value=new_key)],
+        )
+    )
+
+
+def encode_split_fixed_key_script_function(token: TypeTag, for_address: AccountAddress, amount: st.uint128, lock_period: st.uint64) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("MintScripts")),
+            function=Identifier("split_fixed_key"),
+            ty_args=[token],
+            args=[TransactionArgument__Address(value=for_address), TransactionArgument__U128(
+                value=amount), TransactionArgument__U64(value=lock_period)],
+        )
+    )
+
+
+def encode_submit_module_upgrade_plan_script_function(token: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("ModuleUpgradeScripts")),
+            function=Identifier("submit_module_upgrade_plan"),
+            ty_args=[token],
+            args=[TransactionArgument__Address(
+                value=proposer_address), TransactionArgument__U64(value=proposal_id)],
+        )
+    )
+
+
+def encode_take_offer_script_function(offered: TypeTag, offer_address: AccountAddress) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("Offer")),
+            function=Identifier("take_offer"),
+            ty_args=[offered],
+            args=[TransactionArgument__Address(value=offer_address)],
+        )
+    )
+
+
+def encode_unstake_vote_script_function(token: TypeTag, action: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("DaoVoteScripts")),
+            function=Identifier("unstake_vote"),
+            ty_args=[token, action],
+            args=[TransactionArgument__Address(
+                value=proposer_address), TransactionArgument__U64(value=proposal_id)],
+        )
+    )
+
+
+def encode_update_module_upgrade_strategy_script_function(strategy: st.uint8) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("ModuleUpgradeScripts")),
+            function=Identifier("update_module_upgrade_strategy"),
+            ty_args=[],
+            args=[TransactionArgument__U8(value=strategy)],
+        )
+    )
+
+
+def decode_accept_token_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__AcceptToken(
+        token_type=script.ty_args[0],
+    )
+
+
+def decode_cancel_upgrade_plan_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__CancelUpgradePlan(
+    )
+
+
+def decode_cast_vote_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__CastVote(
+        token=script.ty_args[0],
+        action_t=script.ty_args[1],
+        proposer_address=decode_address_argument(script.args[0]),
+        proposal_id=decode_u64_argument(script.args[1]),
+        agree=decode_bool_argument(script.args[2]),
+        votes=decode_u128_argument(script.args[3]),
+    )
+
+
+def decode_create_account_with_initial_amount_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__CreateAccountWithInitialAmount(
+        token_type=script.ty_args[0],
+        fresh_address=decode_address_argument(script.args[0]),
+        auth_key=decode_u8vector_argument(script.args[1]),
+        initial_amount=decode_u128_argument(script.args[2]),
+    )
+
+
+def decode_destroy_terminated_proposal_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__DestroyTerminatedProposal(
+        token_t=script.ty_args[0],
+        action_t=script.ty_args[1],
+        proposer_address=decode_address_argument(script.args[0]),
+        proposal_id=decode_u64_argument(script.args[1]),
+    )
+
+
+def decode_empty_script_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__EmptyScript(
+    )
+
+
+def decode_execute_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__Execute(
+        token_t=script.ty_args[0],
+        proposer_address=decode_address_argument(script.args[0]),
+        proposal_id=decode_u64_argument(script.args[1]),
+    )
+
+
+def decode_execute_on_chain_config_proposal_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__ExecuteOnChainConfigProposal(
+        config_t=script.ty_args[0],
+        proposal_id=decode_u64_argument(script.args[0]),
+    )
+
+
+def decode_initialize_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__Initialize(
+        stdlib_version=decode_u64_argument(script.args[0]),
+        reward_delay=decode_u64_argument(script.args[1]),
+        pre_mine_amount=decode_u128_argument(script.args[2]),
+        time_mint_amount=decode_u128_argument(script.args[3]),
+        time_mint_period=decode_u64_argument(script.args[4]),
+        parent_hash=decode_u8vector_argument(script.args[5]),
+        association_auth_key=decode_u8vector_argument(script.args[6]),
+        genesis_auth_key=decode_u8vector_argument(script.args[7]),
+        chain_id=decode_u8_argument(script.args[8]),
+        genesis_timestamp=decode_u64_argument(script.args[9]),
+        uncle_rate_target=decode_u64_argument(script.args[10]),
+        epoch_block_count=decode_u64_argument(script.args[11]),
+        base_block_time_target=decode_u64_argument(script.args[12]),
+        base_block_difficulty_window=decode_u64_argument(script.args[13]),
+        base_reward_per_block=decode_u128_argument(script.args[14]),
+        base_reward_per_uncle_percent=decode_u64_argument(script.args[15]),
+        min_block_time_target=decode_u64_argument(script.args[16]),
+        max_block_time_target=decode_u64_argument(script.args[17]),
+        base_max_uncles_per_block=decode_u64_argument(script.args[18]),
+        base_block_gas_limit=decode_u64_argument(script.args[19]),
+        strategy=decode_u8_argument(script.args[20]),
+        script_allowed=decode_bool_argument(script.args[21]),
+        module_publishing_allowed=decode_bool_argument(script.args[22]),
+        instruction_schedule=decode_u8vector_argument(script.args[23]),
+        native_schedule=decode_u8vector_argument(script.args[24]),
+        global_memory_per_byte_cost=decode_u64_argument(script.args[25]),
+        global_memory_per_byte_write_cost=decode_u64_argument(script.args[26]),
+        min_transaction_gas_units=decode_u64_argument(script.args[27]),
+        large_transaction_cutoff=decode_u64_argument(script.args[28]),
+        instrinsic_gas_per_byte=decode_u64_argument(script.args[29]),
+        maximum_number_of_gas_units=decode_u64_argument(script.args[30]),
+        min_price_per_gas_unit=decode_u64_argument(script.args[31]),
+        max_price_per_gas_unit=decode_u64_argument(script.args[32]),
+        max_transaction_size_in_bytes=decode_u64_argument(script.args[33]),
+        gas_unit_scaling_factor=decode_u64_argument(script.args[34]),
+        default_account_size=decode_u64_argument(script.args[35]),
+        voting_delay=decode_u64_argument(script.args[36]),
+        voting_period=decode_u64_argument(script.args[37]),
+        voting_quorum_rate=decode_u8_argument(script.args[38]),
+        min_action_delay=decode_u64_argument(script.args[39]),
+        transaction_timeout=decode_u64_argument(script.args[40]),
+    )
+
+
+def decode_mint_and_split_by_linear_key_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__MintAndSplitByLinearKey(
+        token=script.ty_args[0],
+        for_address=decode_address_argument(script.args[0]),
+        amount=decode_u128_argument(script.args[1]),
+        lock_period=decode_u64_argument(script.args[2]),
+    )
+
+
+def decode_mint_token_by_fixed_key_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__MintTokenByFixedKey(
+        token=script.ty_args[0],
+    )
+
+
+def decode_mint_token_by_linear_key_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__MintTokenByLinearKey(
+        token=script.ty_args[0],
+    )
+
+
+def decode_peer_to_peer_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__PeerToPeer(
+        token_type=script.ty_args[0],
+        payee=decode_address_argument(script.args[0]),
+        payee_auth_key=decode_u8vector_argument(script.args[1]),
+        amount=decode_u128_argument(script.args[2]),
+    )
+
+
+def decode_peer_to_peer_batch_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__PeerToPeerBatch(
+        token_type=script.ty_args[0],
+        payeees=decode_u8vector_argument(script.args[0]),
+        payee_auth_keys=decode_u8vector_argument(script.args[1]),
+        amount=decode_u128_argument(script.args[2]),
+    )
+
+
+def decode_peer_to_peer_with_metadata_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__PeerToPeerWithMetadata(
+        token_type=script.ty_args[0],
+        payee=decode_address_argument(script.args[0]),
+        payee_auth_key=decode_u8vector_argument(script.args[1]),
+        amount=decode_u128_argument(script.args[2]),
+        metadata=decode_u8vector_argument(script.args[3]),
+    )
+
+
+def decode_propose_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__Propose(
+        token_t=script.ty_args[0],
+        voting_delay=decode_u64_argument(script.args[0]),
+        voting_period=decode_u64_argument(script.args[1]),
+        voting_quorum_rate=decode_u8_argument(script.args[2]),
+        min_action_delay=decode_u64_argument(script.args[3]),
+        exec_delay=decode_u64_argument(script.args[4]),
+    )
+
+
+def decode_propose_module_upgrade_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__ProposeModuleUpgrade(
+        token=script.ty_args[0],
+        module_address=decode_address_argument(script.args[0]),
+        package_hash=decode_u8vector_argument(script.args[1]),
+        version=decode_u64_argument(script.args[2]),
+        exec_delay=decode_u64_argument(script.args[3]),
+    )
+
+
+def decode_propose_update_consensus_config_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__ProposeUpdateConsensusConfig(
+        uncle_rate_target=decode_u64_argument(script.args[0]),
+        base_block_time_target=decode_u64_argument(script.args[1]),
+        base_reward_per_block=decode_u128_argument(script.args[2]),
+        base_reward_per_uncle_percent=decode_u64_argument(script.args[3]),
+        epoch_block_count=decode_u64_argument(script.args[4]),
+        base_block_difficulty_window=decode_u64_argument(script.args[5]),
+        min_block_time_target=decode_u64_argument(script.args[6]),
+        max_block_time_target=decode_u64_argument(script.args[7]),
+        base_max_uncles_per_block=decode_u64_argument(script.args[8]),
+        base_block_gas_limit=decode_u64_argument(script.args[9]),
+        strategy=decode_u8_argument(script.args[10]),
+        exec_delay=decode_u64_argument(script.args[11]),
+    )
+
+
+def decode_propose_update_reward_config_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__ProposeUpdateRewardConfig(
+        reward_delay=decode_u64_argument(script.args[0]),
+        exec_delay=decode_u64_argument(script.args[1]),
+    )
+
+
+def decode_propose_update_txn_publish_option_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__ProposeUpdateTxnPublishOption(
+        script_allowed=decode_bool_argument(script.args[0]),
+        module_publishing_allowed=decode_bool_argument(script.args[1]),
+        exec_delay=decode_u64_argument(script.args[2]),
+    )
+
+
+def decode_propose_update_txn_timeout_config_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__ProposeUpdateTxnTimeoutConfig(
+        duration_seconds=decode_u64_argument(script.args[0]),
+        exec_delay=decode_u64_argument(script.args[1]),
+    )
+
+
+def decode_propose_update_vm_config_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__ProposeUpdateVmConfig(
+        instruction_schedule=decode_u8vector_argument(script.args[0]),
+        native_schedule=decode_u8vector_argument(script.args[1]),
+        global_memory_per_byte_cost=decode_u64_argument(script.args[2]),
+        global_memory_per_byte_write_cost=decode_u64_argument(script.args[3]),
+        min_transaction_gas_units=decode_u64_argument(script.args[4]),
+        large_transaction_cutoff=decode_u64_argument(script.args[5]),
+        instrinsic_gas_per_byte=decode_u64_argument(script.args[6]),
+        maximum_number_of_gas_units=decode_u64_argument(script.args[7]),
+        min_price_per_gas_unit=decode_u64_argument(script.args[8]),
+        max_price_per_gas_unit=decode_u64_argument(script.args[9]),
+        max_transaction_size_in_bytes=decode_u64_argument(script.args[10]),
+        gas_unit_scaling_factor=decode_u64_argument(script.args[11]),
+        default_account_size=decode_u64_argument(script.args[12]),
+        exec_delay=decode_u64_argument(script.args[13]),
+    )
+
+
+def decode_queue_proposal_action_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__QueueProposalAction(
+        token_t=script.ty_args[0],
+        action_t=script.ty_args[1],
+        proposer_address=decode_address_argument(script.args[0]),
+        proposal_id=decode_u64_argument(script.args[1]),
+    )
+
+
+def decode_revoke_vote_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__RevokeVote(
+        token=script.ty_args[0],
+        action=script.ty_args[1],
+        proposer_address=decode_address_argument(script.args[0]),
+        proposal_id=decode_u64_argument(script.args[1]),
+    )
+
+
+def decode_rotate_authentication_key_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__RotateAuthenticationKey(
+        new_key=decode_u8vector_argument(script.args[0]),
+    )
+
+
+def decode_split_fixed_key_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__SplitFixedKey(
+        token=script.ty_args[0],
+        for_address=decode_address_argument(script.args[0]),
+        amount=decode_u128_argument(script.args[1]),
+        lock_period=decode_u64_argument(script.args[2]),
+    )
+
+
+def decode_submit_module_upgrade_plan_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__SubmitModuleUpgradePlan(
+        token=script.ty_args[0],
+        proposer_address=decode_address_argument(script.args[0]),
+        proposal_id=decode_u64_argument(script.args[1]),
+    )
+
+
+def decode_take_offer_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__TakeOffer(
+        offered=script.ty_args[0],
+        offer_address=decode_address_argument(script.args[0]),
+    )
+
+
+def decode_unstake_vote_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__UnstakeVote(
+        token=script.ty_args[0],
+        action=script.ty_args[1],
+        proposer_address=decode_address_argument(script.args[0]),
+        proposal_id=decode_u64_argument(script.args[1]),
+    )
+
+
+def decode_update_module_upgrade_strategy_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__UpdateModuleUpgradeStrategy(
+        strategy=decode_u8_argument(script.args[0]),
+    )
+
+
+# pyre-ignore
+TRANSACTION_SCRIPT_ENCODER_MAP: typing.Dict[typing.Type[ScriptCall], typing.Callable[[ScriptCall], Script]] = {
+}
+
+
+# pyre-ignore
+SCRIPT_FUNCTION_ENCODER_MAP: typing.Dict[typing.Type[ScriptFunctionCall], typing.Callable[[ScriptFunctionCall], TransactionPayload]] = {
+    ScriptFunctionCall__AcceptToken: encode_accept_token_script_function,
+    ScriptFunctionCall__CancelUpgradePlan: encode_cancel_upgrade_plan_script_function,
+    ScriptFunctionCall__CastVote: encode_cast_vote_script_function,
+    ScriptFunctionCall__CreateAccountWithInitialAmount: encode_create_account_with_initial_amount_script_function,
+    ScriptFunctionCall__DestroyTerminatedProposal: encode_destroy_terminated_proposal_script_function,
+    ScriptFunctionCall__EmptyScript: encode_empty_script_script_function,
+    ScriptFunctionCall__Execute: encode_execute_script_function,
+    ScriptFunctionCall__ExecuteOnChainConfigProposal: encode_execute_on_chain_config_proposal_script_function,
+    ScriptFunctionCall__Initialize: encode_initialize_script_function,
+    ScriptFunctionCall__MintAndSplitByLinearKey: encode_mint_and_split_by_linear_key_script_function,
+    ScriptFunctionCall__MintTokenByFixedKey: encode_mint_token_by_fixed_key_script_function,
+    ScriptFunctionCall__MintTokenByLinearKey: encode_mint_token_by_linear_key_script_function,
+    ScriptFunctionCall__PeerToPeer: encode_peer_to_peer_script_function,
+    ScriptFunctionCall__PeerToPeerBatch: encode_peer_to_peer_batch_script_function,
+    ScriptFunctionCall__PeerToPeerWithMetadata: encode_peer_to_peer_with_metadata_script_function,
+    ScriptFunctionCall__Propose: encode_propose_script_function,
+    ScriptFunctionCall__ProposeModuleUpgrade: encode_propose_module_upgrade_script_function,
+    ScriptFunctionCall__ProposeUpdateConsensusConfig: encode_propose_update_consensus_config_script_function,
+    ScriptFunctionCall__ProposeUpdateRewardConfig: encode_propose_update_reward_config_script_function,
+    ScriptFunctionCall__ProposeUpdateTxnPublishOption: encode_propose_update_txn_publish_option_script_function,
+    ScriptFunctionCall__ProposeUpdateTxnTimeoutConfig: encode_propose_update_txn_timeout_config_script_function,
+    ScriptFunctionCall__ProposeUpdateVmConfig: encode_propose_update_vm_config_script_function,
+    ScriptFunctionCall__QueueProposalAction: encode_queue_proposal_action_script_function,
+    ScriptFunctionCall__RevokeVote: encode_revoke_vote_script_function,
+    ScriptFunctionCall__RotateAuthenticationKey: encode_rotate_authentication_key_script_function,
+    ScriptFunctionCall__SplitFixedKey: encode_split_fixed_key_script_function,
+    ScriptFunctionCall__SubmitModuleUpgradePlan: encode_submit_module_upgrade_plan_script_function,
+    ScriptFunctionCall__TakeOffer: encode_take_offer_script_function,
+    ScriptFunctionCall__UnstakeVote: encode_unstake_vote_script_function,
+    ScriptFunctionCall__UpdateModuleUpgradeStrategy: encode_update_module_upgrade_strategy_script_function,
+}
+
+
+TRANSACTION_SCRIPT_DECODER_MAP: typing.Dict[bytes, typing.Callable[[Script], ScriptCall]] = {
+}
+
+
+SCRIPT_FUNCTION_DECODER_MAP: typing.Dict[str, typing.Callable[[TransactionPayload], ScriptFunctionCall]] = {
+    "Accountaccept_token": decode_accept_token_script_function,
+    "ModuleUpgradeScriptscancel_upgrade_plan": decode_cancel_upgrade_plan_script_function,
+    "DaoVoteScriptscast_vote": decode_cast_vote_script_function,
+    "Accountcreate_account_with_initial_amount": decode_create_account_with_initial_amount_script_function,
+    "Daodestroy_terminated_proposal": decode_destroy_terminated_proposal_script_function,
+    "EmptyScriptsempty_script": decode_empty_script_script_function,
+    "ModifyDaoConfigProposalexecute": decode_execute_script_function,
+    "OnChainConfigScriptsexecute_on_chain_config_proposal": decode_execute_on_chain_config_proposal_script_function,
+    "Genesisinitialize": decode_initialize_script_function,
+    "MintScriptsmint_and_split_by_linear_key": decode_mint_and_split_by_linear_key_script_function,
+    "MintScriptsmint_token_by_fixed_key": decode_mint_token_by_fixed_key_script_function,
+    "MintScriptsmint_token_by_linear_key": decode_mint_token_by_linear_key_script_function,
+    "TransferScriptspeer_to_peer": decode_peer_to_peer_script_function,
+    "TransferScriptspeer_to_peer_batch": decode_peer_to_peer_batch_script_function,
+    "TransferScriptspeer_to_peer_with_metadata": decode_peer_to_peer_with_metadata_script_function,
+    "ModifyDaoConfigProposalpropose": decode_propose_script_function,
+    "ModuleUpgradeScriptspropose_module_upgrade": decode_propose_module_upgrade_script_function,
+    "OnChainConfigScriptspropose_update_consensus_config": decode_propose_update_consensus_config_script_function,
+    "OnChainConfigScriptspropose_update_reward_config": decode_propose_update_reward_config_script_function,
+    "OnChainConfigScriptspropose_update_txn_publish_option": decode_propose_update_txn_publish_option_script_function,
+    "OnChainConfigScriptspropose_update_txn_timeout_config": decode_propose_update_txn_timeout_config_script_function,
+    "OnChainConfigScriptspropose_update_vm_config": decode_propose_update_vm_config_script_function,
+    "Daoqueue_proposal_action": decode_queue_proposal_action_script_function,
+    "DaoVoteScriptsrevoke_vote": decode_revoke_vote_script_function,
+    "Accountrotate_authentication_key": decode_rotate_authentication_key_script_function,
+    "MintScriptssplit_fixed_key": decode_split_fixed_key_script_function,
+    "ModuleUpgradeScriptssubmit_module_upgrade_plan": decode_submit_module_upgrade_plan_script_function,
+    "Offertake_offer": decode_take_offer_script_function,
+    "DaoVoteScriptsunstake_vote": decode_unstake_vote_script_function,
+    "ModuleUpgradeScriptsupdate_module_upgrade_strategy": decode_update_module_upgrade_strategy_script_function,
+}
+
+
+def decode_bool_argument(arg: TransactionArgument) -> bool:
+    if not isinstance(arg, TransactionArgument__Bool):
+        raise ValueError("Was expecting a Bool argument")
+    return arg.value
+
+
+def decode_u8_argument(arg: TransactionArgument) -> st.uint8:
+    if not isinstance(arg, TransactionArgument__U8):
+        raise ValueError("Was expecting a U8 argument")
+    return arg.value
+
+
+def decode_u64_argument(arg: TransactionArgument) -> st.uint64:
+    if not isinstance(arg, TransactionArgument__U64):
+        raise ValueError("Was expecting a U64 argument")
+    return arg.value
+
+
+def decode_u128_argument(arg: TransactionArgument) -> st.uint128:
+    if not isinstance(arg, TransactionArgument__U128):
+        raise ValueError("Was expecting a U128 argument")
+    return arg.value
+
+
+def decode_address_argument(arg: TransactionArgument) -> AccountAddress:
+    if not isinstance(arg, TransactionArgument__Address):
+        raise ValueError("Was expecting a Address argument")
+    return arg.value
+
+
+def decode_u8vector_argument(arg: TransactionArgument) -> bytes:
+    if not isinstance(arg, TransactionArgument__U8Vector):
+        raise ValueError("Was expecting a U8Vector argument")
+    return arg.value

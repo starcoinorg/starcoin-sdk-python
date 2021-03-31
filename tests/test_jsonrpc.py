@@ -10,10 +10,10 @@ def test_apis():
     assert cli.node_info().get("net") == "barnard"
     account_resource = cli.state_get(
         '0x00000000000000000000000000000001/1/0x00000000000000000000000000000001::Account::Account')
-    auth_key = bytes(starcoin_types.AccountResource.lcs_deserialize(
-        account_resource).authentication_key).hex()
+    auth_key = bytes(starcoin_types.AccountResource.bcs_deserialize(
+        bytes(account_resource)).authentication_key).hex()
     assert auth_key == "0000000000000000000000000000000000000000000000000000000000000000"
     assert isinstance(cli.get_account_sequence(
-        "0x00000000000000000000000000000001"), int) == True
+        "0x00000000000000000000000000000001"), int) is True
     assert cli.get_account_token(
         "0x00000000000000000000000000000001", "STC", "STC") == 0

@@ -29,7 +29,7 @@ class Client():
         self.request = RpcRequest(url)
         self.session = Session()
 
-    def execute(self, operation) -> str:
+    def execute(self, operation):
         """ Execute a rpc request operation
         operation = {
             "rpc_method": $rpc_method,
@@ -95,7 +95,7 @@ class Client():
 
     def submit(self, txn: typing.Union[starcoin_types.SignedUserTransaction, str]):
         if isinstance(txn, starcoin_types.SignedUserTransaction):
-            return self.submit(txn.lcs_serialize().hex())
+            return self.submit(txn.bcs_serialize().hex())
 
         operation = {
             "rpc_method": "txpool.submit_hex_transaction",
@@ -135,7 +135,7 @@ class Client():
         path = "{}/{}/{}".format(addr,
                                  utils.RESOURCE_TAG, struct_tag)
         state = self.state_get(path)
-        balance = starcoin_types.BalanceResource.lcs_deserialize(state)
+        balance = starcoin_types.BalanceResource.bcs_deserialize(bytes(state))
         return int(balance.token)
 
     def get_account_resource(self, addr: str) -> starcoin_types.AccountResource:
@@ -143,8 +143,8 @@ class Client():
             utils.CORE_CODE_ADDRESS, "Account", "Account")
         path = "{}/{}/{}".format(addr, utils.RESOURCE_TAG, struct_tag)
         state = self.state_get(path)
-        account_resource = starcoin_types.AccountResource.lcs_deserialize(
-            state)
+        account_resource = starcoin_types.AccountResource.bcs_deserialize(
+            bytes(state))
         return account_resource
 
 
