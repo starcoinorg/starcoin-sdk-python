@@ -84,6 +84,14 @@ class Client():
         }
         ret = self.execute(operation)
         return ret
+    
+    def get_transaction_info(self, txn_hash: str) -> dict:
+        operation = {
+            "rpc_method": "chain.get_transaction_info",
+            "params": [txn_hash],
+        }
+        ret = self.execute(operation)
+        return ret
 
     def get_block_by_number(self, number: int) -> dict:
         operation = {
