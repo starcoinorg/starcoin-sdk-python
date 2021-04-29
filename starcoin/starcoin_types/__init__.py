@@ -1,7 +1,7 @@
 # pyre-strict
 from dataclasses import dataclass
 import typing
-import starcoin.serde_types as st
+from starcoin import serde_types as st
 from starcoin import bcs
 
 
@@ -710,7 +710,7 @@ class TransactionArgument__U8Vector(TransactionArgument):
 @dataclass(frozen=True)
 class TransactionArgument__Bool(TransactionArgument):
     INDEX = 5  # type: int
-    value: st.bool
+    value: bool
 
 
 TransactionArgument.VARIANTS = [
@@ -1033,6 +1033,7 @@ WriteSetPayload.VARIANTS = [
     WriteSetPayload__Direct,
     WriteSetPayload__Script,
 ]
+
 
 @dataclass
 class BlockRewardEvent:

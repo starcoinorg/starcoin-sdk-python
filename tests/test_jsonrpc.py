@@ -17,12 +17,10 @@ def test_apis():
         "0x00000000000000000000000000000001"), int) is True
     assert cli.get_account_token(
         "0x00000000000000000000000000000001", "STC", "STC") == 0
-    tx = cli.get_transaction("0xd15e5d2d306c898effe61ce9cddb976b8e5a5c24ef67fb5c3a02ca7f156b738b")
+    tx = cli.get_transaction(
+        "0xd15e5d2d306c898effe61ce9cddb976b8e5a5c24ef67fb5c3a02ca7f156b738b")
     payload = tx.get("user_transaction").get("raw_txn").get("payload")
-    if payload.startswith("0x"):
-        payload = payload[2:]
-    payload = bytes.fromhex(payload)
+    payload = bytes.fromhex(payload[2:])
     payload = starcoin_types.TransactionPayload.bcs_deserialize(payload)
-    print(instance(payload))
-    script = starcoin_stdlib.decode_peer_to_peer_script_function(payload)
+    script = starcoin_stdlib.decode_peer_to_peer_script_function(payload.value)
     print(script)

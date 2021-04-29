@@ -1,11 +1,11 @@
 # pyre-strict
+from starcoin import bcs
 from starcoin.starcoin_types import (Script, ScriptFunction, TransactionPayload, TransactionPayload__ScriptFunction, Identifier, ModuleId, TypeTag, AccountAddress, TransactionArgument,
                                      TransactionArgument__Bool, TransactionArgument__U8, TransactionArgument__U64, TransactionArgument__U128, TransactionArgument__Address, TransactionArgument__U8Vector)
 from dataclasses import dataclass
 import typing
 from starcoin import serde_types as st
 from starcoin import starcoin_types
-from starcoin import bcs
 
 
 class ScriptCall:
@@ -42,8 +42,15 @@ class ScriptFunctionCall__CastVote(ScriptFunctionCall):
     action_t: starcoin_types.TypeTag
     proposer_address: starcoin_types.AccountAddress
     proposal_id: st.uint64
-    agree: st.bool
+    agree: bool
     votes: st.uint128
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__ConvertTwoPhaseUpgradeToTwoPhaseUpgradeV2(ScriptFunctionCall):
+    """.
+    """
+    package_address: starcoin_types.AccountAddress
 
 
 @dataclass(frozen=True)
@@ -115,8 +122,8 @@ class ScriptFunctionCall__Initialize(ScriptFunctionCall):
     base_max_uncles_per_block: st.uint64
     base_block_gas_limit: st.uint64
     strategy: st.uint8
-    script_allowed: st.bool
-    module_publishing_allowed: st.bool
+    script_allowed: bool
+    module_publishing_allowed: bool
     instruction_schedule: bytes
     native_schedule: bytes
     global_memory_per_byte_cost: st.uint64
@@ -209,10 +216,22 @@ class ScriptFunctionCall__ProposeModuleUpgrade(ScriptFunctionCall):
     """.
     """
     token: starcoin_types.TypeTag
+    _module_address: starcoin_types.AccountAddress
+    _package_hash: bytes
+    _version: st.uint64
+    _exec_delay: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__ProposeModuleUpgradeV2(ScriptFunctionCall):
+    """.
+    """
+    token: starcoin_types.TypeTag
     module_address: starcoin_types.AccountAddress
     package_hash: bytes
     version: st.uint64
     exec_delay: st.uint64
+    enforced: bool
 
 
 @dataclass(frozen=True)
@@ -245,8 +264,8 @@ class ScriptFunctionCall__ProposeUpdateRewardConfig(ScriptFunctionCall):
 class ScriptFunctionCall__ProposeUpdateTxnPublishOption(ScriptFunctionCall):
     """.
     """
-    script_allowed: st.bool
-    module_publishing_allowed: st.bool
+    script_allowed: bool
+    module_publishing_allowed: bool
     exec_delay: st.uint64
 
 
@@ -422,8 +441,24 @@ def encode_cast_vote_script_function(token: TypeTag, action_t: TypeTag, proposer
                 "00000000000000000000000000000001"), name=Identifier("DaoVoteScripts")),
             function=Identifier("cast_vote"),
             ty_args=[token, action_t],
-            args=[proposer_address.bcs_serialize(), bcs.serialize(
+            args=[bcs.serialize(proposer_address, starcoin_types.AccountAddress), bcs.serialize(
                 proposal_id, st.uint64), bcs.serialize(agree, st.bool), bcs.serialize(votes, st.uint128)],
+        )
+    )
+
+
+def encode_convert_TwoPhaseUpgrade_to_TwoPhaseUpgradeV2_script_function(package_address: AccountAddress) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("PackageTxnManager")),
+            function=Identifier(
+                "convert_TwoPhaseUpgrade_to_TwoPhaseUpgradeV2"),
+            ty_args=[],
+            args=[bcs.serialize(
+                package_address, starcoin_types.AccountAddress)],
         )
     )
 
@@ -437,7 +472,7 @@ def encode_create_account_with_initial_amount_script_function(token_type: TypeTa
                 "00000000000000000000000000000001"), name=Identifier("Account")),
             function=Identifier("create_account_with_initial_amount"),
             ty_args=[token_type],
-            args=[fresh_address.bcs_serialize(), bcs.serialize(
+            args=[bcs.serialize(fresh_address, starcoin_types.AccountAddress), bcs.serialize(
                 auth_key, bytes), bcs.serialize(initial_amount, st.uint128)],
         )
     )
@@ -452,8 +487,8 @@ def encode_destroy_terminated_proposal_script_function(token_t: TypeTag, action_
                 "00000000000000000000000000000001"), name=Identifier("Dao")),
             function=Identifier("destroy_terminated_proposal"),
             ty_args=[token_t, action_t],
-            args=[proposer_address.bcs_serialize(
-            ), bcs.serialize(proposal_id, st.uint64)],
+            args=[bcs.serialize(proposer_address, starcoin_types.AccountAddress), bcs.serialize(
+                proposal_id, st.uint64)],
         )
     )
 
@@ -481,8 +516,8 @@ def encode_execute_script_function(token_t: TypeTag, proposer_address: AccountAd
                 "00000000000000000000000000000001"), name=Identifier("ModifyDaoConfigProposal")),
             function=Identifier("execute"),
             ty_args=[token_t],
-            args=[proposer_address.bcs_serialize(
-            ), bcs.serialize(proposal_id, st.uint64)],
+            args=[bcs.serialize(proposer_address, starcoin_types.AccountAddress), bcs.serialize(
+                proposal_id, st.uint64)],
         )
     )
 
@@ -525,7 +560,7 @@ def encode_mint_and_split_by_linear_key_script_function(token: TypeTag, for_addr
                 "00000000000000000000000000000001"), name=Identifier("MintScripts")),
             function=Identifier("mint_and_split_by_linear_key"),
             ty_args=[token],
-            args=[for_address.bcs_serialize(), bcs.serialize(
+            args=[bcs.serialize(for_address, starcoin_types.AccountAddress), bcs.serialize(
                 amount, st.uint128), bcs.serialize(lock_period, st.uint64)],
         )
     )
@@ -568,7 +603,7 @@ def encode_peer_to_peer_script_function(token_type: TypeTag, payee: AccountAddre
                 "00000000000000000000000000000001"), name=Identifier("TransferScripts")),
             function=Identifier("peer_to_peer"),
             ty_args=[token_type],
-            args=[payee.bcs_serialize(), bcs.serialize(
+            args=[bcs.serialize(payee, starcoin_types.AccountAddress), bcs.serialize(
                 payee_auth_key, bytes), bcs.serialize(amount, st.uint128)],
         )
     )
@@ -598,8 +633,8 @@ def encode_peer_to_peer_with_metadata_script_function(token_type: TypeTag, payee
                 "00000000000000000000000000000001"), name=Identifier("TransferScripts")),
             function=Identifier("peer_to_peer_with_metadata"),
             ty_args=[token_type],
-            args=[payee.bcs_serialize(), bcs.serialize(payee_auth_key, bytes), bcs.serialize(
-                amount, st.uint128), bcs.serialize(metadata, bytes)],
+            args=[bcs.serialize(payee, starcoin_types.AccountAddress), bcs.serialize(
+                payee_auth_key, bytes), bcs.serialize(amount, st.uint128), bcs.serialize(metadata, bytes)],
         )
     )
 
@@ -619,7 +654,7 @@ def encode_propose_script_function(token_t: TypeTag, voting_delay: st.uint64, vo
     )
 
 
-def encode_propose_module_upgrade_script_function(token: TypeTag, module_address: AccountAddress, package_hash: bytes, version: st.uint64, exec_delay: st.uint64) -> TransactionPayload:
+def encode_propose_module_upgrade_script_function(token: TypeTag, _module_address: AccountAddress, _package_hash: bytes, _version: st.uint64, _exec_delay: st.uint64) -> TransactionPayload:
     """.
     """
     return TransactionPayload__ScriptFunction(
@@ -628,8 +663,23 @@ def encode_propose_module_upgrade_script_function(token: TypeTag, module_address
                 "00000000000000000000000000000001"), name=Identifier("ModuleUpgradeScripts")),
             function=Identifier("propose_module_upgrade"),
             ty_args=[token],
-            args=[module_address.bcs_serialize(), bcs.serialize(package_hash, bytes), bcs.serialize(
-                version, st.uint64), bcs.serialize(exec_delay, st.uint64)],
+            args=[bcs.serialize(_module_address, starcoin_types.AccountAddress), bcs.serialize(
+                _package_hash, bytes), bcs.serialize(_version, st.uint64), bcs.serialize(_exec_delay, st.uint64)],
+        )
+    )
+
+
+def encode_propose_module_upgrade_v2_script_function(token: TypeTag, module_address: AccountAddress, package_hash: bytes, version: st.uint64, exec_delay: st.uint64, enforced: bool) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("ModuleUpgradeScripts")),
+            function=Identifier("propose_module_upgrade_v2"),
+            ty_args=[token],
+            args=[bcs.serialize(module_address, starcoin_types.AccountAddress), bcs.serialize(package_hash, bytes), bcs.serialize(
+                version, st.uint64), bcs.serialize(exec_delay, st.uint64), bcs.serialize(enforced, st.bool)],
         )
     )
 
@@ -718,8 +768,8 @@ def encode_queue_proposal_action_script_function(token_t: TypeTag, action_t: Typ
                 "00000000000000000000000000000001"), name=Identifier("Dao")),
             function=Identifier("queue_proposal_action"),
             ty_args=[token_t, action_t],
-            args=[proposer_address.bcs_serialize(
-            ), bcs.serialize(proposal_id, st.uint64)],
+            args=[bcs.serialize(proposer_address, starcoin_types.AccountAddress), bcs.serialize(
+                proposal_id, st.uint64)],
         )
     )
 
@@ -733,8 +783,8 @@ def encode_revoke_vote_script_function(token: TypeTag, action: TypeTag, proposer
                 "00000000000000000000000000000001"), name=Identifier("DaoVoteScripts")),
             function=Identifier("revoke_vote"),
             ty_args=[token, action],
-            args=[proposer_address.bcs_serialize(
-            ), bcs.serialize(proposal_id, st.uint64)],
+            args=[bcs.serialize(proposer_address, starcoin_types.AccountAddress), bcs.serialize(
+                proposal_id, st.uint64)],
         )
     )
 
@@ -762,7 +812,7 @@ def encode_split_fixed_key_script_function(token: TypeTag, for_address: AccountA
                 "00000000000000000000000000000001"), name=Identifier("MintScripts")),
             function=Identifier("split_fixed_key"),
             ty_args=[token],
-            args=[for_address.bcs_serialize(), bcs.serialize(
+            args=[bcs.serialize(for_address, starcoin_types.AccountAddress), bcs.serialize(
                 amount, st.uint128), bcs.serialize(lock_period, st.uint64)],
         )
     )
@@ -777,8 +827,8 @@ def encode_submit_module_upgrade_plan_script_function(token: TypeTag, proposer_a
                 "00000000000000000000000000000001"), name=Identifier("ModuleUpgradeScripts")),
             function=Identifier("submit_module_upgrade_plan"),
             ty_args=[token],
-            args=[proposer_address.bcs_serialize(
-            ), bcs.serialize(proposal_id, st.uint64)],
+            args=[bcs.serialize(proposer_address, starcoin_types.AccountAddress), bcs.serialize(
+                proposal_id, st.uint64)],
         )
     )
 
@@ -792,7 +842,7 @@ def encode_take_offer_script_function(offered: TypeTag, offer_address: AccountAd
                 "00000000000000000000000000000001"), name=Identifier("Offer")),
             function=Identifier("take_offer"),
             ty_args=[offered],
-            args=[offer_address.bcs_serialize()],
+            args=[bcs.serialize(offer_address, starcoin_types.AccountAddress)],
         )
     )
 
@@ -806,8 +856,8 @@ def encode_unstake_vote_script_function(token: TypeTag, action: TypeTag, propose
                 "00000000000000000000000000000001"), name=Identifier("DaoVoteScripts")),
             function=Identifier("unstake_vote"),
             ty_args=[token, action],
-            args=[proposer_address.bcs_serialize(
-            ), bcs.serialize(proposal_id, st.uint64)],
+            args=[bcs.serialize(proposer_address, starcoin_types.AccountAddress), bcs.serialize(
+                proposal_id, st.uint64)],
         )
     )
 
@@ -847,10 +897,20 @@ def decode_cast_vote_script_function(script: TransactionPayload) -> ScriptFuncti
     return ScriptFunctionCall__CastVote(
         token=script.ty_args[0],
         action_t=script.ty_args[1],
-        proposer_address=decode_address_argument(script.args[0]),
-        proposal_id=decode_u64_argument(script.args[1]),
-        agree=decode_bool_argument(script.args[2]),
-        votes=decode_u128_argument(script.args[3]),
+        proposer_address=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
+        proposal_id=bcs.deserialize(script.args[1], st.uint64),
+        agree=bcs.deserialize(script.args[2], bool),
+        votes=bcs.deserialize(script.args[3], st.uint128),
+    )
+
+
+def decode_convert_TwoPhaseUpgrade_to_TwoPhaseUpgradeV2_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__ConvertTwoPhaseUpgradeToTwoPhaseUpgradeV2(
+        package_address=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
     )
 
 
@@ -859,9 +919,10 @@ def decode_create_account_with_initial_amount_script_function(script: Transactio
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__CreateAccountWithInitialAmount(
         token_type=script.ty_args[0],
-        fresh_address=decode_address_argument(script.args[0]),
-        auth_key=decode_u8vector_argument(script.args[1]),
-        initial_amount=decode_u128_argument(script.args[2]),
+        fresh_address=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
+        auth_key=bcs.deserialize(script.args[1], bytes),
+        initial_amount=bcs.deserialize(script.args[2], st.uint128),
     )
 
 
@@ -871,8 +932,9 @@ def decode_destroy_terminated_proposal_script_function(script: TransactionPayloa
     return ScriptFunctionCall__DestroyTerminatedProposal(
         token_t=script.ty_args[0],
         action_t=script.ty_args[1],
-        proposer_address=decode_address_argument(script.args[0]),
-        proposal_id=decode_u64_argument(script.args[1]),
+        proposer_address=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
+        proposal_id=bcs.deserialize(script.args[1], st.uint64),
     )
 
 
@@ -888,8 +950,9 @@ def decode_execute_script_function(script: TransactionPayload) -> ScriptFunction
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__Execute(
         token_t=script.ty_args[0],
-        proposer_address=decode_address_argument(script.args[0]),
-        proposal_id=decode_u64_argument(script.args[1]),
+        proposer_address=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
+        proposal_id=bcs.deserialize(script.args[1], st.uint64),
     )
 
 
@@ -898,7 +961,7 @@ def decode_execute_on_chain_config_proposal_script_function(script: TransactionP
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__ExecuteOnChainConfigProposal(
         config_t=script.ty_args[0],
-        proposal_id=decode_u64_argument(script.args[0]),
+        proposal_id=bcs.deserialize(script.args[0], st.uint64),
     )
 
 
@@ -906,47 +969,53 @@ def decode_initialize_script_function(script: TransactionPayload) -> ScriptFunct
     if not isinstance(script, ScriptFunction):
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__Initialize(
-        stdlib_version=decode_u64_argument(script.args[0]),
-        reward_delay=decode_u64_argument(script.args[1]),
-        pre_mine_amount=decode_u128_argument(script.args[2]),
-        time_mint_amount=decode_u128_argument(script.args[3]),
-        time_mint_period=decode_u64_argument(script.args[4]),
-        parent_hash=decode_u8vector_argument(script.args[5]),
-        association_auth_key=decode_u8vector_argument(script.args[6]),
-        genesis_auth_key=decode_u8vector_argument(script.args[7]),
-        chain_id=decode_u8_argument(script.args[8]),
-        genesis_timestamp=decode_u64_argument(script.args[9]),
-        uncle_rate_target=decode_u64_argument(script.args[10]),
-        epoch_block_count=decode_u64_argument(script.args[11]),
-        base_block_time_target=decode_u64_argument(script.args[12]),
-        base_block_difficulty_window=decode_u64_argument(script.args[13]),
-        base_reward_per_block=decode_u128_argument(script.args[14]),
-        base_reward_per_uncle_percent=decode_u64_argument(script.args[15]),
-        min_block_time_target=decode_u64_argument(script.args[16]),
-        max_block_time_target=decode_u64_argument(script.args[17]),
-        base_max_uncles_per_block=decode_u64_argument(script.args[18]),
-        base_block_gas_limit=decode_u64_argument(script.args[19]),
-        strategy=decode_u8_argument(script.args[20]),
-        script_allowed=decode_bool_argument(script.args[21]),
-        module_publishing_allowed=decode_bool_argument(script.args[22]),
-        instruction_schedule=decode_u8vector_argument(script.args[23]),
-        native_schedule=decode_u8vector_argument(script.args[24]),
-        global_memory_per_byte_cost=decode_u64_argument(script.args[25]),
-        global_memory_per_byte_write_cost=decode_u64_argument(script.args[26]),
-        min_transaction_gas_units=decode_u64_argument(script.args[27]),
-        large_transaction_cutoff=decode_u64_argument(script.args[28]),
-        instrinsic_gas_per_byte=decode_u64_argument(script.args[29]),
-        maximum_number_of_gas_units=decode_u64_argument(script.args[30]),
-        min_price_per_gas_unit=decode_u64_argument(script.args[31]),
-        max_price_per_gas_unit=decode_u64_argument(script.args[32]),
-        max_transaction_size_in_bytes=decode_u64_argument(script.args[33]),
-        gas_unit_scaling_factor=decode_u64_argument(script.args[34]),
-        default_account_size=decode_u64_argument(script.args[35]),
-        voting_delay=decode_u64_argument(script.args[36]),
-        voting_period=decode_u64_argument(script.args[37]),
-        voting_quorum_rate=decode_u8_argument(script.args[38]),
-        min_action_delay=decode_u64_argument(script.args[39]),
-        transaction_timeout=decode_u64_argument(script.args[40]),
+        stdlib_version=bcs.deserialize(script.args[0], st.uint64),
+        reward_delay=bcs.deserialize(script.args[1], st.uint64),
+        pre_mine_amount=bcs.deserialize(script.args[2], st.uint128),
+        time_mint_amount=bcs.deserialize(script.args[3], st.uint128),
+        time_mint_period=bcs.deserialize(script.args[4], st.uint64),
+        parent_hash=bcs.deserialize(script.args[5], bytes),
+        association_auth_key=bcs.deserialize(script.args[6], bytes),
+        genesis_auth_key=bcs.deserialize(script.args[7], bytes),
+        chain_id=bcs.deserialize(script.args[8], st.uint8),
+        genesis_timestamp=bcs.deserialize(script.args[9], st.uint64),
+        uncle_rate_target=bcs.deserialize(script.args[10], st.uint64),
+        epoch_block_count=bcs.deserialize(script.args[11], st.uint64),
+        base_block_time_target=bcs.deserialize(script.args[12], st.uint64),
+        base_block_difficulty_window=bcs.deserialize(
+            script.args[13], st.uint64),
+        base_reward_per_block=bcs.deserialize(script.args[14], st.uint128),
+        base_reward_per_uncle_percent=bcs.deserialize(
+            script.args[15], st.uint64),
+        min_block_time_target=bcs.deserialize(script.args[16], st.uint64),
+        max_block_time_target=bcs.deserialize(script.args[17], st.uint64),
+        base_max_uncles_per_block=bcs.deserialize(script.args[18], st.uint64),
+        base_block_gas_limit=bcs.deserialize(script.args[19], st.uint64),
+        strategy=bcs.deserialize(script.args[20], st.uint8),
+        script_allowed=bcs.deserialize(script.args[21], bool),
+        module_publishing_allowed=bcs.deserialize(script.args[22], bool),
+        instruction_schedule=bcs.deserialize(script.args[23], bytes),
+        native_schedule=bcs.deserialize(script.args[24], bytes),
+        global_memory_per_byte_cost=bcs.deserialize(
+            script.args[25], st.uint64),
+        global_memory_per_byte_write_cost=bcs.deserialize(
+            script.args[26], st.uint64),
+        min_transaction_gas_units=bcs.deserialize(script.args[27], st.uint64),
+        large_transaction_cutoff=bcs.deserialize(script.args[28], st.uint64),
+        instrinsic_gas_per_byte=bcs.deserialize(script.args[29], st.uint64),
+        maximum_number_of_gas_units=bcs.deserialize(
+            script.args[30], st.uint64),
+        min_price_per_gas_unit=bcs.deserialize(script.args[31], st.uint64),
+        max_price_per_gas_unit=bcs.deserialize(script.args[32], st.uint64),
+        max_transaction_size_in_bytes=bcs.deserialize(
+            script.args[33], st.uint64),
+        gas_unit_scaling_factor=bcs.deserialize(script.args[34], st.uint64),
+        default_account_size=bcs.deserialize(script.args[35], st.uint64),
+        voting_delay=bcs.deserialize(script.args[36], st.uint64),
+        voting_period=bcs.deserialize(script.args[37], st.uint64),
+        voting_quorum_rate=bcs.deserialize(script.args[38], st.uint8),
+        min_action_delay=bcs.deserialize(script.args[39], st.uint64),
+        transaction_timeout=bcs.deserialize(script.args[40], st.uint64),
     )
 
 
@@ -955,9 +1024,10 @@ def decode_mint_and_split_by_linear_key_script_function(script: TransactionPaylo
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__MintAndSplitByLinearKey(
         token=script.ty_args[0],
-        for_address=decode_address_argument(script.args[0]),
-        amount=decode_u128_argument(script.args[1]),
-        lock_period=decode_u64_argument(script.args[2]),
+        for_address=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
+        amount=bcs.deserialize(script.args[1], st.uint128),
+        lock_period=bcs.deserialize(script.args[2], st.uint64),
     )
 
 
@@ -982,9 +1052,9 @@ def decode_peer_to_peer_script_function(script: TransactionPayload) -> ScriptFun
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__PeerToPeer(
         token_type=script.ty_args[0],
-        payee=decode_address_argument(script.args[0]),
-        payee_auth_key=decode_u8vector_argument(script.args[1]),
-        amount=decode_u128_argument(script.args[2]),
+        payee=bcs.deserialize(script.args[0], starcoin_types.AccountAddress),
+        payee_auth_key=bcs.deserialize(script.args[1], bytes),
+        amount=bcs.deserialize(script.args[2], st.uint128),
     )
 
 
@@ -993,9 +1063,9 @@ def decode_peer_to_peer_batch_script_function(script: TransactionPayload) -> Scr
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__PeerToPeerBatch(
         token_type=script.ty_args[0],
-        payeees=decode_u8vector_argument(script.args[0]),
-        payee_auth_keys=decode_u8vector_argument(script.args[1]),
-        amount=decode_u128_argument(script.args[2]),
+        payeees=bcs.deserialize(script.args[0], bytes),
+        payee_auth_keys=bcs.deserialize(script.args[1], bytes),
+        amount=bcs.deserialize(script.args[2], st.uint128),
     )
 
 
@@ -1004,10 +1074,10 @@ def decode_peer_to_peer_with_metadata_script_function(script: TransactionPayload
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__PeerToPeerWithMetadata(
         token_type=script.ty_args[0],
-        payee=decode_address_argument(script.args[0]),
-        payee_auth_key=decode_u8vector_argument(script.args[1]),
-        amount=decode_u128_argument(script.args[2]),
-        metadata=decode_u8vector_argument(script.args[3]),
+        payee=bcs.deserialize(script.args[0], starcoin_types.AccountAddress),
+        payee_auth_key=bcs.deserialize(script.args[1], bytes),
+        amount=bcs.deserialize(script.args[2], st.uint128),
+        metadata=bcs.deserialize(script.args[3], bytes),
     )
 
 
@@ -1016,11 +1086,11 @@ def decode_propose_script_function(script: TransactionPayload) -> ScriptFunction
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__Propose(
         token_t=script.ty_args[0],
-        voting_delay=decode_u64_argument(script.args[0]),
-        voting_period=decode_u64_argument(script.args[1]),
-        voting_quorum_rate=decode_u8_argument(script.args[2]),
-        min_action_delay=decode_u64_argument(script.args[3]),
-        exec_delay=decode_u64_argument(script.args[4]),
+        voting_delay=bcs.deserialize(script.args[0], st.uint64),
+        voting_period=bcs.deserialize(script.args[1], st.uint64),
+        voting_quorum_rate=bcs.deserialize(script.args[2], st.uint8),
+        min_action_delay=bcs.deserialize(script.args[3], st.uint64),
+        exec_delay=bcs.deserialize(script.args[4], st.uint64),
     )
 
 
@@ -1029,10 +1099,25 @@ def decode_propose_module_upgrade_script_function(script: TransactionPayload) ->
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__ProposeModuleUpgrade(
         token=script.ty_args[0],
-        module_address=decode_address_argument(script.args[0]),
-        package_hash=decode_u8vector_argument(script.args[1]),
-        version=decode_u64_argument(script.args[2]),
-        exec_delay=decode_u64_argument(script.args[3]),
+        _module_address=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
+        _package_hash=bcs.deserialize(script.args[1], bytes),
+        _version=bcs.deserialize(script.args[2], st.uint64),
+        _exec_delay=bcs.deserialize(script.args[3], st.uint64),
+    )
+
+
+def decode_propose_module_upgrade_v2_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__ProposeModuleUpgradeV2(
+        token=script.ty_args[0],
+        module_address=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
+        package_hash=bcs.deserialize(script.args[1], bytes),
+        version=bcs.deserialize(script.args[2], st.uint64),
+        exec_delay=bcs.deserialize(script.args[3], st.uint64),
+        enforced=bcs.deserialize(script.args[4], bool),
     )
 
 
@@ -1040,18 +1125,20 @@ def decode_propose_update_consensus_config_script_function(script: TransactionPa
     if not isinstance(script, ScriptFunction):
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__ProposeUpdateConsensusConfig(
-        uncle_rate_target=decode_u64_argument(script.args[0]),
-        base_block_time_target=decode_u64_argument(script.args[1]),
-        base_reward_per_block=decode_u128_argument(script.args[2]),
-        base_reward_per_uncle_percent=decode_u64_argument(script.args[3]),
-        epoch_block_count=decode_u64_argument(script.args[4]),
-        base_block_difficulty_window=decode_u64_argument(script.args[5]),
-        min_block_time_target=decode_u64_argument(script.args[6]),
-        max_block_time_target=decode_u64_argument(script.args[7]),
-        base_max_uncles_per_block=decode_u64_argument(script.args[8]),
-        base_block_gas_limit=decode_u64_argument(script.args[9]),
-        strategy=decode_u8_argument(script.args[10]),
-        exec_delay=decode_u64_argument(script.args[11]),
+        uncle_rate_target=bcs.deserialize(script.args[0], st.uint64),
+        base_block_time_target=bcs.deserialize(script.args[1], st.uint64),
+        base_reward_per_block=bcs.deserialize(script.args[2], st.uint128),
+        base_reward_per_uncle_percent=bcs.deserialize(
+            script.args[3], st.uint64),
+        epoch_block_count=bcs.deserialize(script.args[4], st.uint64),
+        base_block_difficulty_window=bcs.deserialize(
+            script.args[5], st.uint64),
+        min_block_time_target=bcs.deserialize(script.args[6], st.uint64),
+        max_block_time_target=bcs.deserialize(script.args[7], st.uint64),
+        base_max_uncles_per_block=bcs.deserialize(script.args[8], st.uint64),
+        base_block_gas_limit=bcs.deserialize(script.args[9], st.uint64),
+        strategy=bcs.deserialize(script.args[10], st.uint8),
+        exec_delay=bcs.deserialize(script.args[11], st.uint64),
     )
 
 
@@ -1059,8 +1146,8 @@ def decode_propose_update_reward_config_script_function(script: TransactionPaylo
     if not isinstance(script, ScriptFunction):
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__ProposeUpdateRewardConfig(
-        reward_delay=decode_u64_argument(script.args[0]),
-        exec_delay=decode_u64_argument(script.args[1]),
+        reward_delay=bcs.deserialize(script.args[0], st.uint64),
+        exec_delay=bcs.deserialize(script.args[1], st.uint64),
     )
 
 
@@ -1068,9 +1155,9 @@ def decode_propose_update_txn_publish_option_script_function(script: Transaction
     if not isinstance(script, ScriptFunction):
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__ProposeUpdateTxnPublishOption(
-        script_allowed=decode_bool_argument(script.args[0]),
-        module_publishing_allowed=decode_bool_argument(script.args[1]),
-        exec_delay=decode_u64_argument(script.args[2]),
+        script_allowed=bcs.deserialize(script.args[0], bool),
+        module_publishing_allowed=bcs.deserialize(script.args[1], bool),
+        exec_delay=bcs.deserialize(script.args[2], st.uint64),
     )
 
 
@@ -1078,8 +1165,8 @@ def decode_propose_update_txn_timeout_config_script_function(script: Transaction
     if not isinstance(script, ScriptFunction):
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__ProposeUpdateTxnTimeoutConfig(
-        duration_seconds=decode_u64_argument(script.args[0]),
-        exec_delay=decode_u64_argument(script.args[1]),
+        duration_seconds=bcs.deserialize(script.args[0], st.uint64),
+        exec_delay=bcs.deserialize(script.args[1], st.uint64),
     )
 
 
@@ -1087,20 +1174,22 @@ def decode_propose_update_vm_config_script_function(script: TransactionPayload) 
     if not isinstance(script, ScriptFunction):
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__ProposeUpdateVmConfig(
-        instruction_schedule=decode_u8vector_argument(script.args[0]),
-        native_schedule=decode_u8vector_argument(script.args[1]),
-        global_memory_per_byte_cost=decode_u64_argument(script.args[2]),
-        global_memory_per_byte_write_cost=decode_u64_argument(script.args[3]),
-        min_transaction_gas_units=decode_u64_argument(script.args[4]),
-        large_transaction_cutoff=decode_u64_argument(script.args[5]),
-        instrinsic_gas_per_byte=decode_u64_argument(script.args[6]),
-        maximum_number_of_gas_units=decode_u64_argument(script.args[7]),
-        min_price_per_gas_unit=decode_u64_argument(script.args[8]),
-        max_price_per_gas_unit=decode_u64_argument(script.args[9]),
-        max_transaction_size_in_bytes=decode_u64_argument(script.args[10]),
-        gas_unit_scaling_factor=decode_u64_argument(script.args[11]),
-        default_account_size=decode_u64_argument(script.args[12]),
-        exec_delay=decode_u64_argument(script.args[13]),
+        instruction_schedule=bcs.deserialize(script.args[0], bytes),
+        native_schedule=bcs.deserialize(script.args[1], bytes),
+        global_memory_per_byte_cost=bcs.deserialize(script.args[2], st.uint64),
+        global_memory_per_byte_write_cost=bcs.deserialize(
+            script.args[3], st.uint64),
+        min_transaction_gas_units=bcs.deserialize(script.args[4], st.uint64),
+        large_transaction_cutoff=bcs.deserialize(script.args[5], st.uint64),
+        instrinsic_gas_per_byte=bcs.deserialize(script.args[6], st.uint64),
+        maximum_number_of_gas_units=bcs.deserialize(script.args[7], st.uint64),
+        min_price_per_gas_unit=bcs.deserialize(script.args[8], st.uint64),
+        max_price_per_gas_unit=bcs.deserialize(script.args[9], st.uint64),
+        max_transaction_size_in_bytes=bcs.deserialize(
+            script.args[10], st.uint64),
+        gas_unit_scaling_factor=bcs.deserialize(script.args[11], st.uint64),
+        default_account_size=bcs.deserialize(script.args[12], st.uint64),
+        exec_delay=bcs.deserialize(script.args[13], st.uint64),
     )
 
 
@@ -1110,8 +1199,9 @@ def decode_queue_proposal_action_script_function(script: TransactionPayload) -> 
     return ScriptFunctionCall__QueueProposalAction(
         token_t=script.ty_args[0],
         action_t=script.ty_args[1],
-        proposer_address=decode_address_argument(script.args[0]),
-        proposal_id=decode_u64_argument(script.args[1]),
+        proposer_address=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
+        proposal_id=bcs.deserialize(script.args[1], st.uint64),
     )
 
 
@@ -1121,8 +1211,9 @@ def decode_revoke_vote_script_function(script: TransactionPayload) -> ScriptFunc
     return ScriptFunctionCall__RevokeVote(
         token=script.ty_args[0],
         action=script.ty_args[1],
-        proposer_address=decode_address_argument(script.args[0]),
-        proposal_id=decode_u64_argument(script.args[1]),
+        proposer_address=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
+        proposal_id=bcs.deserialize(script.args[1], st.uint64),
     )
 
 
@@ -1130,7 +1221,7 @@ def decode_rotate_authentication_key_script_function(script: TransactionPayload)
     if not isinstance(script, ScriptFunction):
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__RotateAuthenticationKey(
-        new_key=decode_u8vector_argument(script.args[0]),
+        new_key=bcs.deserialize(script.args[0], bytes),
     )
 
 
@@ -1139,9 +1230,10 @@ def decode_split_fixed_key_script_function(script: TransactionPayload) -> Script
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__SplitFixedKey(
         token=script.ty_args[0],
-        for_address=decode_address_argument(script.args[0]),
-        amount=decode_u128_argument(script.args[1]),
-        lock_period=decode_u64_argument(script.args[2]),
+        for_address=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
+        amount=bcs.deserialize(script.args[1], st.uint128),
+        lock_period=bcs.deserialize(script.args[2], st.uint64),
     )
 
 
@@ -1150,8 +1242,9 @@ def decode_submit_module_upgrade_plan_script_function(script: TransactionPayload
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__SubmitModuleUpgradePlan(
         token=script.ty_args[0],
-        proposer_address=decode_address_argument(script.args[0]),
-        proposal_id=decode_u64_argument(script.args[1]),
+        proposer_address=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
+        proposal_id=bcs.deserialize(script.args[1], st.uint64),
     )
 
 
@@ -1160,7 +1253,8 @@ def decode_take_offer_script_function(script: TransactionPayload) -> ScriptFunct
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__TakeOffer(
         offered=script.ty_args[0],
-        offer_address=decode_address_argument(script.args[0]),
+        offer_address=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
     )
 
 
@@ -1170,8 +1264,9 @@ def decode_unstake_vote_script_function(script: TransactionPayload) -> ScriptFun
     return ScriptFunctionCall__UnstakeVote(
         token=script.ty_args[0],
         action=script.ty_args[1],
-        proposer_address=decode_address_argument(script.args[0]),
-        proposal_id=decode_u64_argument(script.args[1]),
+        proposer_address=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
+        proposal_id=bcs.deserialize(script.args[1], st.uint64),
     )
 
 
@@ -1179,7 +1274,7 @@ def decode_update_module_upgrade_strategy_script_function(script: TransactionPay
     if not isinstance(script, ScriptFunction):
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__UpdateModuleUpgradeStrategy(
-        strategy=decode_u8_argument(script.args[0]),
+        strategy=bcs.deserialize(script.args[0], st.uint8),
     )
 
 
@@ -1193,6 +1288,7 @@ SCRIPT_FUNCTION_ENCODER_MAP: typing.Dict[typing.Type[ScriptFunctionCall], typing
     ScriptFunctionCall__AcceptToken: encode_accept_token_script_function,
     ScriptFunctionCall__CancelUpgradePlan: encode_cancel_upgrade_plan_script_function,
     ScriptFunctionCall__CastVote: encode_cast_vote_script_function,
+    ScriptFunctionCall__ConvertTwoPhaseUpgradeToTwoPhaseUpgradeV2: encode_convert_TwoPhaseUpgrade_to_TwoPhaseUpgradeV2_script_function,
     ScriptFunctionCall__CreateAccountWithInitialAmount: encode_create_account_with_initial_amount_script_function,
     ScriptFunctionCall__DestroyTerminatedProposal: encode_destroy_terminated_proposal_script_function,
     ScriptFunctionCall__EmptyScript: encode_empty_script_script_function,
@@ -1207,6 +1303,7 @@ SCRIPT_FUNCTION_ENCODER_MAP: typing.Dict[typing.Type[ScriptFunctionCall], typing
     ScriptFunctionCall__PeerToPeerWithMetadata: encode_peer_to_peer_with_metadata_script_function,
     ScriptFunctionCall__Propose: encode_propose_script_function,
     ScriptFunctionCall__ProposeModuleUpgrade: encode_propose_module_upgrade_script_function,
+    ScriptFunctionCall__ProposeModuleUpgradeV2: encode_propose_module_upgrade_v2_script_function,
     ScriptFunctionCall__ProposeUpdateConsensusConfig: encode_propose_update_consensus_config_script_function,
     ScriptFunctionCall__ProposeUpdateRewardConfig: encode_propose_update_reward_config_script_function,
     ScriptFunctionCall__ProposeUpdateTxnPublishOption: encode_propose_update_txn_publish_option_script_function,
@@ -1231,6 +1328,7 @@ SCRIPT_FUNCTION_DECODER_MAP: typing.Dict[str, typing.Callable[[TransactionPayloa
     "Accountaccept_token": decode_accept_token_script_function,
     "ModuleUpgradeScriptscancel_upgrade_plan": decode_cancel_upgrade_plan_script_function,
     "DaoVoteScriptscast_vote": decode_cast_vote_script_function,
+    "PackageTxnManagerconvert_TwoPhaseUpgrade_to_TwoPhaseUpgradeV2": decode_convert_TwoPhaseUpgrade_to_TwoPhaseUpgradeV2_script_function,
     "Accountcreate_account_with_initial_amount": decode_create_account_with_initial_amount_script_function,
     "Daodestroy_terminated_proposal": decode_destroy_terminated_proposal_script_function,
     "EmptyScriptsempty_script": decode_empty_script_script_function,
@@ -1245,6 +1343,7 @@ SCRIPT_FUNCTION_DECODER_MAP: typing.Dict[str, typing.Callable[[TransactionPayloa
     "TransferScriptspeer_to_peer_with_metadata": decode_peer_to_peer_with_metadata_script_function,
     "ModifyDaoConfigProposalpropose": decode_propose_script_function,
     "ModuleUpgradeScriptspropose_module_upgrade": decode_propose_module_upgrade_script_function,
+    "ModuleUpgradeScriptspropose_module_upgrade_v2": decode_propose_module_upgrade_v2_script_function,
     "OnChainConfigScriptspropose_update_consensus_config": decode_propose_update_consensus_config_script_function,
     "OnChainConfigScriptspropose_update_reward_config": decode_propose_update_reward_config_script_function,
     "OnChainConfigScriptspropose_update_txn_publish_option": decode_propose_update_txn_publish_option_script_function,
@@ -1259,39 +1358,3 @@ SCRIPT_FUNCTION_DECODER_MAP: typing.Dict[str, typing.Callable[[TransactionPayloa
     "DaoVoteScriptsunstake_vote": decode_unstake_vote_script_function,
     "ModuleUpgradeScriptsupdate_module_upgrade_strategy": decode_update_module_upgrade_strategy_script_function,
 }
-
-
-def decode_bool_argument(arg: TransactionArgument) -> bool:
-    if not isinstance(arg, TransactionArgument__Bool):
-        raise ValueError("Was expecting a Bool argument")
-    return arg.value
-
-
-def decode_u8_argument(arg: TransactionArgument) -> st.uint8:
-    if not isinstance(arg, TransactionArgument__U8):
-        raise ValueError("Was expecting a U8 argument")
-    return arg.value
-
-
-def decode_u64_argument(arg: TransactionArgument) -> st.uint64:
-    if not isinstance(arg, TransactionArgument__U64):
-        raise ValueError("Was expecting a U64 argument")
-    return arg.value
-
-
-def decode_u128_argument(arg: TransactionArgument) -> st.uint128:
-    if not isinstance(arg, TransactionArgument__U128):
-        raise ValueError("Was expecting a U128 argument")
-    return arg.value
-
-
-def decode_address_argument(arg: TransactionArgument) -> AccountAddress:
-    if not isinstance(arg, TransactionArgument__Address):
-        raise ValueError("Was expecting a Address argument")
-    return arg.value
-
-
-def decode_u8vector_argument(arg: TransactionArgument) -> bytes:
-    if not isinstance(arg, TransactionArgument__U8Vector):
-        raise ValueError("Was expecting a U8Vector argument")
-    return arg.value
