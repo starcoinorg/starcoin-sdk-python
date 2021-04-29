@@ -1033,3 +1033,20 @@ WriteSetPayload.VARIANTS = [
     WriteSetPayload__Direct,
     WriteSetPayload__Script,
 ]
+
+@dataclass
+class BlockRewardEvent:
+    block_number: st.uint64
+    block_reward: st.uint128
+    gas_fees: st.uint128
+    miner: "AccountAddress"
+
+    def bcs_serialize(self) -> bytes:
+        return bcs.serialize(self, BlockRewardEvent)
+
+    @staticmethod
+    def bcs_deserialize(input: bytes) -> 'BlockMetadata':
+        v, buffer = bcs.deserialize(input, BlockRewardEvent)
+        if buffer:
+            raise ValueError("Some input bytes were not read")
+        return v
