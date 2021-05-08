@@ -18,6 +18,10 @@ def transfer(cli: client.Client, sender: local_account.LocalAccount, payee: str,
         payee_auth_key=payee_auth_key,  # assert the payee address has been on chain
         amount=amount,
     )
+    node_info = cli.node_info()
+    now_seconds = int(node_info.get('now_seconds'))
+    # expired after 12 hours
+    expiration_timestamp_secs = now_seconds + 43200
     raw_txn = types.RawTransaction(
         sender=sender.account_address,
         sequence_number=seq_num,
@@ -25,7 +29,7 @@ def transfer(cli: client.Client, sender: local_account.LocalAccount, payee: str,
         max_gas_amount=10000000,
         gas_unit_price=1,
         gas_token_code="0x1::STC::STC",
-        expiration_timestamp_secs=int(time.time()) + 300,
+        expiration_timestamp_secs=expiration_timestamp_secs,
         chain_id=types.ChainId(st.uint8(251)),
     )
 
