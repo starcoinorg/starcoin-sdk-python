@@ -8,8 +8,8 @@ import typing
 from copy import copy
 from typing import get_type_hints
 
-import starcoin.serde_types as st
-import starcoin.serde_binary as sb
+from starcoin import serde_types as st
+from starcoin import serde_binary as sb
 
 MAX_LENGTH = (1 << 31) - 1
 MAX_U32 = (1 << 32) - 1

@@ -26,11 +26,11 @@ def transfer(cli: client.Client, sender: local_account.LocalAccount, payee: str,
         sender=sender.account_address,
         sequence_number=seq_num,
         payload=script,
-        max_gas_amount=1000000,
+        max_gas_amount=10000000,
         gas_unit_price=1,
         gas_token_code="0x1::STC::STC",
         expiration_timestamp_secs=expiration_timestamp_secs,
-        chain_id=types.ChainId(st.uint8(253)),
+        chain_id=types.ChainId(st.uint8(251)),
     )
 
     txn = sender.sign(raw_txn)
@@ -38,14 +38,14 @@ def transfer(cli: client.Client, sender: local_account.LocalAccount, payee: str,
 
 
 if __name__ == "__main__":
-    cli = client.Client("http://halley1.seed.starcoin.org:9850")
+    cli = client.Client("http://barnard1.seed.starcoin.org:9850")
     # sender
     private_key = Ed25519PrivateKey.from_private_bytes(bytes.fromhex(
-        "75e9bee7e0474926cb6cfd5d4eefea4d56a4c9fdc518c8425e53aac23059f4f6"))
+        "e424e16db235e3f3b9ef2475516c51d4c15aa5287ceb364213698bd551eab4f2"))
     sender = local_account.LocalAccount(private_key)
 
     # reciver
-    payee_public_key_hex = "cdf17852b92695569943b0681e3c23934c73d041eaee1190236840e70dc4a6e6"
+    payee_public_key_hex = "a1d2f3e34563ef6e63e0d01e91bd53e9d27da758b25b01771572c240cb4f3113"
     pk = Ed25519PublicKey.from_public_bytes(
         bytes.fromhex(payee_public_key_hex))
     payee_auth_key = auth_key.AuthKey.from_public_key(pk)

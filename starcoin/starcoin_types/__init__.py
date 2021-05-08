@@ -1,8 +1,23 @@
 # pyre-strict
 from dataclasses import dataclass
 import typing
-import starcoin.serde_types as st
+from starcoin import serde_types as st
 from starcoin import bcs
+
+
+@dataclass(frozen=True)
+class AcceptTokenEvent:
+    token_code: "TokenCode"
+
+    def bcs_serialize(self) -> bytes:
+        return bcs.serialize(self, AcceptTokenEvent)
+
+    @staticmethod
+    def bcs_deserialize(input: bytes) -> 'AcceptTokenEvent':
+        v, buffer = bcs.deserialize(input, AcceptTokenEvent)
+        if buffer:
+            raise st.DeserializationError("Some input bytes were not read")
+        return v
 
 
 @dataclass(frozen=True)
@@ -19,7 +34,7 @@ class AccessPath:
         if buffer:
             raise st.DeserializationError("Some input bytes were not read")
         return v
-
+    
 
 @dataclass(frozen=True)
 class AccountAddress:
@@ -40,7 +55,6 @@ class AccountAddress:
     def from_hex(addr: str) -> 'AccountAddress':
         """Create an account address from bytes."""
         return AccountAddress(tuple(st.uint8(x) for x in bytes.fromhex(addr)))
-
 
 @dataclass(frozen=True)
 class AccountResource:
@@ -93,6 +107,40 @@ class BlockMetadata:
     @staticmethod
     def bcs_deserialize(input: bytes) -> 'BlockMetadata':
         v, buffer = bcs.deserialize(input, BlockMetadata)
+        if buffer:
+            raise st.DeserializationError("Some input bytes were not read")
+        return v
+
+
+@dataclass(frozen=True)
+class BlockRewardEvent:
+    block_number: st.uint64
+    block_reward: st.uint128
+    gas_fees: st.uint128
+    miner: "AccountAddress"
+
+    def bcs_serialize(self) -> bytes:
+        return bcs.serialize(self, BlockRewardEvent)
+
+    @staticmethod
+    def bcs_deserialize(input: bytes) -> 'BlockRewardEvent':
+        v, buffer = bcs.deserialize(input, BlockRewardEvent)
+        if buffer:
+            raise st.DeserializationError("Some input bytes were not read")
+        return v
+
+
+@dataclass(frozen=True)
+class BurnEvent:
+    amount: st.uint128
+    token_code: "TokenCode"
+
+    def bcs_serialize(self) -> bytes:
+        return bcs.serialize(self, BurnEvent)
+
+    @staticmethod
+    def bcs_deserialize(input: bytes) -> 'BurnEvent':
+        v, buffer = bcs.deserialize(input, BurnEvent)
         if buffer:
             raise st.DeserializationError("Some input bytes were not read")
         return v
@@ -202,6 +250,23 @@ DataPath.VARIANTS = [
     DataPath__Code,
     DataPath__Resource,
 ]
+
+
+@dataclass(frozen=True)
+class DepositEvent:
+    amount: st.uint128
+    token_code: "TokenCode"
+    metadata: typing.Sequence[st.uint8]
+
+    def bcs_serialize(self) -> bytes:
+        return bcs.serialize(self, DepositEvent)
+
+    @staticmethod
+    def bcs_deserialize(input: bytes) -> 'DepositEvent':
+        v, buffer = bcs.deserialize(input, DepositEvent)
+        if buffer:
+            raise st.DeserializationError("Some input bytes were not read")
+        return v
 
 
 @dataclass(frozen=True)
@@ -463,6 +528,22 @@ Metadata.VARIANTS = [
 
 
 @dataclass(frozen=True)
+class MintEvent:
+    amount: st.uint128
+    token_code: "TokenCode"
+
+    def bcs_serialize(self) -> bytes:
+        return bcs.serialize(self, MintEvent)
+
+    @staticmethod
+    def bcs_deserialize(input: bytes) -> 'MintEvent':
+        v, buffer = bcs.deserialize(input, MintEvent)
+        if buffer:
+            raise st.DeserializationError("Some input bytes were not read")
+        return v
+
+
+@dataclass(frozen=True)
 class Module:
     code: bytes
 
@@ -524,6 +605,24 @@ class MultiEd25519Signature:
 
 
 @dataclass(frozen=True)
+class NewBlockEvent:
+    number: st.uint64
+    author: "AccountAddress"
+    timestamp: st.uint64
+    uncles: st.uint64
+
+    def bcs_serialize(self) -> bytes:
+        return bcs.serialize(self, NewBlockEvent)
+
+    @staticmethod
+    def bcs_deserialize(input: bytes) -> 'NewBlockEvent':
+        v, buffer = bcs.deserialize(input, NewBlockEvent)
+        if buffer:
+            raise st.DeserializationError("Some input bytes were not read")
+        return v
+
+
+@dataclass(frozen=True)
 class Package:
     package_address: "AccountAddress"
     modules: typing.Sequence["Module"]
@@ -535,6 +634,22 @@ class Package:
     @staticmethod
     def bcs_deserialize(input: bytes) -> 'Package':
         v, buffer = bcs.deserialize(input, Package)
+        if buffer:
+            raise st.DeserializationError("Some input bytes were not read")
+        return v
+
+
+@dataclass(frozen=True)
+class ProposalCreatedEvent:
+    proposal_id: st.uint64
+    proposer: "AccountAddress"
+
+    def bcs_serialize(self) -> bytes:
+        return bcs.serialize(self, ProposalCreatedEvent)
+
+    @staticmethod
+    def bcs_deserialize(input: bytes) -> 'ProposalCreatedEvent':
+        v, buffer = bcs.deserialize(input, ProposalCreatedEvent)
         if buffer:
             raise st.DeserializationError("Some input bytes were not read")
         return v
@@ -631,6 +746,23 @@ class StructTag:
         return v
 
 
+@dataclass(frozen=True)
+class TokenCode:
+    address: "AccountAddress"
+    module: str
+    name: str
+
+    def bcs_serialize(self) -> bytes:
+        return bcs.serialize(self, TokenCode)
+
+    @staticmethod
+    def bcs_deserialize(input: bytes) -> 'TokenCode':
+        v, buffer = bcs.deserialize(input, TokenCode)
+        if buffer:
+            raise st.DeserializationError("Some input bytes were not read")
+        return v
+
+
 class Transaction:
     VARIANTS = []  # type: typing.Sequence[typing.Type[Transaction]]
 
@@ -710,7 +842,7 @@ class TransactionArgument__U8Vector(TransactionArgument):
 @dataclass(frozen=True)
 class TransactionArgument__Bool(TransactionArgument):
     INDEX = 5  # type: int
-    value: st.bool
+    value: bool
 
 
 TransactionArgument.VARIANTS = [
@@ -926,6 +1058,25 @@ class UnstructuredBytesMetadata:
 
 
 @dataclass(frozen=True)
+class VoteChangedEvent:
+    proposal_id: st.uint64
+    proposer: "AccountAddress"
+    voter: "AccountAddress"
+    agree: bool
+    vote: st.uint128
+
+    def bcs_serialize(self) -> bytes:
+        return bcs.serialize(self, VoteChangedEvent)
+
+    @staticmethod
+    def bcs_deserialize(input: bytes) -> 'VoteChangedEvent':
+        v, buffer = bcs.deserialize(input, VoteChangedEvent)
+        if buffer:
+            raise st.DeserializationError("Some input bytes were not read")
+        return v
+
+
+@dataclass(frozen=True)
 class WithdrawCapabilityResource:
     account_address: "AccountAddress"
 
@@ -935,6 +1086,23 @@ class WithdrawCapabilityResource:
     @staticmethod
     def bcs_deserialize(input: bytes) -> 'WithdrawCapabilityResource':
         v, buffer = bcs.deserialize(input, WithdrawCapabilityResource)
+        if buffer:
+            raise st.DeserializationError("Some input bytes were not read")
+        return v
+
+
+@dataclass(frozen=True)
+class WithdrawEvent:
+    amount: st.uint128
+    token_code: "TokenCode"
+    metadata: typing.Sequence[st.uint8]
+
+    def bcs_serialize(self) -> bytes:
+        return bcs.serialize(self, WithdrawEvent)
+
+    @staticmethod
+    def bcs_deserialize(input: bytes) -> 'WithdrawEvent':
+        v, buffer = bcs.deserialize(input, WithdrawEvent)
         if buffer:
             raise st.DeserializationError("Some input bytes were not read")
         return v
