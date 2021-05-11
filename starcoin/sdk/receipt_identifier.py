@@ -30,5 +30,9 @@ class ReceiptIdentifier:
             return None
         address = AccountAddress.from_hex(
             bytearray(data[0:utils.ACCOUNT_ADDRESS_LEN]).hex())
-        auth_key = AuthKey(bytes(data[utils.ACCOUNT_ADDRESS_LEN:]))
+        if len(data) == utils.ACCOUNT_ADDRESS_LEN:
+            auth_key = None
+        else:
+            auth_key = AuthKey(bytes(data[utils.ACCOUNT_ADDRESS_LEN:]))
+
         return ReceiptIdentifier(address, auth_key)
