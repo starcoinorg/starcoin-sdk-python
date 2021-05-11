@@ -34,7 +34,7 @@ class AccessPath:
         if buffer:
             raise st.DeserializationError("Some input bytes were not read")
         return v
-    
+
 
 @dataclass(frozen=True)
 class AccountAddress:
@@ -55,6 +55,7 @@ class AccountAddress:
     def from_hex(addr: str) -> 'AccountAddress':
         """Create an account address from bytes."""
         return AccountAddress(tuple(st.uint8(x) for x in bytes.fromhex(addr)))
+
 
 @dataclass(frozen=True)
 class AccountResource:
