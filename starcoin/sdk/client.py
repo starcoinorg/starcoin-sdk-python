@@ -155,6 +155,33 @@ class Client():
             bytes(state))
         return account_resource
 
+    def get_block_reward(self, block_number: int):
+        u""" get block reward by blcok_number, block_number shoule less than header.block_number
+        return coin_reward, author, gas_fee
+        """
+        operation = {
+            u"rpc_method": u"chain.get_block_by_number",
+            u"params": [block_number+1],
+        }
+        state_root = self.execute(operation).get("header").get("state_root")
+        operation = {
+            u"rpc_method": u"state.get_account_state_set",
+            u"params": ["0x1", state_root],
+        }
+        state_set = self.execute(operation)
+        infos = state_set.get("resources").get(
+            "0x00000000000000000000000000000001::BlockReward::RewardQueue").get(
+                "value")[1][1].get("Vector")
+        for info in infos:
+            info = info.get("Struct").get("value")
+            if int(info[0][1].get("U64")) != block_number:
+                continue
+            reward = int(info[1][1].get("U128"))
+            author = info[2][1].get("Address")
+            gas_fee = int(info[3][1].get("Struct").get(
+                "value")[0][1].get("U128"))
+        return (reward, author, gas_fee)
+
 
 class RpcRequest():
     def __init__(self, url):
