@@ -1,7 +1,7 @@
 from starcoin.sdk import client
 from starcoin import starcoin_types
 from starcoin import starcoin_stdlib
-cli = client.Client("http://123.56.9.161:9850")
+cli = client.Client("http://barnard.seed.starcoin.org:9850")
 
 
 def test_apis():
@@ -23,4 +23,6 @@ def test_apis():
     payload = bytes.fromhex(payload[2:])
     payload = starcoin_types.TransactionPayload.bcs_deserialize(payload)
     script = starcoin_stdlib.decode_peer_to_peer_script_function(payload.value)
-    print(script)
+    event = cli.get_events_by_txn_hash("0xc48e82f3f836b7521ccc62d7a4ecd5a80dd4580da8ef75764d7329967c5b14cb")
+    e = event[0]["data"]
+
