@@ -182,15 +182,15 @@ class Client():
                 "value")[0][1].get("U128"))
         return (reward, author, gas_fee)
 
-    def get_events_by_txn_hash(self,txn_hash: str):
+    def get_events_by_txn_hash(self, txn_hash: str):
         operation = {
             "rpc_method": "chain.get_events_by_txn_hash",
             "params": [txn_hash],
         }
         ret = self.execute(operation)
         return ret
-        
-        
+
+
 class RpcRequest():
     def __init__(self, url):
         self.setting = {

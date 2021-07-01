@@ -321,7 +321,7 @@ class EventFilter:
 @dataclass(frozen=True)
 class EventHandle:
     count: st.uint64
-    key: "EventKey"
+    key: bytes
 
     def bcs_serialize(self) -> bytes:
         return bcs.serialize(self, EventHandle)
@@ -336,7 +336,8 @@ class EventHandle:
 
 @dataclass(frozen=True)
 class EventKey:
-    value: bytes
+    salt: st.uint64
+    address: AccountAddress
 
     def bcs_serialize(self) -> bytes:
         return bcs.serialize(self, EventKey)
