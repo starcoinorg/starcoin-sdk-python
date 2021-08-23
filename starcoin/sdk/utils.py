@@ -105,6 +105,21 @@ def currency_code(code: str) -> starcoin_types.TypeTag:
     raise TypeError(f"unknown currency code type: {code}")
 
 
+def currency_user_code(address: str, code: str) -> starcoin_types.TypeTag:
+    """converts currency code string to starcoin_types.TypeTag"""
+    if isinstance(code, str):
+        return starcoin_types.TypeTag__Struct(
+            value=starcoin_types.StructTag(
+                address=account_address(address),
+                module=starcoin_types.Identifier(code),
+                name=starcoin_types.Identifier(code),
+                type_params=[],
+            )
+        )
+
+    raise TypeError(f"unknown currency code type: {code}")
+
+
 def type_tag_to_str(code: starcoin_types.TypeTag) -> str:
     """converts currency code TypeTag into string"""
 
