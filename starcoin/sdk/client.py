@@ -92,11 +92,11 @@ class Client():
         }
         ret = self.execute(operation)
         return ret
-    
-    def get_txpool_pending_txn(self, txn_hash:str) -> dict:
+
+    def get_blocks_by_number(self, number: int, count: int) -> dict:
         operation = {
-            "rpc_method": "txpool.pending_txn",
-            "params": [txn_hash],
+            "rpc_method": "chain.get_blocks_by_number",
+            "params": [number, count],
         }
         ret = self.execute(operation)
         return ret
@@ -194,6 +194,26 @@ class Client():
         operation = {
             "rpc_method": "chain.get_events_by_txn_hash",
             "params": [txn_hash],
+        }
+        ret = self.execute(operation)
+        return ret
+
+    def get_txpool_pending_txn(self, txn_hash: str) -> dict:
+        operation = {
+            "rpc_method": "txpool.pending_txn",
+            "params": [txn_hash],
+        }
+        ret = self.execute(operation)
+        return ret
+
+    def contract_call(self, function_id: str, type_args: list, args: list):
+        operation = {
+            "rpc_method": "contract.call_v2",
+            "params": [{
+                "function_id": function_id,
+                "type_args": type_args,
+                "args": args,
+            }],
         }
         ret = self.execute(operation)
         return ret

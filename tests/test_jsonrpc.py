@@ -13,7 +13,7 @@ def test_apis():
         '0x00000000000000000000000000000001/1/0x00000000000000000000000000000001::Account::Account')
     auth_key = bytes(starcoin_types.AccountResource.bcs_deserialize(
         bytes(account_resource)).authentication_key).hex()
-    assert auth_key == "0000000000000000000000000000000000000000000000000000000000000000"
+    assert auth_key == "0000000000000000000000000000000000000000000000000000000000000001"
     assert isinstance(cli.get_account_sequence(
         "0x00000000000000000000000000000001"), int) is True
     assert cli.get_account_token(
@@ -28,7 +28,11 @@ def test_apis():
         "0xc48e82f3f836b7521ccc62d7a4ecd5a80dd4580da8ef75764d7329967c5b14cb")
     for event in events:
         event_key = event["event_key"][2:]
+        print(event_key)
         event_key = starcoin_types.EventKey.bcs_deserialize(
             bytes.fromhex(event_key))
         add = utils.account_address_hex(event_key.address)
         print(add)
+
+    print(cli.contract_call("0x07fa08a855753f0ff7292fdcbe871216::TokenSwapRouter::get_amount_out", [
+    ], ["200u128", "500u128", "600u128"]))
