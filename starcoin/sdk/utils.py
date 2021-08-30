@@ -177,7 +177,7 @@ def payload_bcs_decode(payload: str) -> typing.Union[starcoin_types.Script, star
     return payload
 
 
-def verify_signed_message(signed_message_hex: str):
+def verify_signed_message(signed_message_hex: str) -> starcoin_types.SignedMessage:
     if signed_message_hex.startswith("0x"):
         signed_message_hex = signed_message_hex[2:]
     signed_message_bytes = bytes.fromhex(signed_message_hex)
@@ -193,3 +193,4 @@ def verify_signed_message(signed_message_hex: str):
         ed.verify(signature, data)
     except Exception as e:
         raise InvalidSignedMessage(e)
+    return signed_message
