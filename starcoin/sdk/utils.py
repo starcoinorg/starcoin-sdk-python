@@ -27,6 +27,10 @@ class InvalidSubAddressError(Exception):
     pass
 
 
+class InvalidSignedMessage(Exception):
+    pass
+
+
 def hex_to_tuple(input: str) -> tuple:
     if input.startswith("0x"):
         input = input[2:]
@@ -171,3 +175,22 @@ def payload_bcs_decode(payload: str) -> typing.Union[starcoin_types.Script, star
     payload = starcoin_types.TransactionPayload.bcs_deserialize(
         bytes.fromhex(payload[2:])).value
     return payload
+
+
+def verify_signed_message(signed_message_hex: str) -> starcoin_types.SignedMessage:
+    if signed_message_hex.startswith("0x"):
+        signed_message_hex = signed_message_hex[2:]
+    signed_message_bytes = bytes.fromhex(signed_message_hex)
+
+    try:
+        signed_message = starcoin_types.SignedMessage.bcs_deserialize(
+            signed_message_bytes)
+        public_key = signed_message.authenticator.public_key.value
+        signature = signed_message.authenticator.signature.value
+        data = starcoin_hash_seed(b"SigningMessage") + \
+            signed_message.signing_message.bcs_serialize()
+        ed = ed25519.Ed25519PublicKey.from_public_bytes(public_key)
+        ed.verify(signature, data)
+    except Exception as e:
+        raise InvalidSignedMessage(e)
+    return signed_message
