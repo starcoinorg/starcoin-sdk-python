@@ -1,0 +1,6 @@
+from starcoin.sdk.utils import *
+
+
+def test_verify_signed_message():
+    msg_hex = "0xfb55e7e03e21d2a35ab062802557140c036162630020795f72c48f06d9e69924937bdeccb8f57b90f7982317e54a687faac0707816d040fb61b2dd81a494c3ec4fc0869499c10bd837b4a57f318daae5e5aa1d5882359471b9272b6ecf075a54b7a26620758b0761c375b18af0860012cbcd055f05be04fd"
+    verify_signed_message(msg_hex)
