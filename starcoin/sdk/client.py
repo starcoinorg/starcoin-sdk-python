@@ -163,6 +163,13 @@ class Client():
             bytes(state))
         return account_resource
 
+    def get_resource(self, addr: str, resource_type: str, option=None):
+        operation = {
+            "rpc_method": "state.get_resource",
+            "params": [addr, resource_type, option],
+        }
+        return self.execute(operation)
+
     def get_block_reward(self, block_number: int):
         u""" get block reward by blcok_number, block_number shoule less than header.block_number
         return coin_reward, author, gas_fee

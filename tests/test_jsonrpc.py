@@ -2,6 +2,7 @@ from starcoin.sdk import client
 from starcoin import starcoin_types
 from starcoin import starcoin_stdlib
 from starcoin.sdk import utils
+import json
 cli = client.Client("http://barnard.seed.starcoin.org:9850")
 
 
@@ -36,3 +37,6 @@ def test_apis():
 
     print(cli.contract_call("0x07fa08a855753f0ff7292fdcbe871216::TokenSwapRouter::get_amount_out", [
     ], ["200u128", "500u128", "600u128"]))
+
+    assert cli.get_resource("0xcf94727afcfad7dcc59ef494f0cc4229", "0xcf94727afcfad7dcc59ef494f0cc4229::Market::GoodsBasket", {
+                            "decode": True}).get("json") is not None
