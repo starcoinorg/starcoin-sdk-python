@@ -170,6 +170,21 @@ class Client():
         }
         return self.execute(operation)
 
+    def get_block_events(self, block_number: int, to_number: int, type_tags=None, option=None):
+        operation = {
+            u"rpc_method": u"chain.get_events",
+            u"params": [{"event_keys": [], "from_block": block_number, "limit": None, "to_block": to_number,"type_tags":type_tags}, option],
+        }
+        return self.execute(operation)
+    
+    def get_state_root_by_height(self, block_number: int):
+        operation = {
+            u"rpc_method": u"chain.get_block_by_number",
+            u"params": [block_number+1],
+        }
+        state_root = self.execute(operation).get("header").get("state_root")
+        return state_root
+
     def get_block_reward(self, block_number: int):
         u""" get block reward by blcok_number, block_number shoule less than header.block_number
         return coin_reward, author, gas_fee
