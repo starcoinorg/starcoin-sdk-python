@@ -170,17 +170,21 @@ class Client():
         }
         return self.execute(operation)
 
-    def get_block_events(self, block_number: int, to_number: int, type_tags=None, option=None):
+    def get_block_events(self, filter, option=None):
+        '''
+        filter: {'from_block':2, 'to_block':5, 'event_keys':[], 'addrs':[], 'type_tags':[], 'limit': None}
+        option: {'decode':true}
+        '''
         operation = {
             u"rpc_method": u"chain.get_events",
-            u"params": [{"event_keys": [], "from_block": block_number, "limit": None, "to_block": to_number,"type_tags":type_tags}, option],
+            u"params": [filter, option],
         }
         return self.execute(operation)
     
     def get_state_root_by_height(self, block_number: int):
         operation = {
             u"rpc_method": u"chain.get_block_by_number",
-            u"params": [block_number+1],
+            u"params": [block_number],
         }
         state_root = self.execute(operation).get("header").get("state_root")
         return state_root
