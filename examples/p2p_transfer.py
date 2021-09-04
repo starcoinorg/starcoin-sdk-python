@@ -13,10 +13,9 @@ def transfer(cli: client.Client, sender: local_account.LocalAccount, receipt: st
     seq_num = cli.get_account_sequence(
         "0x"+sender.account_address.bcs_serialize().hex())
     receipt = ReceiptIdentifier.decode(receipt)
-    script = stdlib.encode_peer_to_peer_script_function(
+    script = stdlib.encode_peer_to_peer_v2_script_function(
         token_type=utils.currency_code("STC"),
         payee=receipt.account_address,
-        payee_auth_key=receipt.auth_key.data if receipt.auth_key is not None else b"",
         amount=amount,
     )
     node_info = cli.node_info()

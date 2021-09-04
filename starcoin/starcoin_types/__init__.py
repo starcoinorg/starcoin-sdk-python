@@ -321,7 +321,7 @@ class EventFilter:
 @dataclass(frozen=True)
 class EventHandle:
     count: st.uint64
-    key: "EventKey"
+    key: bytes
 
     def bcs_serialize(self) -> bytes:
         return bcs.serialize(self, EventHandle)
@@ -336,7 +336,8 @@ class EventHandle:
 
 @dataclass(frozen=True)
 class EventKey:
-    value: bytes
+    salt: st.uint64
+    address: AccountAddress
 
     def bcs_serialize(self) -> bytes:
         return bcs.serialize(self, EventKey)
@@ -1202,3 +1203,36 @@ WriteSetPayload.VARIANTS = [
     WriteSetPayload__Direct,
     WriteSetPayload__Script,
 ]
+
+
+@dataclass(frozen=True)
+class SigningMessage:
+    value: bytes
+
+    def bcs_serialize(self) -> bytes:
+        return bcs.serialize(self, SigningMessage)
+
+    @staticmethod
+    def bcs_deserialize(input: bytes) -> 'SigningMessage':
+        v, buffer = bcs.deserialize(input, SigningMessage)
+        if buffer:
+            raise st.DeserializationError("Some input bytes were not read")
+        return v
+
+
+@dataclass(frozen=True)
+class SignedMessage:
+    account: AccountAddress
+    signing_message: SigningMessage
+    authenticator: TransactionAuthenticator
+    chain_id: ChainId
+
+    def bcs_serialize(self) -> bytes:
+        return bcs.serialize(self, SignedMessage)
+
+    @staticmethod
+    def bcs_deserialize(input: bytes) -> 'SignedMessage':
+        v, buffer = bcs.deserialize(input, SignedMessage)
+        if buffer:
+            raise st.DeserializationError("Some input bytes were not read")
+        return v

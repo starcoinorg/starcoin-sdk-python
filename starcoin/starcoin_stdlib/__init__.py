@@ -59,7 +59,16 @@ class ScriptFunctionCall__CreateAccountWithInitialAmount(ScriptFunctionCall):
     """
     token_type: starcoin_types.TypeTag
     fresh_address: starcoin_types.AccountAddress
-    auth_key: bytes
+    _auth_key: bytes
+    initial_amount: st.uint128
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__CreateAccountWithInitialAmountV2(ScriptFunctionCall):
+    """.
+    """
+    token_type: starcoin_types.TypeTag
+    fresh_address: starcoin_types.AccountAddress
     initial_amount: st.uint128
 
 
@@ -98,14 +107,23 @@ class ScriptFunctionCall__ExecuteOnChainConfigProposal(ScriptFunctionCall):
 
 
 @dataclass(frozen=True)
+class ScriptFunctionCall__ExecuteWithdrawProposal(ScriptFunctionCall):
+    """.
+    """
+    token_t: starcoin_types.TypeTag
+    proposer_address: starcoin_types.AccountAddress
+    proposal_id: st.uint64
+
+
+@dataclass(frozen=True)
 class ScriptFunctionCall__Initialize(ScriptFunctionCall):
     """.
     """
     stdlib_version: st.uint64
     reward_delay: st.uint64
-    pre_mine_amount: st.uint128
-    time_mint_amount: st.uint128
-    time_mint_period: st.uint64
+    pre_mine_stc_amount: st.uint128
+    time_mint_stc_amount: st.uint128
+    time_mint_stc_period: st.uint64
     parent_hash: bytes
     association_auth_key: bytes
     genesis_auth_key: bytes
@@ -145,27 +163,51 @@ class ScriptFunctionCall__Initialize(ScriptFunctionCall):
 
 
 @dataclass(frozen=True)
-class ScriptFunctionCall__MintAndSplitByLinearKey(ScriptFunctionCall):
+class ScriptFunctionCall__InitializeV2(ScriptFunctionCall):
     """.
     """
-    token: starcoin_types.TypeTag
-    for_address: starcoin_types.AccountAddress
-    amount: st.uint128
-    lock_period: st.uint64
-
-
-@dataclass(frozen=True)
-class ScriptFunctionCall__MintTokenByFixedKey(ScriptFunctionCall):
-    """.
-    """
-    token: starcoin_types.TypeTag
-
-
-@dataclass(frozen=True)
-class ScriptFunctionCall__MintTokenByLinearKey(ScriptFunctionCall):
-    """.
-    """
-    token: starcoin_types.TypeTag
+    stdlib_version: st.uint64
+    reward_delay: st.uint64
+    total_stc_amount: st.uint128
+    pre_mine_stc_amount: st.uint128
+    time_mint_stc_amount: st.uint128
+    time_mint_stc_period: st.uint64
+    parent_hash: bytes
+    association_auth_key: bytes
+    genesis_auth_key: bytes
+    chain_id: st.uint8
+    genesis_timestamp: st.uint64
+    uncle_rate_target: st.uint64
+    epoch_block_count: st.uint64
+    base_block_time_target: st.uint64
+    base_block_difficulty_window: st.uint64
+    base_reward_per_block: st.uint128
+    base_reward_per_uncle_percent: st.uint64
+    min_block_time_target: st.uint64
+    max_block_time_target: st.uint64
+    base_max_uncles_per_block: st.uint64
+    base_block_gas_limit: st.uint64
+    strategy: st.uint8
+    script_allowed: bool
+    module_publishing_allowed: bool
+    instruction_schedule: bytes
+    native_schedule: bytes
+    global_memory_per_byte_cost: st.uint64
+    global_memory_per_byte_write_cost: st.uint64
+    min_transaction_gas_units: st.uint64
+    large_transaction_cutoff: st.uint64
+    instrinsic_gas_per_byte: st.uint64
+    maximum_number_of_gas_units: st.uint64
+    min_price_per_gas_unit: st.uint64
+    max_price_per_gas_unit: st.uint64
+    max_transaction_size_in_bytes: st.uint64
+    gas_unit_scaling_factor: st.uint64
+    default_account_size: st.uint64
+    voting_delay: st.uint64
+    voting_period: st.uint64
+    voting_quorum_rate: st.uint8
+    min_action_delay: st.uint64
+    transaction_timeout: st.uint64
 
 
 @dataclass(frozen=True)
@@ -174,7 +216,7 @@ class ScriptFunctionCall__PeerToPeer(ScriptFunctionCall):
     """
     token_type: starcoin_types.TypeTag
     payee: starcoin_types.AccountAddress
-    payee_auth_key: bytes
+    _payee_auth_key: bytes
     amount: st.uint128
 
 
@@ -183,8 +225,17 @@ class ScriptFunctionCall__PeerToPeerBatch(ScriptFunctionCall):
     """.
     """
     token_type: starcoin_types.TypeTag
-    payeees: bytes
-    payee_auth_keys: bytes
+    _payeees: bytes
+    _payee_auth_keys: bytes
+    _amount: st.uint128
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__PeerToPeerV2(ScriptFunctionCall):
+    """.
+    """
+    token_type: starcoin_types.TypeTag
+    payee: starcoin_types.AccountAddress
     amount: st.uint128
 
 
@@ -194,7 +245,17 @@ class ScriptFunctionCall__PeerToPeerWithMetadata(ScriptFunctionCall):
     """
     token_type: starcoin_types.TypeTag
     payee: starcoin_types.AccountAddress
-    payee_auth_key: bytes
+    _payee_auth_key: bytes
+    amount: st.uint128
+    metadata: bytes
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__PeerToPeerWithMetadataV2(ScriptFunctionCall):
+    """.
+    """
+    token_type: starcoin_types.TypeTag
+    payee: starcoin_types.AccountAddress
     amount: st.uint128
     metadata: bytes
 
@@ -209,17 +270,6 @@ class ScriptFunctionCall__Propose(ScriptFunctionCall):
     voting_quorum_rate: st.uint8
     min_action_delay: st.uint64
     exec_delay: st.uint64
-
-
-@dataclass(frozen=True)
-class ScriptFunctionCall__ProposeModuleUpgrade(ScriptFunctionCall):
-    """.
-    """
-    token: starcoin_types.TypeTag
-    _module_address: starcoin_types.AccountAddress
-    _package_hash: bytes
-    _version: st.uint64
-    _exec_delay: st.uint64
 
 
 @dataclass(frozen=True)
@@ -298,6 +348,17 @@ class ScriptFunctionCall__ProposeUpdateVmConfig(ScriptFunctionCall):
 
 
 @dataclass(frozen=True)
+class ScriptFunctionCall__ProposeWithdraw(ScriptFunctionCall):
+    """.
+    """
+    token_t: starcoin_types.TypeTag
+    receiver: starcoin_types.AccountAddress
+    amount: st.uint128
+    period: st.uint64
+    exec_delay: st.uint64
+
+
+@dataclass(frozen=True)
 class ScriptFunctionCall__QueueProposalAction(ScriptFunctionCall):
     """queue agreed proposal to execute.
     """
@@ -325,16 +386,6 @@ class ScriptFunctionCall__RotateAuthenticationKey(ScriptFunctionCall):
 
 
 @dataclass(frozen=True)
-class ScriptFunctionCall__SplitFixedKey(ScriptFunctionCall):
-    """.
-    """
-    token: starcoin_types.TypeTag
-    for_address: starcoin_types.AccountAddress
-    amount: st.uint128
-    lock_period: st.uint64
-
-
-@dataclass(frozen=True)
 class ScriptFunctionCall__SubmitModuleUpgradePlan(ScriptFunctionCall):
     """.
     """
@@ -344,8 +395,15 @@ class ScriptFunctionCall__SubmitModuleUpgradePlan(ScriptFunctionCall):
 
 
 @dataclass(frozen=True)
+class ScriptFunctionCall__TakeLinearWithdrawCapability(ScriptFunctionCall):
+    """association account should call this script after upgrade from v2 to v3.
+    """
+    pass
+
+
+@dataclass(frozen=True)
 class ScriptFunctionCall__TakeOffer(ScriptFunctionCall):
-    """.
+    """Take Offer and put to signer's Collection<Offered>.
     """
     offered: starcoin_types.TypeTag
     offer_address: starcoin_types.AccountAddress
@@ -366,6 +424,30 @@ class ScriptFunctionCall__UpdateModuleUpgradeStrategy(ScriptFunctionCall):
     """.
     """
     strategy: st.uint8
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__UpgradeFromV2ToV3(ScriptFunctionCall):
+    """Stdlib upgrade script from v2 to v3.
+    """
+    total_stc_amount: st.uint128
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__WithdrawAndSplitLtWithdrawCap(ScriptFunctionCall):
+    """.
+    """
+    token_t: starcoin_types.TypeTag
+    for_address: starcoin_types.AccountAddress
+    amount: st.uint128
+    lock_period: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__WithdrawTokenWithLinearWithdrawCapability(ScriptFunctionCall):
+    """.
+    """
+    token_t: starcoin_types.TypeTag
 
 
 def encode_script(call: ScriptCall) -> Script:
@@ -463,7 +545,7 @@ def encode_convert_TwoPhaseUpgrade_to_TwoPhaseUpgradeV2_script_function(package_
     )
 
 
-def encode_create_account_with_initial_amount_script_function(token_type: TypeTag, fresh_address: AccountAddress, auth_key: bytes, initial_amount: st.uint128) -> TransactionPayload:
+def encode_create_account_with_initial_amount_script_function(token_type: TypeTag, fresh_address: AccountAddress, _auth_key: bytes, initial_amount: st.uint128) -> TransactionPayload:
     """.
     """
     return TransactionPayload__ScriptFunction(
@@ -473,7 +555,22 @@ def encode_create_account_with_initial_amount_script_function(token_type: TypeTa
             function=Identifier("create_account_with_initial_amount"),
             ty_args=[token_type],
             args=[bcs.serialize(fresh_address, starcoin_types.AccountAddress), bcs.serialize(
-                auth_key, bytes), bcs.serialize(initial_amount, st.uint128)],
+                _auth_key, bytes), bcs.serialize(initial_amount, st.uint128)],
+        )
+    )
+
+
+def encode_create_account_with_initial_amount_v2_script_function(token_type: TypeTag, fresh_address: AccountAddress, initial_amount: st.uint128) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("Account")),
+            function=Identifier("create_account_with_initial_amount_v2"),
+            ty_args=[token_type],
+            args=[bcs.serialize(fresh_address, starcoin_types.AccountAddress), bcs.serialize(
+                initial_amount, st.uint128)],
         )
     )
 
@@ -536,7 +633,22 @@ def encode_execute_on_chain_config_proposal_script_function(config_t: TypeTag, p
     )
 
 
-def encode_initialize_script_function(stdlib_version: st.uint64, reward_delay: st.uint64, pre_mine_amount: st.uint128, time_mint_amount: st.uint128, time_mint_period: st.uint64, parent_hash: bytes, association_auth_key: bytes, genesis_auth_key: bytes, chain_id: st.uint8, genesis_timestamp: st.uint64, uncle_rate_target: st.uint64, epoch_block_count: st.uint64, base_block_time_target: st.uint64, base_block_difficulty_window: st.uint64, base_reward_per_block: st.uint128, base_reward_per_uncle_percent: st.uint64, min_block_time_target: st.uint64, max_block_time_target: st.uint64, base_max_uncles_per_block: st.uint64, base_block_gas_limit: st.uint64, strategy: st.uint8, script_allowed: bool, module_publishing_allowed: bool, instruction_schedule: bytes, native_schedule: bytes, global_memory_per_byte_cost: st.uint64, global_memory_per_byte_write_cost: st.uint64, min_transaction_gas_units: st.uint64, large_transaction_cutoff: st.uint64, instrinsic_gas_per_byte: st.uint64, maximum_number_of_gas_units: st.uint64, min_price_per_gas_unit: st.uint64, max_price_per_gas_unit: st.uint64, max_transaction_size_in_bytes: st.uint64, gas_unit_scaling_factor: st.uint64, default_account_size: st.uint64, voting_delay: st.uint64, voting_period: st.uint64, voting_quorum_rate: st.uint8, min_action_delay: st.uint64, transaction_timeout: st.uint64) -> TransactionPayload:
+def encode_execute_withdraw_proposal_script_function(token_t: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("TreasuryScripts")),
+            function=Identifier("execute_withdraw_proposal"),
+            ty_args=[token_t],
+            args=[bcs.serialize(proposer_address, starcoin_types.AccountAddress), bcs.serialize(
+                proposal_id, st.uint64)],
+        )
+    )
+
+
+def encode_initialize_script_function(stdlib_version: st.uint64, reward_delay: st.uint64, pre_mine_stc_amount: st.uint128, time_mint_stc_amount: st.uint128, time_mint_stc_period: st.uint64, parent_hash: bytes, association_auth_key: bytes, genesis_auth_key: bytes, chain_id: st.uint8, genesis_timestamp: st.uint64, uncle_rate_target: st.uint64, epoch_block_count: st.uint64, base_block_time_target: st.uint64, base_block_difficulty_window: st.uint64, base_reward_per_block: st.uint128, base_reward_per_uncle_percent: st.uint64, min_block_time_target: st.uint64, max_block_time_target: st.uint64, base_max_uncles_per_block: st.uint64, base_block_gas_limit: st.uint64, strategy: st.uint8, script_allowed: bool, module_publishing_allowed: bool, instruction_schedule: bytes, native_schedule: bytes, global_memory_per_byte_cost: st.uint64, global_memory_per_byte_write_cost: st.uint64, min_transaction_gas_units: st.uint64, large_transaction_cutoff: st.uint64, instrinsic_gas_per_byte: st.uint64, maximum_number_of_gas_units: st.uint64, min_price_per_gas_unit: st.uint64, max_price_per_gas_unit: st.uint64, max_transaction_size_in_bytes: st.uint64, gas_unit_scaling_factor: st.uint64, default_account_size: st.uint64, voting_delay: st.uint64, voting_period: st.uint64, voting_quorum_rate: st.uint8, min_action_delay: st.uint64, transaction_timeout: st.uint64) -> TransactionPayload:
     """.
     """
     return TransactionPayload__ScriptFunction(
@@ -545,66 +657,23 @@ def encode_initialize_script_function(stdlib_version: st.uint64, reward_delay: s
                 "00000000000000000000000000000001"), name=Identifier("Genesis")),
             function=Identifier("initialize"),
             ty_args=[],
-            args=[bcs.serialize(stdlib_version, st.uint64), bcs.serialize(reward_delay, st.uint64), bcs.serialize(pre_mine_amount, st.uint128), bcs.serialize(time_mint_amount, st.uint128), bcs.serialize(time_mint_period, st.uint64), bcs.serialize(parent_hash, bytes), bcs.serialize(association_auth_key, bytes), bcs.serialize(genesis_auth_key, bytes), bcs.serialize(chain_id, st.uint8), bcs.serialize(genesis_timestamp, st.uint64), bcs.serialize(uncle_rate_target, st.uint64), bcs.serialize(epoch_block_count, st.uint64), bcs.serialize(base_block_time_target, st.uint64), bcs.serialize(base_block_difficulty_window, st.uint64), bcs.serialize(base_reward_per_block, st.uint128), bcs.serialize(base_reward_per_uncle_percent, st.uint64), bcs.serialize(min_block_time_target, st.uint64), bcs.serialize(max_block_time_target, st.uint64), bcs.serialize(base_max_uncles_per_block, st.uint64), bcs.serialize(base_block_gas_limit, st.uint64), bcs.serialize(strategy, st.uint8), bcs.serialize(
+            args=[bcs.serialize(stdlib_version, st.uint64), bcs.serialize(reward_delay, st.uint64), bcs.serialize(pre_mine_stc_amount, st.uint128), bcs.serialize(time_mint_stc_amount, st.uint128), bcs.serialize(time_mint_stc_period, st.uint64), bcs.serialize(parent_hash, bytes), bcs.serialize(association_auth_key, bytes), bcs.serialize(genesis_auth_key, bytes), bcs.serialize(chain_id, st.uint8), bcs.serialize(genesis_timestamp, st.uint64), bcs.serialize(uncle_rate_target, st.uint64), bcs.serialize(epoch_block_count, st.uint64), bcs.serialize(base_block_time_target, st.uint64), bcs.serialize(base_block_difficulty_window, st.uint64), bcs.serialize(base_reward_per_block, st.uint128), bcs.serialize(base_reward_per_uncle_percent, st.uint64), bcs.serialize(min_block_time_target, st.uint64), bcs.serialize(max_block_time_target, st.uint64), bcs.serialize(base_max_uncles_per_block, st.uint64), bcs.serialize(base_block_gas_limit, st.uint64), bcs.serialize(strategy, st.uint8), bcs.serialize(
                 script_allowed, st.bool), bcs.serialize(module_publishing_allowed, st.bool), bcs.serialize(instruction_schedule, bytes), bcs.serialize(native_schedule, bytes), bcs.serialize(global_memory_per_byte_cost, st.uint64), bcs.serialize(global_memory_per_byte_write_cost, st.uint64), bcs.serialize(min_transaction_gas_units, st.uint64), bcs.serialize(large_transaction_cutoff, st.uint64), bcs.serialize(instrinsic_gas_per_byte, st.uint64), bcs.serialize(maximum_number_of_gas_units, st.uint64), bcs.serialize(min_price_per_gas_unit, st.uint64), bcs.serialize(max_price_per_gas_unit, st.uint64), bcs.serialize(max_transaction_size_in_bytes, st.uint64), bcs.serialize(gas_unit_scaling_factor, st.uint64), bcs.serialize(default_account_size, st.uint64), bcs.serialize(voting_delay, st.uint64), bcs.serialize(voting_period, st.uint64), bcs.serialize(voting_quorum_rate, st.uint8), bcs.serialize(min_action_delay, st.uint64), bcs.serialize(transaction_timeout, st.uint64)],
         )
     )
 
 
-def encode_mint_and_split_by_linear_key_script_function(token: TypeTag, for_address: AccountAddress, amount: st.uint128, lock_period: st.uint64) -> TransactionPayload:
+def encode_initialize_v2_script_function(stdlib_version: st.uint64, reward_delay: st.uint64, total_stc_amount: st.uint128, pre_mine_stc_amount: st.uint128, time_mint_stc_amount: st.uint128, time_mint_stc_period: st.uint64, parent_hash: bytes, association_auth_key: bytes, genesis_auth_key: bytes, chain_id: st.uint8, genesis_timestamp: st.uint64, uncle_rate_target: st.uint64, epoch_block_count: st.uint64, base_block_time_target: st.uint64, base_block_difficulty_window: st.uint64, base_reward_per_block: st.uint128, base_reward_per_uncle_percent: st.uint64, min_block_time_target: st.uint64, max_block_time_target: st.uint64, base_max_uncles_per_block: st.uint64, base_block_gas_limit: st.uint64, strategy: st.uint8, script_allowed: bool, module_publishing_allowed: bool, instruction_schedule: bytes, native_schedule: bytes, global_memory_per_byte_cost: st.uint64, global_memory_per_byte_write_cost: st.uint64, min_transaction_gas_units: st.uint64, large_transaction_cutoff: st.uint64, instrinsic_gas_per_byte: st.uint64, maximum_number_of_gas_units: st.uint64, min_price_per_gas_unit: st.uint64, max_price_per_gas_unit: st.uint64, max_transaction_size_in_bytes: st.uint64, gas_unit_scaling_factor: st.uint64, default_account_size: st.uint64, voting_delay: st.uint64, voting_period: st.uint64, voting_quorum_rate: st.uint8, min_action_delay: st.uint64, transaction_timeout: st.uint64) -> TransactionPayload:
     """.
     """
     return TransactionPayload__ScriptFunction(
         value=ScriptFunction(
             module=ModuleId(address=AccountAddress.from_hex(
-                "00000000000000000000000000000001"), name=Identifier("MintScripts")),
-            function=Identifier("mint_and_split_by_linear_key"),
-            ty_args=[token],
-            args=[bcs.serialize(for_address, starcoin_types.AccountAddress), bcs.serialize(
-                amount, st.uint128), bcs.serialize(lock_period, st.uint64)],
-        )
-    )
-
-
-def encode_mint_token_by_fixed_key_script_function(token: TypeTag) -> TransactionPayload:
-    """.
-    """
-    return TransactionPayload__ScriptFunction(
-        value=ScriptFunction(
-            module=ModuleId(address=AccountAddress.from_hex(
-                "00000000000000000000000000000001"), name=Identifier("MintScripts")),
-            function=Identifier("mint_token_by_fixed_key"),
-            ty_args=[token],
-            args=[],
-        )
-    )
-
-
-def encode_mint_token_by_linear_key_script_function(token: TypeTag) -> TransactionPayload:
-    """.
-    """
-    return TransactionPayload__ScriptFunction(
-        value=ScriptFunction(
-            module=ModuleId(address=AccountAddress.from_hex(
-                "00000000000000000000000000000001"), name=Identifier("MintScripts")),
-            function=Identifier("mint_token_by_linear_key"),
-            ty_args=[token],
-            args=[],
-        )
-    )
-
-
-def encode_peer_to_peer_v2_script_function(token_type: TypeTag, payee: AccountAddress, amount: st.uint128) -> TransactionPayload:
-    """.
-    """
-    return TransactionPayload__ScriptFunction(
-        value=ScriptFunction(
-            module=ModuleId(address=AccountAddress.from_hex(
-                "00000000000000000000000000000001"), name=Identifier("TransferScripts")),
-            function=Identifier("peer_to_peer_v2"),
-            ty_args=[token_type],
-            args=[bcs.serialize(payee, starcoin_types.AccountAddress),
-                  bcs.serialize(amount, st.uint128)],
+                "00000000000000000000000000000001"), name=Identifier("Genesis")),
+            function=Identifier("initialize_v2"),
+            ty_args=[],
+            args=[bcs.serialize(stdlib_version, st.uint64), bcs.serialize(reward_delay, st.uint64), bcs.serialize(total_stc_amount, st.uint128), bcs.serialize(pre_mine_stc_amount, st.uint128), bcs.serialize(time_mint_stc_amount, st.uint128), bcs.serialize(time_mint_stc_period, st.uint64), bcs.serialize(parent_hash, bytes), bcs.serialize(association_auth_key, bytes), bcs.serialize(genesis_auth_key, bytes), bcs.serialize(chain_id, st.uint8), bcs.serialize(genesis_timestamp, st.uint64), bcs.serialize(uncle_rate_target, st.uint64), bcs.serialize(epoch_block_count, st.uint64), bcs.serialize(base_block_time_target, st.uint64), bcs.serialize(base_block_difficulty_window, st.uint64), bcs.serialize(base_reward_per_block, st.uint128), bcs.serialize(base_reward_per_uncle_percent, st.uint64), bcs.serialize(min_block_time_target, st.uint64), bcs.serialize(max_block_time_target, st.uint64), bcs.serialize(base_max_uncles_per_block, st.uint64), bcs.serialize(base_block_gas_limit, st.uint64), bcs.serialize(
+                strategy, st.uint8), bcs.serialize(script_allowed, st.bool), bcs.serialize(module_publishing_allowed, st.bool), bcs.serialize(instruction_schedule, bytes), bcs.serialize(native_schedule, bytes), bcs.serialize(global_memory_per_byte_cost, st.uint64), bcs.serialize(global_memory_per_byte_write_cost, st.uint64), bcs.serialize(min_transaction_gas_units, st.uint64), bcs.serialize(large_transaction_cutoff, st.uint64), bcs.serialize(instrinsic_gas_per_byte, st.uint64), bcs.serialize(maximum_number_of_gas_units, st.uint64), bcs.serialize(min_price_per_gas_unit, st.uint64), bcs.serialize(max_price_per_gas_unit, st.uint64), bcs.serialize(max_transaction_size_in_bytes, st.uint64), bcs.serialize(gas_unit_scaling_factor, st.uint64), bcs.serialize(default_account_size, st.uint64), bcs.serialize(voting_delay, st.uint64), bcs.serialize(voting_period, st.uint64), bcs.serialize(voting_quorum_rate, st.uint8), bcs.serialize(min_action_delay, st.uint64), bcs.serialize(transaction_timeout, st.uint64)],
         )
     )
 
@@ -624,7 +693,7 @@ def encode_peer_to_peer_script_function(token_type: TypeTag, payee: AccountAddre
     )
 
 
-def encode_peer_to_peer_batch_script_function(token_type: TypeTag, payeees: bytes, payee_auth_keys: bytes, amount: st.uint128) -> TransactionPayload:
+def encode_peer_to_peer_batch_script_function(token_type: TypeTag, _payeees: bytes, _payee_auth_keys: bytes, _amount: st.uint128) -> TransactionPayload:
     """.
     """
     return TransactionPayload__ScriptFunction(
@@ -633,13 +702,28 @@ def encode_peer_to_peer_batch_script_function(token_type: TypeTag, payeees: byte
                 "00000000000000000000000000000001"), name=Identifier("TransferScripts")),
             function=Identifier("peer_to_peer_batch"),
             ty_args=[token_type],
-            args=[bcs.serialize(payeees, bytes), bcs.serialize(
-                payee_auth_keys, bytes), bcs.serialize(amount, st.uint128)],
+            args=[bcs.serialize(_payeees, bytes), bcs.serialize(
+                _payee_auth_keys, bytes), bcs.serialize(_amount, st.uint128)],
         )
     )
 
 
-def encode_peer_to_peer_with_metadata_script_function(token_type: TypeTag, payee: AccountAddress, payee_auth_key: bytes, amount: st.uint128, metadata: bytes) -> TransactionPayload:
+def encode_peer_to_peer_v2_script_function(token_type: TypeTag, payee: AccountAddress, amount: st.uint128) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("TransferScripts")),
+            function=Identifier("peer_to_peer_v2"),
+            ty_args=[token_type],
+            args=[bcs.serialize(payee, starcoin_types.AccountAddress),
+                  bcs.serialize(amount, st.uint128)],
+        )
+    )
+
+
+def encode_peer_to_peer_with_metadata_script_function(token_type: TypeTag, payee: AccountAddress, _payee_auth_key: bytes, amount: st.uint128, metadata: bytes) -> TransactionPayload:
     """.
     """
     return TransactionPayload__ScriptFunction(
@@ -649,7 +733,22 @@ def encode_peer_to_peer_with_metadata_script_function(token_type: TypeTag, payee
             function=Identifier("peer_to_peer_with_metadata"),
             ty_args=[token_type],
             args=[bcs.serialize(payee, starcoin_types.AccountAddress), bcs.serialize(
-                payee_auth_key, bytes), bcs.serialize(amount, st.uint128), bcs.serialize(metadata, bytes)],
+                _payee_auth_key, bytes), bcs.serialize(amount, st.uint128), bcs.serialize(metadata, bytes)],
+        )
+    )
+
+
+def encode_peer_to_peer_with_metadata_v2_script_function(token_type: TypeTag, payee: AccountAddress, amount: st.uint128, metadata: bytes) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("TransferScripts")),
+            function=Identifier("peer_to_peer_with_metadata_v2"),
+            ty_args=[token_type],
+            args=[bcs.serialize(payee, starcoin_types.AccountAddress), bcs.serialize(
+                amount, st.uint128), bcs.serialize(metadata, bytes)],
         )
     )
 
@@ -665,21 +764,6 @@ def encode_propose_script_function(token_t: TypeTag, voting_delay: st.uint64, vo
             ty_args=[token_t],
             args=[bcs.serialize(voting_delay, st.uint64), bcs.serialize(voting_period, st.uint64), bcs.serialize(
                 voting_quorum_rate, st.uint8), bcs.serialize(min_action_delay, st.uint64), bcs.serialize(exec_delay, st.uint64)],
-        )
-    )
-
-
-def encode_propose_module_upgrade_script_function(token: TypeTag, _module_address: AccountAddress, _package_hash: bytes, _version: st.uint64, _exec_delay: st.uint64) -> TransactionPayload:
-    """.
-    """
-    return TransactionPayload__ScriptFunction(
-        value=ScriptFunction(
-            module=ModuleId(address=AccountAddress.from_hex(
-                "00000000000000000000000000000001"), name=Identifier("ModuleUpgradeScripts")),
-            function=Identifier("propose_module_upgrade"),
-            ty_args=[token],
-            args=[bcs.serialize(_module_address, starcoin_types.AccountAddress), bcs.serialize(
-                _package_hash, bytes), bcs.serialize(_version, st.uint64), bcs.serialize(_exec_delay, st.uint64)],
         )
     )
 
@@ -774,6 +858,21 @@ def encode_propose_update_vm_config_script_function(instruction_schedule: bytes,
     )
 
 
+def encode_propose_withdraw_script_function(token_t: TypeTag, receiver: AccountAddress, amount: st.uint128, period: st.uint64, exec_delay: st.uint64) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("TreasuryScripts")),
+            function=Identifier("propose_withdraw"),
+            ty_args=[token_t],
+            args=[bcs.serialize(receiver, starcoin_types.AccountAddress), bcs.serialize(
+                amount, st.uint128), bcs.serialize(period, st.uint64), bcs.serialize(exec_delay, st.uint64)],
+        )
+    )
+
+
 def encode_queue_proposal_action_script_function(token_t: TypeTag, action_t: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> TransactionPayload:
     """queue agreed proposal to execute.
     """
@@ -818,21 +917,6 @@ def encode_rotate_authentication_key_script_function(new_key: bytes) -> Transact
     )
 
 
-def encode_split_fixed_key_script_function(token: TypeTag, for_address: AccountAddress, amount: st.uint128, lock_period: st.uint64) -> TransactionPayload:
-    """.
-    """
-    return TransactionPayload__ScriptFunction(
-        value=ScriptFunction(
-            module=ModuleId(address=AccountAddress.from_hex(
-                "00000000000000000000000000000001"), name=Identifier("MintScripts")),
-            function=Identifier("split_fixed_key"),
-            ty_args=[token],
-            args=[bcs.serialize(for_address, starcoin_types.AccountAddress), bcs.serialize(
-                amount, st.uint128), bcs.serialize(lock_period, st.uint64)],
-        )
-    )
-
-
 def encode_submit_module_upgrade_plan_script_function(token: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> TransactionPayload:
     """.
     """
@@ -848,8 +932,22 @@ def encode_submit_module_upgrade_plan_script_function(token: TypeTag, proposer_a
     )
 
 
+def encode_take_linear_withdraw_capability_script_function() -> TransactionPayload:
+    """association account should call this script after upgrade from v2 to v3.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("StdlibUpgradeScripts")),
+            function=Identifier("take_linear_withdraw_capability"),
+            ty_args=[],
+            args=[],
+        )
+    )
+
+
 def encode_take_offer_script_function(offered: TypeTag, offer_address: AccountAddress) -> TransactionPayload:
-    """.
+    """Take Offer and put to signer's Collection<Offered>.
     """
     return TransactionPayload__ScriptFunction(
         value=ScriptFunction(
@@ -887,6 +985,50 @@ def encode_update_module_upgrade_strategy_script_function(strategy: st.uint8) ->
             function=Identifier("update_module_upgrade_strategy"),
             ty_args=[],
             args=[bcs.serialize(strategy, st.uint8)],
+        )
+    )
+
+
+def encode_upgrade_from_v2_to_v3_script_function(total_stc_amount: st.uint128) -> TransactionPayload:
+    """Stdlib upgrade script from v2 to v3.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("StdlibUpgradeScripts")),
+            function=Identifier("upgrade_from_v2_to_v3"),
+            ty_args=[],
+            args=[bcs.serialize(total_stc_amount, st.uint128)],
+        )
+    )
+
+
+def encode_withdraw_and_split_lt_withdraw_cap_script_function(token_t: TypeTag, for_address: AccountAddress, amount: st.uint128, lock_period: st.uint64) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("TreasuryScripts")),
+            function=Identifier("withdraw_and_split_lt_withdraw_cap"),
+            ty_args=[token_t],
+            args=[bcs.serialize(for_address, starcoin_types.AccountAddress), bcs.serialize(
+                amount, st.uint128), bcs.serialize(lock_period, st.uint64)],
+        )
+    )
+
+
+def encode_withdraw_token_with_linear_withdraw_capability_script_function(token_t: TypeTag) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("TreasuryScripts")),
+            function=Identifier(
+                "withdraw_token_with_linear_withdraw_capability"),
+            ty_args=[token_t],
+            args=[],
         )
     )
 
@@ -936,8 +1078,19 @@ def decode_create_account_with_initial_amount_script_function(script: Transactio
         token_type=script.ty_args[0],
         fresh_address=bcs.deserialize(
             script.args[0], starcoin_types.AccountAddress),
-        auth_key=bcs.deserialize(script.args[1], bytes),
+        _auth_key=bcs.deserialize(script.args[1], bytes),
         initial_amount=bcs.deserialize(script.args[2], st.uint128),
+    )
+
+
+def decode_create_account_with_initial_amount_v2_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__CreateAccountWithInitialAmountV2(
+        token_type=script.ty_args[0],
+        fresh_address=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
+        initial_amount=bcs.deserialize(script.args[1], st.uint128),
     )
 
 
@@ -980,15 +1133,26 @@ def decode_execute_on_chain_config_proposal_script_function(script: TransactionP
     )
 
 
+def decode_execute_withdraw_proposal_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__ExecuteWithdrawProposal(
+        token_t=script.ty_args[0],
+        proposer_address=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
+        proposal_id=bcs.deserialize(script.args[1], st.uint64),
+    )
+
+
 def decode_initialize_script_function(script: TransactionPayload) -> ScriptFunctionCall:
     if not isinstance(script, ScriptFunction):
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__Initialize(
         stdlib_version=bcs.deserialize(script.args[0], st.uint64),
         reward_delay=bcs.deserialize(script.args[1], st.uint64),
-        pre_mine_amount=bcs.deserialize(script.args[2], st.uint128),
-        time_mint_amount=bcs.deserialize(script.args[3], st.uint128),
-        time_mint_period=bcs.deserialize(script.args[4], st.uint64),
+        pre_mine_stc_amount=bcs.deserialize(script.args[2], st.uint128),
+        time_mint_stc_amount=bcs.deserialize(script.args[3], st.uint128),
+        time_mint_stc_period=bcs.deserialize(script.args[4], st.uint64),
         parent_hash=bcs.deserialize(script.args[5], bytes),
         association_auth_key=bcs.deserialize(script.args[6], bytes),
         genesis_auth_key=bcs.deserialize(script.args[7], bytes),
@@ -1034,31 +1198,58 @@ def decode_initialize_script_function(script: TransactionPayload) -> ScriptFunct
     )
 
 
-def decode_mint_and_split_by_linear_key_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+def decode_initialize_v2_script_function(script: TransactionPayload) -> ScriptFunctionCall:
     if not isinstance(script, ScriptFunction):
         raise ValueError("Unexpected transaction payload")
-    return ScriptFunctionCall__MintAndSplitByLinearKey(
-        token=script.ty_args[0],
-        for_address=bcs.deserialize(
-            script.args[0], starcoin_types.AccountAddress),
-        amount=bcs.deserialize(script.args[1], st.uint128),
-        lock_period=bcs.deserialize(script.args[2], st.uint64),
-    )
-
-
-def decode_mint_token_by_fixed_key_script_function(script: TransactionPayload) -> ScriptFunctionCall:
-    if not isinstance(script, ScriptFunction):
-        raise ValueError("Unexpected transaction payload")
-    return ScriptFunctionCall__MintTokenByFixedKey(
-        token=script.ty_args[0],
-    )
-
-
-def decode_mint_token_by_linear_key_script_function(script: TransactionPayload) -> ScriptFunctionCall:
-    if not isinstance(script, ScriptFunction):
-        raise ValueError("Unexpected transaction payload")
-    return ScriptFunctionCall__MintTokenByLinearKey(
-        token=script.ty_args[0],
+    return ScriptFunctionCall__InitializeV2(
+        stdlib_version=bcs.deserialize(script.args[0], st.uint64),
+        reward_delay=bcs.deserialize(script.args[1], st.uint64),
+        total_stc_amount=bcs.deserialize(script.args[2], st.uint128),
+        pre_mine_stc_amount=bcs.deserialize(script.args[3], st.uint128),
+        time_mint_stc_amount=bcs.deserialize(script.args[4], st.uint128),
+        time_mint_stc_period=bcs.deserialize(script.args[5], st.uint64),
+        parent_hash=bcs.deserialize(script.args[6], bytes),
+        association_auth_key=bcs.deserialize(script.args[7], bytes),
+        genesis_auth_key=bcs.deserialize(script.args[8], bytes),
+        chain_id=bcs.deserialize(script.args[9], st.uint8),
+        genesis_timestamp=bcs.deserialize(script.args[10], st.uint64),
+        uncle_rate_target=bcs.deserialize(script.args[11], st.uint64),
+        epoch_block_count=bcs.deserialize(script.args[12], st.uint64),
+        base_block_time_target=bcs.deserialize(script.args[13], st.uint64),
+        base_block_difficulty_window=bcs.deserialize(
+            script.args[14], st.uint64),
+        base_reward_per_block=bcs.deserialize(script.args[15], st.uint128),
+        base_reward_per_uncle_percent=bcs.deserialize(
+            script.args[16], st.uint64),
+        min_block_time_target=bcs.deserialize(script.args[17], st.uint64),
+        max_block_time_target=bcs.deserialize(script.args[18], st.uint64),
+        base_max_uncles_per_block=bcs.deserialize(script.args[19], st.uint64),
+        base_block_gas_limit=bcs.deserialize(script.args[20], st.uint64),
+        strategy=bcs.deserialize(script.args[21], st.uint8),
+        script_allowed=bcs.deserialize(script.args[22], bool),
+        module_publishing_allowed=bcs.deserialize(script.args[23], bool),
+        instruction_schedule=bcs.deserialize(script.args[24], bytes),
+        native_schedule=bcs.deserialize(script.args[25], bytes),
+        global_memory_per_byte_cost=bcs.deserialize(
+            script.args[26], st.uint64),
+        global_memory_per_byte_write_cost=bcs.deserialize(
+            script.args[27], st.uint64),
+        min_transaction_gas_units=bcs.deserialize(script.args[28], st.uint64),
+        large_transaction_cutoff=bcs.deserialize(script.args[29], st.uint64),
+        instrinsic_gas_per_byte=bcs.deserialize(script.args[30], st.uint64),
+        maximum_number_of_gas_units=bcs.deserialize(
+            script.args[31], st.uint64),
+        min_price_per_gas_unit=bcs.deserialize(script.args[32], st.uint64),
+        max_price_per_gas_unit=bcs.deserialize(script.args[33], st.uint64),
+        max_transaction_size_in_bytes=bcs.deserialize(
+            script.args[34], st.uint64),
+        gas_unit_scaling_factor=bcs.deserialize(script.args[35], st.uint64),
+        default_account_size=bcs.deserialize(script.args[36], st.uint64),
+        voting_delay=bcs.deserialize(script.args[37], st.uint64),
+        voting_period=bcs.deserialize(script.args[38], st.uint64),
+        voting_quorum_rate=bcs.deserialize(script.args[39], st.uint8),
+        min_action_delay=bcs.deserialize(script.args[40], st.uint64),
+        transaction_timeout=bcs.deserialize(script.args[41], st.uint64),
     )
 
 
@@ -1068,7 +1259,7 @@ def decode_peer_to_peer_script_function(script: TransactionPayload) -> ScriptFun
     return ScriptFunctionCall__PeerToPeer(
         token_type=script.ty_args[0],
         payee=bcs.deserialize(script.args[0], starcoin_types.AccountAddress),
-        payee_auth_key=bcs.deserialize(script.args[1], bytes),
+        _payee_auth_key=bcs.deserialize(script.args[1], bytes),
         amount=bcs.deserialize(script.args[2], st.uint128),
     )
 
@@ -1078,9 +1269,19 @@ def decode_peer_to_peer_batch_script_function(script: TransactionPayload) -> Scr
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__PeerToPeerBatch(
         token_type=script.ty_args[0],
-        payeees=bcs.deserialize(script.args[0], bytes),
-        payee_auth_keys=bcs.deserialize(script.args[1], bytes),
-        amount=bcs.deserialize(script.args[2], st.uint128),
+        _payeees=bcs.deserialize(script.args[0], bytes),
+        _payee_auth_keys=bcs.deserialize(script.args[1], bytes),
+        _amount=bcs.deserialize(script.args[2], st.uint128),
+    )
+
+
+def decode_peer_to_peer_v2_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__PeerToPeerV2(
+        token_type=script.ty_args[0],
+        payee=bcs.deserialize(script.args[0], starcoin_types.AccountAddress),
+        amount=bcs.deserialize(script.args[1], st.uint128),
     )
 
 
@@ -1090,9 +1291,20 @@ def decode_peer_to_peer_with_metadata_script_function(script: TransactionPayload
     return ScriptFunctionCall__PeerToPeerWithMetadata(
         token_type=script.ty_args[0],
         payee=bcs.deserialize(script.args[0], starcoin_types.AccountAddress),
-        payee_auth_key=bcs.deserialize(script.args[1], bytes),
+        _payee_auth_key=bcs.deserialize(script.args[1], bytes),
         amount=bcs.deserialize(script.args[2], st.uint128),
         metadata=bcs.deserialize(script.args[3], bytes),
+    )
+
+
+def decode_peer_to_peer_with_metadata_v2_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__PeerToPeerWithMetadataV2(
+        token_type=script.ty_args[0],
+        payee=bcs.deserialize(script.args[0], starcoin_types.AccountAddress),
+        amount=bcs.deserialize(script.args[1], st.uint128),
+        metadata=bcs.deserialize(script.args[2], bytes),
     )
 
 
@@ -1106,19 +1318,6 @@ def decode_propose_script_function(script: TransactionPayload) -> ScriptFunction
         voting_quorum_rate=bcs.deserialize(script.args[2], st.uint8),
         min_action_delay=bcs.deserialize(script.args[3], st.uint64),
         exec_delay=bcs.deserialize(script.args[4], st.uint64),
-    )
-
-
-def decode_propose_module_upgrade_script_function(script: TransactionPayload) -> ScriptFunctionCall:
-    if not isinstance(script, ScriptFunction):
-        raise ValueError("Unexpected transaction payload")
-    return ScriptFunctionCall__ProposeModuleUpgrade(
-        token=script.ty_args[0],
-        _module_address=bcs.deserialize(
-            script.args[0], starcoin_types.AccountAddress),
-        _package_hash=bcs.deserialize(script.args[1], bytes),
-        _version=bcs.deserialize(script.args[2], st.uint64),
-        _exec_delay=bcs.deserialize(script.args[3], st.uint64),
     )
 
 
@@ -1208,6 +1407,19 @@ def decode_propose_update_vm_config_script_function(script: TransactionPayload) 
     )
 
 
+def decode_propose_withdraw_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__ProposeWithdraw(
+        token_t=script.ty_args[0],
+        receiver=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
+        amount=bcs.deserialize(script.args[1], st.uint128),
+        period=bcs.deserialize(script.args[2], st.uint64),
+        exec_delay=bcs.deserialize(script.args[3], st.uint64),
+    )
+
+
 def decode_queue_proposal_action_script_function(script: TransactionPayload) -> ScriptFunctionCall:
     if not isinstance(script, ScriptFunction):
         raise ValueError("Unexpected transaction payload")
@@ -1240,18 +1452,6 @@ def decode_rotate_authentication_key_script_function(script: TransactionPayload)
     )
 
 
-def decode_split_fixed_key_script_function(script: TransactionPayload) -> ScriptFunctionCall:
-    if not isinstance(script, ScriptFunction):
-        raise ValueError("Unexpected transaction payload")
-    return ScriptFunctionCall__SplitFixedKey(
-        token=script.ty_args[0],
-        for_address=bcs.deserialize(
-            script.args[0], starcoin_types.AccountAddress),
-        amount=bcs.deserialize(script.args[1], st.uint128),
-        lock_period=bcs.deserialize(script.args[2], st.uint64),
-    )
-
-
 def decode_submit_module_upgrade_plan_script_function(script: TransactionPayload) -> ScriptFunctionCall:
     if not isinstance(script, ScriptFunction):
         raise ValueError("Unexpected transaction payload")
@@ -1260,6 +1460,13 @@ def decode_submit_module_upgrade_plan_script_function(script: TransactionPayload
         proposer_address=bcs.deserialize(
             script.args[0], starcoin_types.AccountAddress),
         proposal_id=bcs.deserialize(script.args[1], st.uint64),
+    )
+
+
+def decode_take_linear_withdraw_capability_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__TakeLinearWithdrawCapability(
     )
 
 
@@ -1293,6 +1500,34 @@ def decode_update_module_upgrade_strategy_script_function(script: TransactionPay
     )
 
 
+def decode_upgrade_from_v2_to_v3_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__UpgradeFromV2ToV3(
+        total_stc_amount=bcs.deserialize(script.args[0], st.uint128),
+    )
+
+
+def decode_withdraw_and_split_lt_withdraw_cap_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__WithdrawAndSplitLtWithdrawCap(
+        token_t=script.ty_args[0],
+        for_address=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
+        amount=bcs.deserialize(script.args[1], st.uint128),
+        lock_period=bcs.deserialize(script.args[2], st.uint64),
+    )
+
+
+def decode_withdraw_token_with_linear_withdraw_capability_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__WithdrawTokenWithLinearWithdrawCapability(
+        token_t=script.ty_args[0],
+    )
+
+
 # pyre-ignore
 TRANSACTION_SCRIPT_ENCODER_MAP: typing.Dict[typing.Type[ScriptCall], typing.Callable[[ScriptCall], Script]] = {
 }
@@ -1305,33 +1540,38 @@ SCRIPT_FUNCTION_ENCODER_MAP: typing.Dict[typing.Type[ScriptFunctionCall], typing
     ScriptFunctionCall__CastVote: encode_cast_vote_script_function,
     ScriptFunctionCall__ConvertTwoPhaseUpgradeToTwoPhaseUpgradeV2: encode_convert_TwoPhaseUpgrade_to_TwoPhaseUpgradeV2_script_function,
     ScriptFunctionCall__CreateAccountWithInitialAmount: encode_create_account_with_initial_amount_script_function,
+    ScriptFunctionCall__CreateAccountWithInitialAmountV2: encode_create_account_with_initial_amount_v2_script_function,
     ScriptFunctionCall__DestroyTerminatedProposal: encode_destroy_terminated_proposal_script_function,
     ScriptFunctionCall__EmptyScript: encode_empty_script_script_function,
     ScriptFunctionCall__Execute: encode_execute_script_function,
     ScriptFunctionCall__ExecuteOnChainConfigProposal: encode_execute_on_chain_config_proposal_script_function,
+    ScriptFunctionCall__ExecuteWithdrawProposal: encode_execute_withdraw_proposal_script_function,
     ScriptFunctionCall__Initialize: encode_initialize_script_function,
-    ScriptFunctionCall__MintAndSplitByLinearKey: encode_mint_and_split_by_linear_key_script_function,
-    ScriptFunctionCall__MintTokenByFixedKey: encode_mint_token_by_fixed_key_script_function,
-    ScriptFunctionCall__MintTokenByLinearKey: encode_mint_token_by_linear_key_script_function,
+    ScriptFunctionCall__InitializeV2: encode_initialize_v2_script_function,
     ScriptFunctionCall__PeerToPeer: encode_peer_to_peer_script_function,
     ScriptFunctionCall__PeerToPeerBatch: encode_peer_to_peer_batch_script_function,
+    ScriptFunctionCall__PeerToPeerV2: encode_peer_to_peer_v2_script_function,
     ScriptFunctionCall__PeerToPeerWithMetadata: encode_peer_to_peer_with_metadata_script_function,
+    ScriptFunctionCall__PeerToPeerWithMetadataV2: encode_peer_to_peer_with_metadata_v2_script_function,
     ScriptFunctionCall__Propose: encode_propose_script_function,
-    ScriptFunctionCall__ProposeModuleUpgrade: encode_propose_module_upgrade_script_function,
     ScriptFunctionCall__ProposeModuleUpgradeV2: encode_propose_module_upgrade_v2_script_function,
     ScriptFunctionCall__ProposeUpdateConsensusConfig: encode_propose_update_consensus_config_script_function,
     ScriptFunctionCall__ProposeUpdateRewardConfig: encode_propose_update_reward_config_script_function,
     ScriptFunctionCall__ProposeUpdateTxnPublishOption: encode_propose_update_txn_publish_option_script_function,
     ScriptFunctionCall__ProposeUpdateTxnTimeoutConfig: encode_propose_update_txn_timeout_config_script_function,
     ScriptFunctionCall__ProposeUpdateVmConfig: encode_propose_update_vm_config_script_function,
+    ScriptFunctionCall__ProposeWithdraw: encode_propose_withdraw_script_function,
     ScriptFunctionCall__QueueProposalAction: encode_queue_proposal_action_script_function,
     ScriptFunctionCall__RevokeVote: encode_revoke_vote_script_function,
     ScriptFunctionCall__RotateAuthenticationKey: encode_rotate_authentication_key_script_function,
-    ScriptFunctionCall__SplitFixedKey: encode_split_fixed_key_script_function,
     ScriptFunctionCall__SubmitModuleUpgradePlan: encode_submit_module_upgrade_plan_script_function,
+    ScriptFunctionCall__TakeLinearWithdrawCapability: encode_take_linear_withdraw_capability_script_function,
     ScriptFunctionCall__TakeOffer: encode_take_offer_script_function,
     ScriptFunctionCall__UnstakeVote: encode_unstake_vote_script_function,
     ScriptFunctionCall__UpdateModuleUpgradeStrategy: encode_update_module_upgrade_strategy_script_function,
+    ScriptFunctionCall__UpgradeFromV2ToV3: encode_upgrade_from_v2_to_v3_script_function,
+    ScriptFunctionCall__WithdrawAndSplitLtWithdrawCap: encode_withdraw_and_split_lt_withdraw_cap_script_function,
+    ScriptFunctionCall__WithdrawTokenWithLinearWithdrawCapability: encode_withdraw_token_with_linear_withdraw_capability_script_function,
 }
 
 
@@ -1345,31 +1585,36 @@ SCRIPT_FUNCTION_DECODER_MAP: typing.Dict[str, typing.Callable[[TransactionPayloa
     "DaoVoteScriptscast_vote": decode_cast_vote_script_function,
     "PackageTxnManagerconvert_TwoPhaseUpgrade_to_TwoPhaseUpgradeV2": decode_convert_TwoPhaseUpgrade_to_TwoPhaseUpgradeV2_script_function,
     "Accountcreate_account_with_initial_amount": decode_create_account_with_initial_amount_script_function,
+    "Accountcreate_account_with_initial_amount_v2": decode_create_account_with_initial_amount_v2_script_function,
     "Daodestroy_terminated_proposal": decode_destroy_terminated_proposal_script_function,
     "EmptyScriptsempty_script": decode_empty_script_script_function,
     "ModifyDaoConfigProposalexecute": decode_execute_script_function,
     "OnChainConfigScriptsexecute_on_chain_config_proposal": decode_execute_on_chain_config_proposal_script_function,
+    "TreasuryScriptsexecute_withdraw_proposal": decode_execute_withdraw_proposal_script_function,
     "Genesisinitialize": decode_initialize_script_function,
-    "MintScriptsmint_and_split_by_linear_key": decode_mint_and_split_by_linear_key_script_function,
-    "MintScriptsmint_token_by_fixed_key": decode_mint_token_by_fixed_key_script_function,
-    "MintScriptsmint_token_by_linear_key": decode_mint_token_by_linear_key_script_function,
+    "Genesisinitialize_v2": decode_initialize_v2_script_function,
     "TransferScriptspeer_to_peer": decode_peer_to_peer_script_function,
     "TransferScriptspeer_to_peer_batch": decode_peer_to_peer_batch_script_function,
+    "TransferScriptspeer_to_peer_v2": decode_peer_to_peer_v2_script_function,
     "TransferScriptspeer_to_peer_with_metadata": decode_peer_to_peer_with_metadata_script_function,
+    "TransferScriptspeer_to_peer_with_metadata_v2": decode_peer_to_peer_with_metadata_v2_script_function,
     "ModifyDaoConfigProposalpropose": decode_propose_script_function,
-    "ModuleUpgradeScriptspropose_module_upgrade": decode_propose_module_upgrade_script_function,
     "ModuleUpgradeScriptspropose_module_upgrade_v2": decode_propose_module_upgrade_v2_script_function,
     "OnChainConfigScriptspropose_update_consensus_config": decode_propose_update_consensus_config_script_function,
     "OnChainConfigScriptspropose_update_reward_config": decode_propose_update_reward_config_script_function,
     "OnChainConfigScriptspropose_update_txn_publish_option": decode_propose_update_txn_publish_option_script_function,
     "OnChainConfigScriptspropose_update_txn_timeout_config": decode_propose_update_txn_timeout_config_script_function,
     "OnChainConfigScriptspropose_update_vm_config": decode_propose_update_vm_config_script_function,
+    "TreasuryScriptspropose_withdraw": decode_propose_withdraw_script_function,
     "Daoqueue_proposal_action": decode_queue_proposal_action_script_function,
     "DaoVoteScriptsrevoke_vote": decode_revoke_vote_script_function,
     "Accountrotate_authentication_key": decode_rotate_authentication_key_script_function,
-    "MintScriptssplit_fixed_key": decode_split_fixed_key_script_function,
     "ModuleUpgradeScriptssubmit_module_upgrade_plan": decode_submit_module_upgrade_plan_script_function,
+    "StdlibUpgradeScriptstake_linear_withdraw_capability": decode_take_linear_withdraw_capability_script_function,
     "Offertake_offer": decode_take_offer_script_function,
     "DaoVoteScriptsunstake_vote": decode_unstake_vote_script_function,
     "ModuleUpgradeScriptsupdate_module_upgrade_strategy": decode_update_module_upgrade_strategy_script_function,
+    "StdlibUpgradeScriptsupgrade_from_v2_to_v3": decode_upgrade_from_v2_to_v3_script_function,
+    "TreasuryScriptswithdraw_and_split_lt_withdraw_cap": decode_withdraw_and_split_lt_withdraw_cap_script_function,
+    "TreasuryScriptswithdraw_token_with_linear_withdraw_capability": decode_withdraw_token_with_linear_withdraw_capability_script_function,
 }
