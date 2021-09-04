@@ -594,6 +594,21 @@ def encode_mint_token_by_linear_key_script_function(token: TypeTag) -> Transacti
     )
 
 
+def encode_peer_to_peer_v2_script_function(token_type: TypeTag, payee: AccountAddress, amount: st.uint128) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("TransferScripts")),
+            function=Identifier("peer_to_peer_v2"),
+            ty_args=[token_type],
+            args=[bcs.serialize(payee, starcoin_types.AccountAddress),
+                  bcs.serialize(amount, st.uint128)],
+        )
+    )
+
+
 def encode_peer_to_peer_script_function(token_type: TypeTag, payee: AccountAddress, payee_auth_key: bytes, amount: st.uint128) -> TransactionPayload:
     """.
     """

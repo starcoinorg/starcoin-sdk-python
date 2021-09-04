@@ -9,14 +9,12 @@ import time
 import typing
 
 
-def transfer(cli: client.Client, sender: local_account.LocalAccount, receipt: str, amount: st.uint128):
+def transfer(cli: client.Client, sender: local_account.LocalAccount, receiver: types.AccountAddress, amount: st.uint128, chain_id: st.uint8):
     seq_num = cli.get_account_sequence(
         "0x"+sender.account_address.bcs_serialize().hex())
-    receipt = ReceiptIdentifier.decode(receipt)
-    script = stdlib.encode_peer_to_peer_script_function(
+    script = stdlib.encode_peer_to_peer_v2_script_function(
         token_type=utils.currency_code("STC"),
-        payee=receipt.account_address,
-        payee_auth_key=receipt.auth_key.data if receipt.auth_key is not None else b"",
+        payee=receiver,
         amount=amount,
     )
     node_info = cli.node_info()
@@ -31,7 +29,7 @@ def transfer(cli: client.Client, sender: local_account.LocalAccount, receipt: st
         gas_unit_price=1,
         gas_token_code="0x1::STC::STC",
         expiration_timestamp_secs=expiration_timestamp_secs,
-        chain_id=types.ChainId(st.uint8(251)),
+        chain_id=types.ChainId(chain_id),
     )
 
     txn = sender.sign(raw_txn)
@@ -40,20 +38,21 @@ def transfer(cli: client.Client, sender: local_account.LocalAccount, receipt: st
 
 if __name__ == "__main__":
     cli = client.Client("https://barnard-seed.starcoin.org")
+    chain_id = 251
+
+    # NanoSTC (1 STC = 1000000000 NanoSTC)
+    amount = 1024
+
+    sender_private_key = "0xe424e16db235e3f3b9ef2475516c51d4c15aa5287ceb364213698bd551eab4f2"
+
+    reciever_address = "0x4c7afc223df1d47072194dcefe26a445"
+
     # sender
-    private_key = Ed25519PrivateKey.from_private_bytes(bytes.fromhex(
-        "e424e16db235e3f3b9ef2475516c51d4c15aa5287ceb364213698bd551eab4f2"))
+    private_key = Ed25519PrivateKey.from_private_bytes(
+        bytes.fromhex(sender_private_key[2:]))
     sender = local_account.LocalAccount(private_key)
 
     # reciver
-    payee_public_key_hex = "848a4e958af8f127a0b4797ab0a2868e2e15b5232ed1076fdf34228433f96a2f"
-    pk = Ed25519PublicKey.from_public_bytes(
-        bytes.fromhex(payee_public_key_hex))
-    payee_auth_key = auth_key.AuthKey.from_public_key(pk)
-    payee_address = payee_auth_key.account_address()
-    if cli.is_account_exist("0x"+payee_address.bcs_serialize().hex()):
-        payee_auth_key = auth_key.AuthKey(b"")
-    receipt = ReceiptIdentifier(payee_address, payee_auth_key).encode()
-    transfer(cli, sender, receipt, 1024)
-    print(cli.get_account_token(
-        utils.account_address_hex(payee_address), "STC", "STC"))
+    reciver = types.AccountAddress.from_hex(reciever_address[2:])
+
+    transfer(cli, sender, reciver, amount, chain_id)
