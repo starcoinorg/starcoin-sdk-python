@@ -12,4 +12,4 @@ $python setup.py install
 $python examples/p2p_transfer.py
 
 <!-- transfer 1024 NanoSTC to receiver by it's address -->
-$python examples/p2p_v2_transfer.py
+$python examples/p2p_transfer_by_address.py
