@@ -61,7 +61,7 @@ class LocalAccount:
         return self.private_key.public_key()
 
     @property
-    def private_key_bytes(self) -> bytes:
+    def private_key_hex(self) -> str:
         return self.private_key.private_bytes(
             encoding=serialization.Encoding.Raw,
             format=serialization.PrivateFormat.Raw,
