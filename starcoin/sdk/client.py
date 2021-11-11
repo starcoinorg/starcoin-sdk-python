@@ -180,7 +180,7 @@ class Client():
             u"params": [filter, option],
         }
         return self.execute(operation)
-    
+
     def get_state_root_by_height(self, block_number: int):
         operation = {
             u"rpc_method": u"chain.get_block_by_number",

@@ -11,6 +11,7 @@ from starcoin import starcoin_types
 from . import utils
 from .auth_key import AuthKey
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey, Ed25519PublicKey
+from cryptography.hazmat.primitives import serialization
 
 
 class LocalAccount:
@@ -38,6 +39,11 @@ class LocalAccount:
         self.private_key = private_key
         self.compliance_key = Ed25519PrivateKey.generate()
 
+    def from_private_key(private_key: str) -> 'LocalAccount':
+        ed_private_key = Ed25519PrivateKey.from_private_bytes(
+            bytes.fromhex(private_key))
+        return LocalAccount(ed_private_key)
+
     @property
     def auth_key(self) -> AuthKey:
         return AuthKey.from_public_key(self.public_key)
@@ -53,6 +59,14 @@ class LocalAccount:
     @property
     def public_key(self) -> Ed25519PublicKey:
         return self.private_key.public_key()
+
+    @property
+    def private_key_bytes(self) -> bytes:
+        return self.private_key.private_bytes(
+            encoding=serialization.Encoding.Raw,
+            format=serialization.PrivateFormat.Raw,
+            encryption_algorithm=serialization.NoEncryption()
+        ).hex()
 
     @property
     def compliance_public_key_bytes(self) -> bytes:
