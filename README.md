@@ -8,8 +8,11 @@ Python 3.8.5
 ## Examples
 $python setup.py install
 
-// transfer 1024 NanoSTC to receiver by it's public key
+- transfer 1024 NanoSTC to receiver by it's public key
+``` bash
 $python examples/p2p_transfer.py
-
-// transfer 1024 NanoSTC to receiver by it's address
+```
+- transfer 1024 NanoSTC to receiver by it's address
+``` bash
 $python examples/p2p_transfer_by_address.py
+```
