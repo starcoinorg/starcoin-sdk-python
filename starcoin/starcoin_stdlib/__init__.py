@@ -1,11 +1,11 @@
 # pyre-strict
-from starcoin import bcs
-from starcoin.starcoin_types import (Script, ScriptFunction, TransactionPayload, TransactionPayload__ScriptFunction, Identifier, ModuleId, TypeTag, AccountAddress, TransactionArgument,
-                                     TransactionArgument__Bool, TransactionArgument__U8, TransactionArgument__U64, TransactionArgument__U128, TransactionArgument__Address, TransactionArgument__U8Vector)
 from dataclasses import dataclass
 import typing
 from starcoin import serde_types as st
 from starcoin import starcoin_types
+from starcoin import bcs
+from starcoin.starcoin_types import (Script, ScriptFunction, TransactionPayload, TransactionPayload__ScriptFunction, Identifier, ModuleId, TypeTag, AccountAddress, TransactionArgument,
+                                     TransactionArgument__Bool, TransactionArgument__U8, TransactionArgument__U64, TransactionArgument__U128, TransactionArgument__Address, TransactionArgument__U8Vector)
 
 
 class ScriptCall:
@@ -21,6 +21,14 @@ class ScriptFunctionCall:
 
 
 @dataclass(frozen=True)
+class ScriptFunctionCall__Accept(ScriptFunctionCall):
+    """Init a  NFTGallery for accept NFT<NFTMeta, NFTBody>.
+    """
+    nft_meta: starcoin_types.TypeTag
+    nft_body: starcoin_types.TypeTag
+
+
+@dataclass(frozen=True)
 class ScriptFunctionCall__AcceptToken(ScriptFunctionCall):
     """.
     """
@@ -29,7 +37,7 @@ class ScriptFunctionCall__AcceptToken(ScriptFunctionCall):
 
 @dataclass(frozen=True)
 class ScriptFunctionCall__CancelUpgradePlan(ScriptFunctionCall):
-    """.
+    """Cancel current upgrade plan, the `sender` must have `UpgradePlanCapability`.
     """
     pass
 
@@ -73,6 +81,14 @@ class ScriptFunctionCall__CreateAccountWithInitialAmountV2(ScriptFunctionCall):
 
 
 @dataclass(frozen=True)
+class ScriptFunctionCall__DestroyEmpty(ScriptFunctionCall):
+    """Destroy empty IdentifierNFT.
+    """
+    nft_meta: starcoin_types.TypeTag
+    nft_body: starcoin_types.TypeTag
+
+
+@dataclass(frozen=True)
 class ScriptFunctionCall__DestroyTerminatedProposal(ScriptFunctionCall):
     """remove terminated proposal from proposer.
     """
@@ -83,8 +99,26 @@ class ScriptFunctionCall__DestroyTerminatedProposal(ScriptFunctionCall):
 
 
 @dataclass(frozen=True)
+class ScriptFunctionCall__DisableAutoAcceptToken(ScriptFunctionCall):
+    """Disable account's auto-accept-token feature.
+
+    The script function is reenterable.
+    """
+    pass
+
+
+@dataclass(frozen=True)
 class ScriptFunctionCall__EmptyScript(ScriptFunctionCall):
     """.
+    """
+    pass
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__EnableAutoAcceptToken(ScriptFunctionCall):
+    """Enable account's auto-accept-token feature.
+
+    The script function is reenterable.
     """
     pass
 
@@ -99,10 +133,29 @@ class ScriptFunctionCall__Execute(ScriptFunctionCall):
 
 
 @dataclass(frozen=True)
+class ScriptFunctionCall__ExecuteModuleUpgradePlanPropose(ScriptFunctionCall):
+    """Execute module upgrade plan propose by submit module upgrade plan, the propose must been agreed, and anyone can execute this function.
+    """
+    token: starcoin_types.TypeTag
+    proposer_address: starcoin_types.AccountAddress
+    proposal_id: st.uint64
+
+
+@dataclass(frozen=True)
 class ScriptFunctionCall__ExecuteOnChainConfigProposal(ScriptFunctionCall):
     """.
     """
     config_t: starcoin_types.TypeTag
+    proposal_id: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__ExecuteOnChainConfigProposalV2(ScriptFunctionCall):
+    """.
+    """
+    token_type: starcoin_types.TypeTag
+    config_t: starcoin_types.TypeTag
+    proposer_address: starcoin_types.AccountAddress
     proposal_id: st.uint64
 
 
@@ -113,6 +166,24 @@ class ScriptFunctionCall__ExecuteWithdrawProposal(ScriptFunctionCall):
     token_t: starcoin_types.TypeTag
     proposer_address: starcoin_types.AccountAddress
     proposal_id: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__FlipVote(ScriptFunctionCall):
+    """Let user change their vote during the voting time.
+    """
+    token_t: starcoin_types.TypeTag
+    action_t: starcoin_types.TypeTag
+    proposer_address: starcoin_types.AccountAddress
+    proposal_id: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__InitDataSource(ScriptFunctionCall):
+    """.
+    """
+    oracle_t: starcoin_types.TypeTag
+    init_value: st.uint128
 
 
 @dataclass(frozen=True)
@@ -211,6 +282,13 @@ class ScriptFunctionCall__InitializeV2(ScriptFunctionCall):
 
 
 @dataclass(frozen=True)
+class ScriptFunctionCall__Mint(ScriptFunctionCall):
+    """.
+    """
+    amount: st.uint128
+
+
+@dataclass(frozen=True)
 class ScriptFunctionCall__PeerToPeer(ScriptFunctionCall):
     """.
     """
@@ -303,6 +381,14 @@ class ScriptFunctionCall__ProposeUpdateConsensusConfig(ScriptFunctionCall):
 
 
 @dataclass(frozen=True)
+class ScriptFunctionCall__ProposeUpdateMoveLanguageVersion(ScriptFunctionCall):
+    """.
+    """
+    new_version: st.uint64
+    exec_delay: st.uint64
+
+
+@dataclass(frozen=True)
 class ScriptFunctionCall__ProposeUpdateRewardConfig(ScriptFunctionCall):
     """.
     """
@@ -369,13 +455,32 @@ class ScriptFunctionCall__QueueProposalAction(ScriptFunctionCall):
 
 
 @dataclass(frozen=True)
-class ScriptFunctionCall__RevokeVote(ScriptFunctionCall):
+class ScriptFunctionCall__RegisterOracle(ScriptFunctionCall):
     """.
+    """
+    oracle_t: starcoin_types.TypeTag
+    precision: st.uint8
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__RevokeVote(ScriptFunctionCall):
+    """revoke all votes on a proposal.
     """
     token: starcoin_types.TypeTag
     action: starcoin_types.TypeTag
     proposer_address: starcoin_types.AccountAddress
     proposal_id: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__RevokeVoteOfPower(ScriptFunctionCall):
+    """revoke some votes on a proposal.
+    """
+    token: starcoin_types.TypeTag
+    action: starcoin_types.TypeTag
+    proposer_address: starcoin_types.AccountAddress
+    proposal_id: st.uint64
+    power: st.uint128
 
 
 @dataclass(frozen=True)
@@ -387,11 +492,20 @@ class ScriptFunctionCall__RotateAuthenticationKey(ScriptFunctionCall):
 
 @dataclass(frozen=True)
 class ScriptFunctionCall__SubmitModuleUpgradePlan(ScriptFunctionCall):
-    """.
+    """a alias of execute_module_upgrade_plan_propose, will deprecated in the future.
     """
     token: starcoin_types.TypeTag
     proposer_address: starcoin_types.AccountAddress
     proposal_id: st.uint64
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__SubmitUpgradePlan(ScriptFunctionCall):
+    """Directly submit a upgrade plan, the `sender`'s module upgrade plan must been PackageTxnManager::STRATEGY_TWO_PHASE and have UpgradePlanCapability.
+    """
+    package_hash: bytes
+    version: st.uint64
+    enforced: bool
 
 
 @dataclass(frozen=True)
@@ -410,6 +524,16 @@ class ScriptFunctionCall__TakeOffer(ScriptFunctionCall):
 
 
 @dataclass(frozen=True)
+class ScriptFunctionCall__Transfer(ScriptFunctionCall):
+    """Transfer NFT<NFTMeta, NFTBody> with `id` from `sender` to `receiver`.
+    """
+    nft_meta: starcoin_types.TypeTag
+    nft_body: starcoin_types.TypeTag
+    id: st.uint64
+    receiver: starcoin_types.AccountAddress
+
+
+@dataclass(frozen=True)
 class ScriptFunctionCall__UnstakeVote(ScriptFunctionCall):
     """.
     """
@@ -420,8 +544,16 @@ class ScriptFunctionCall__UnstakeVote(ScriptFunctionCall):
 
 
 @dataclass(frozen=True)
-class ScriptFunctionCall__UpdateModuleUpgradeStrategy(ScriptFunctionCall):
+class ScriptFunctionCall__Update(ScriptFunctionCall):
     """.
+    """
+    oracle_t: starcoin_types.TypeTag
+    value: st.uint128
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__UpdateModuleUpgradeStrategy(ScriptFunctionCall):
+    """Update `sender`'s module upgrade strategy to `strategy`.
     """
     strategy: st.uint8
 
@@ -431,6 +563,27 @@ class ScriptFunctionCall__UpgradeFromV2ToV3(ScriptFunctionCall):
     """Stdlib upgrade script from v2 to v3.
     """
     total_stc_amount: st.uint128
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__UpgradeFromV5ToV6(ScriptFunctionCall):
+    """.
+    """
+    pass
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__UpgradeFromV6ToV7(ScriptFunctionCall):
+    """.
+    """
+    pass
+
+
+@dataclass(frozen=True)
+class ScriptFunctionCall__UpgradeFromV7ToV8(ScriptFunctionCall):
+    """.
+    """
+    pass
 
 
 @dataclass(frozen=True)
@@ -486,6 +639,20 @@ def decode_script_function_payload(payload: TransactionPayload) -> ScriptFunctio
     return helper(script)
 
 
+def encode_accept_script_function(nft_meta: TypeTag, nft_body: TypeTag) -> TransactionPayload:
+    """Init a  NFTGallery for accept NFT<NFTMeta, NFTBody>.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("NFTGalleryScripts")),
+            function=Identifier("accept"),
+            ty_args=[nft_meta, nft_body],
+            args=[],
+        )
+    )
+
+
 def encode_accept_token_script_function(token_type: TypeTag) -> TransactionPayload:
     """.
     """
@@ -501,7 +668,7 @@ def encode_accept_token_script_function(token_type: TypeTag) -> TransactionPaylo
 
 
 def encode_cancel_upgrade_plan_script_function() -> TransactionPayload:
-    """.
+    """Cancel current upgrade plan, the `sender` must have `UpgradePlanCapability`.
     """
     return TransactionPayload__ScriptFunction(
         value=ScriptFunction(
@@ -575,6 +742,20 @@ def encode_create_account_with_initial_amount_v2_script_function(token_type: Typ
     )
 
 
+def encode_destroy_empty_script_function(nft_meta: TypeTag, nft_body: TypeTag) -> TransactionPayload:
+    """Destroy empty IdentifierNFT.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("IdentifierNFTScripts")),
+            function=Identifier("destroy_empty"),
+            ty_args=[nft_meta, nft_body],
+            args=[],
+        )
+    )
+
+
 def encode_destroy_terminated_proposal_script_function(token_t: TypeTag, action_t: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> TransactionPayload:
     """remove terminated proposal from proposer.
     """
@@ -590,6 +771,22 @@ def encode_destroy_terminated_proposal_script_function(token_t: TypeTag, action_
     )
 
 
+def encode_disable_auto_accept_token_script_function() -> TransactionPayload:
+    """Disable account's auto-accept-token feature.
+
+    The script function is reenterable.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("AccountScripts")),
+            function=Identifier("disable_auto_accept_token"),
+            ty_args=[],
+            args=[],
+        )
+    )
+
+
 def encode_empty_script_script_function() -> TransactionPayload:
     """.
     """
@@ -598,6 +795,22 @@ def encode_empty_script_script_function() -> TransactionPayload:
             module=ModuleId(address=AccountAddress.from_hex(
                 "00000000000000000000000000000001"), name=Identifier("EmptyScripts")),
             function=Identifier("empty_script"),
+            ty_args=[],
+            args=[],
+        )
+    )
+
+
+def encode_enable_auto_accept_token_script_function() -> TransactionPayload:
+    """Enable account's auto-accept-token feature.
+
+    The script function is reenterable.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("AccountScripts")),
+            function=Identifier("enable_auto_accept_token"),
             ty_args=[],
             args=[],
         )
@@ -619,6 +832,21 @@ def encode_execute_script_function(token_t: TypeTag, proposer_address: AccountAd
     )
 
 
+def encode_execute_module_upgrade_plan_propose_script_function(token: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> TransactionPayload:
+    """Execute module upgrade plan propose by submit module upgrade plan, the propose must been agreed, and anyone can execute this function.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("ModuleUpgradeScripts")),
+            function=Identifier("execute_module_upgrade_plan_propose"),
+            ty_args=[token],
+            args=[bcs.serialize(proposer_address, starcoin_types.AccountAddress), bcs.serialize(
+                proposal_id, st.uint64)],
+        )
+    )
+
+
 def encode_execute_on_chain_config_proposal_script_function(config_t: TypeTag, proposal_id: st.uint64) -> TransactionPayload:
     """.
     """
@@ -629,6 +857,21 @@ def encode_execute_on_chain_config_proposal_script_function(config_t: TypeTag, p
             function=Identifier("execute_on_chain_config_proposal"),
             ty_args=[config_t],
             args=[bcs.serialize(proposal_id, st.uint64)],
+        )
+    )
+
+
+def encode_execute_on_chain_config_proposal_v2_script_function(token_type: TypeTag, config_t: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("OnChainConfigScripts")),
+            function=Identifier("execute_on_chain_config_proposal_v2"),
+            ty_args=[token_type, config_t],
+            args=[bcs.serialize(proposer_address, starcoin_types.AccountAddress), bcs.serialize(
+                proposal_id, st.uint64)],
         )
     )
 
@@ -644,6 +887,35 @@ def encode_execute_withdraw_proposal_script_function(token_t: TypeTag, proposer_
             ty_args=[token_t],
             args=[bcs.serialize(proposer_address, starcoin_types.AccountAddress), bcs.serialize(
                 proposal_id, st.uint64)],
+        )
+    )
+
+
+def encode_flip_vote_script_function(token_t: TypeTag, action_t: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> TransactionPayload:
+    """Let user change their vote during the voting time.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("DaoVoteScripts")),
+            function=Identifier("flip_vote"),
+            ty_args=[token_t, action_t],
+            args=[bcs.serialize(proposer_address, starcoin_types.AccountAddress), bcs.serialize(
+                proposal_id, st.uint64)],
+        )
+    )
+
+
+def encode_init_data_source_script_function(oracle_t: TypeTag, init_value: st.uint128) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("PriceOracleScripts")),
+            function=Identifier("init_data_source"),
+            ty_args=[oracle_t],
+            args=[bcs.serialize(init_value, st.uint128)],
         )
     )
 
@@ -678,7 +950,21 @@ def encode_initialize_v2_script_function(stdlib_version: st.uint64, reward_delay
     )
 
 
-def encode_peer_to_peer_script_function(token_type: TypeTag, payee: AccountAddress, payee_auth_key: bytes, amount: st.uint128) -> TransactionPayload:
+def encode_mint_script_function(amount: st.uint128) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("DummyTokenScripts")),
+            function=Identifier("mint"),
+            ty_args=[],
+            args=[bcs.serialize(amount, st.uint128)],
+        )
+    )
+
+
+def encode_peer_to_peer_script_function(token_type: TypeTag, payee: AccountAddress, _payee_auth_key: bytes, amount: st.uint128) -> TransactionPayload:
     """.
     """
     return TransactionPayload__ScriptFunction(
@@ -688,7 +974,7 @@ def encode_peer_to_peer_script_function(token_type: TypeTag, payee: AccountAddre
             function=Identifier("peer_to_peer"),
             ty_args=[token_type],
             args=[bcs.serialize(payee, starcoin_types.AccountAddress), bcs.serialize(
-                payee_auth_key, bytes), bcs.serialize(amount, st.uint128)],
+                _payee_auth_key, bytes), bcs.serialize(amount, st.uint128)],
         )
     )
 
@@ -798,6 +1084,21 @@ def encode_propose_update_consensus_config_script_function(uncle_rate_target: st
     )
 
 
+def encode_propose_update_move_language_version_script_function(new_version: st.uint64, exec_delay: st.uint64) -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("OnChainConfigScripts")),
+            function=Identifier("propose_update_move_language_version"),
+            ty_args=[],
+            args=[bcs.serialize(new_version, st.uint64),
+                  bcs.serialize(exec_delay, st.uint64)],
+        )
+    )
+
+
 def encode_propose_update_reward_config_script_function(reward_delay: st.uint64, exec_delay: st.uint64) -> TransactionPayload:
     """.
     """
@@ -888,8 +1189,22 @@ def encode_queue_proposal_action_script_function(token_t: TypeTag, action_t: Typ
     )
 
 
-def encode_revoke_vote_script_function(token: TypeTag, action: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> TransactionPayload:
+def encode_register_oracle_script_function(oracle_t: TypeTag, precision: st.uint8) -> TransactionPayload:
     """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("PriceOracleScripts")),
+            function=Identifier("register_oracle"),
+            ty_args=[oracle_t],
+            args=[bcs.serialize(precision, st.uint8)],
+        )
+    )
+
+
+def encode_revoke_vote_script_function(token: TypeTag, action: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> TransactionPayload:
+    """revoke all votes on a proposal.
     """
     return TransactionPayload__ScriptFunction(
         value=ScriptFunction(
@@ -899,6 +1214,21 @@ def encode_revoke_vote_script_function(token: TypeTag, action: TypeTag, proposer
             ty_args=[token, action],
             args=[bcs.serialize(proposer_address, starcoin_types.AccountAddress), bcs.serialize(
                 proposal_id, st.uint64)],
+        )
+    )
+
+
+def encode_revoke_vote_of_power_script_function(token: TypeTag, action: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64, power: st.uint128) -> TransactionPayload:
+    """revoke some votes on a proposal.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("DaoVoteScripts")),
+            function=Identifier("revoke_vote_of_power"),
+            ty_args=[token, action],
+            args=[bcs.serialize(proposer_address, starcoin_types.AccountAddress), bcs.serialize(
+                proposal_id, st.uint64), bcs.serialize(power, st.uint128)],
         )
     )
 
@@ -918,7 +1248,7 @@ def encode_rotate_authentication_key_script_function(new_key: bytes) -> Transact
 
 
 def encode_submit_module_upgrade_plan_script_function(token: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> TransactionPayload:
-    """.
+    """a alias of execute_module_upgrade_plan_propose, will deprecated in the future.
     """
     return TransactionPayload__ScriptFunction(
         value=ScriptFunction(
@@ -928,6 +1258,21 @@ def encode_submit_module_upgrade_plan_script_function(token: TypeTag, proposer_a
             ty_args=[token],
             args=[bcs.serialize(proposer_address, starcoin_types.AccountAddress), bcs.serialize(
                 proposal_id, st.uint64)],
+        )
+    )
+
+
+def encode_submit_upgrade_plan_script_function(package_hash: bytes, version: st.uint64, enforced: bool) -> TransactionPayload:
+    """Directly submit a upgrade plan, the `sender`'s module upgrade plan must been PackageTxnManager::STRATEGY_TWO_PHASE and have UpgradePlanCapability.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("ModuleUpgradeScripts")),
+            function=Identifier("submit_upgrade_plan"),
+            ty_args=[],
+            args=[bcs.serialize(package_hash, bytes), bcs.serialize(
+                version, st.uint64), bcs.serialize(enforced, st.bool)],
         )
     )
 
@@ -960,6 +1305,21 @@ def encode_take_offer_script_function(offered: TypeTag, offer_address: AccountAd
     )
 
 
+def encode_transfer_script_function(nft_meta: TypeTag, nft_body: TypeTag, id: st.uint64, receiver: AccountAddress) -> TransactionPayload:
+    """Transfer NFT<NFTMeta, NFTBody> with `id` from `sender` to `receiver`.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("NFTGalleryScripts")),
+            function=Identifier("transfer"),
+            ty_args=[nft_meta, nft_body],
+            args=[bcs.serialize(id, st.uint64), bcs.serialize(
+                receiver, starcoin_types.AccountAddress)],
+        )
+    )
+
+
 def encode_unstake_vote_script_function(token: TypeTag, action: TypeTag, proposer_address: AccountAddress, proposal_id: st.uint64) -> TransactionPayload:
     """.
     """
@@ -975,8 +1335,22 @@ def encode_unstake_vote_script_function(token: TypeTag, action: TypeTag, propose
     )
 
 
-def encode_update_module_upgrade_strategy_script_function(strategy: st.uint8) -> TransactionPayload:
+def encode_update_script_function(oracle_t: TypeTag, value: st.uint128) -> TransactionPayload:
     """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("PriceOracleScripts")),
+            function=Identifier("update"),
+            ty_args=[oracle_t],
+            args=[bcs.serialize(value, st.uint128)],
+        )
+    )
+
+
+def encode_update_module_upgrade_strategy_script_function(strategy: st.uint8) -> TransactionPayload:
+    """Update `sender`'s module upgrade strategy to `strategy`.
     """
     return TransactionPayload__ScriptFunction(
         value=ScriptFunction(
@@ -999,6 +1373,48 @@ def encode_upgrade_from_v2_to_v3_script_function(total_stc_amount: st.uint128) -
             function=Identifier("upgrade_from_v2_to_v3"),
             ty_args=[],
             args=[bcs.serialize(total_stc_amount, st.uint128)],
+        )
+    )
+
+
+def encode_upgrade_from_v5_to_v6_script_function() -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("StdlibUpgradeScripts")),
+            function=Identifier("upgrade_from_v5_to_v6"),
+            ty_args=[],
+            args=[],
+        )
+    )
+
+
+def encode_upgrade_from_v6_to_v7_script_function() -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("StdlibUpgradeScripts")),
+            function=Identifier("upgrade_from_v6_to_v7"),
+            ty_args=[],
+            args=[],
+        )
+    )
+
+
+def encode_upgrade_from_v7_to_v8_script_function() -> TransactionPayload:
+    """.
+    """
+    return TransactionPayload__ScriptFunction(
+        value=ScriptFunction(
+            module=ModuleId(address=AccountAddress.from_hex(
+                "00000000000000000000000000000001"), name=Identifier("StdlibUpgradeScripts")),
+            function=Identifier("upgrade_from_v7_to_v8"),
+            ty_args=[],
+            args=[],
         )
     )
 
@@ -1030,6 +1446,15 @@ def encode_withdraw_token_with_linear_withdraw_capability_script_function(token_
             ty_args=[token_t],
             args=[],
         )
+    )
+
+
+def decode_accept_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__Accept(
+        nft_meta=script.ty_args[0],
+        nft_body=script.ty_args[1],
     )
 
 
@@ -1094,6 +1519,15 @@ def decode_create_account_with_initial_amount_v2_script_function(script: Transac
     )
 
 
+def decode_destroy_empty_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__DestroyEmpty(
+        nft_meta=script.ty_args[0],
+        nft_body=script.ty_args[1],
+    )
+
+
 def decode_destroy_terminated_proposal_script_function(script: TransactionPayload) -> ScriptFunctionCall:
     if not isinstance(script, ScriptFunction):
         raise ValueError("Unexpected transaction payload")
@@ -1106,10 +1540,24 @@ def decode_destroy_terminated_proposal_script_function(script: TransactionPayloa
     )
 
 
+def decode_disable_auto_accept_token_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__DisableAutoAcceptToken(
+    )
+
+
 def decode_empty_script_script_function(script: TransactionPayload) -> ScriptFunctionCall:
     if not isinstance(script, ScriptFunction):
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__EmptyScript(
+    )
+
+
+def decode_enable_auto_accept_token_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__EnableAutoAcceptToken(
     )
 
 
@@ -1118,6 +1566,17 @@ def decode_execute_script_function(script: TransactionPayload) -> ScriptFunction
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__Execute(
         token_t=script.ty_args[0],
+        proposer_address=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
+        proposal_id=bcs.deserialize(script.args[1], st.uint64),
+    )
+
+
+def decode_execute_module_upgrade_plan_propose_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__ExecuteModuleUpgradePlanPropose(
+        token=script.ty_args[0],
         proposer_address=bcs.deserialize(
             script.args[0], starcoin_types.AccountAddress),
         proposal_id=bcs.deserialize(script.args[1], st.uint64),
@@ -1133,6 +1592,18 @@ def decode_execute_on_chain_config_proposal_script_function(script: TransactionP
     )
 
 
+def decode_execute_on_chain_config_proposal_v2_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__ExecuteOnChainConfigProposalV2(
+        token_type=script.ty_args[0],
+        config_t=script.ty_args[1],
+        proposer_address=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
+        proposal_id=bcs.deserialize(script.args[1], st.uint64),
+    )
+
+
 def decode_execute_withdraw_proposal_script_function(script: TransactionPayload) -> ScriptFunctionCall:
     if not isinstance(script, ScriptFunction):
         raise ValueError("Unexpected transaction payload")
@@ -1141,6 +1612,27 @@ def decode_execute_withdraw_proposal_script_function(script: TransactionPayload)
         proposer_address=bcs.deserialize(
             script.args[0], starcoin_types.AccountAddress),
         proposal_id=bcs.deserialize(script.args[1], st.uint64),
+    )
+
+
+def decode_flip_vote_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__FlipVote(
+        token_t=script.ty_args[0],
+        action_t=script.ty_args[1],
+        proposer_address=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
+        proposal_id=bcs.deserialize(script.args[1], st.uint64),
+    )
+
+
+def decode_init_data_source_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__InitDataSource(
+        oracle_t=script.ty_args[0],
+        init_value=bcs.deserialize(script.args[0], st.uint128),
     )
 
 
@@ -1253,6 +1745,14 @@ def decode_initialize_v2_script_function(script: TransactionPayload) -> ScriptFu
     )
 
 
+def decode_mint_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__Mint(
+        amount=bcs.deserialize(script.args[0], st.uint128),
+    )
+
+
 def decode_peer_to_peer_script_function(script: TransactionPayload) -> ScriptFunctionCall:
     if not isinstance(script, ScriptFunction):
         raise ValueError("Unexpected transaction payload")
@@ -1356,6 +1856,15 @@ def decode_propose_update_consensus_config_script_function(script: TransactionPa
     )
 
 
+def decode_propose_update_move_language_version_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__ProposeUpdateMoveLanguageVersion(
+        new_version=bcs.deserialize(script.args[0], st.uint64),
+        exec_delay=bcs.deserialize(script.args[1], st.uint64),
+    )
+
+
 def decode_propose_update_reward_config_script_function(script: TransactionPayload) -> ScriptFunctionCall:
     if not isinstance(script, ScriptFunction):
         raise ValueError("Unexpected transaction payload")
@@ -1432,6 +1941,15 @@ def decode_queue_proposal_action_script_function(script: TransactionPayload) -> 
     )
 
 
+def decode_register_oracle_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__RegisterOracle(
+        oracle_t=script.ty_args[0],
+        precision=bcs.deserialize(script.args[0], st.uint8),
+    )
+
+
 def decode_revoke_vote_script_function(script: TransactionPayload) -> ScriptFunctionCall:
     if not isinstance(script, ScriptFunction):
         raise ValueError("Unexpected transaction payload")
@@ -1441,6 +1959,19 @@ def decode_revoke_vote_script_function(script: TransactionPayload) -> ScriptFunc
         proposer_address=bcs.deserialize(
             script.args[0], starcoin_types.AccountAddress),
         proposal_id=bcs.deserialize(script.args[1], st.uint64),
+    )
+
+
+def decode_revoke_vote_of_power_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__RevokeVoteOfPower(
+        token=script.ty_args[0],
+        action=script.ty_args[1],
+        proposer_address=bcs.deserialize(
+            script.args[0], starcoin_types.AccountAddress),
+        proposal_id=bcs.deserialize(script.args[1], st.uint64),
+        power=bcs.deserialize(script.args[2], st.uint128),
     )
 
 
@@ -1463,6 +1994,16 @@ def decode_submit_module_upgrade_plan_script_function(script: TransactionPayload
     )
 
 
+def decode_submit_upgrade_plan_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__SubmitUpgradePlan(
+        package_hash=bcs.deserialize(script.args[0], bytes),
+        version=bcs.deserialize(script.args[1], st.uint64),
+        enforced=bcs.deserialize(script.args[2], bool),
+    )
+
+
 def decode_take_linear_withdraw_capability_script_function(script: TransactionPayload) -> ScriptFunctionCall:
     if not isinstance(script, ScriptFunction):
         raise ValueError("Unexpected transaction payload")
@@ -1480,6 +2021,18 @@ def decode_take_offer_script_function(script: TransactionPayload) -> ScriptFunct
     )
 
 
+def decode_transfer_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__Transfer(
+        nft_meta=script.ty_args[0],
+        nft_body=script.ty_args[1],
+        id=bcs.deserialize(script.args[0], st.uint64),
+        receiver=bcs.deserialize(
+            script.args[1], starcoin_types.AccountAddress),
+    )
+
+
 def decode_unstake_vote_script_function(script: TransactionPayload) -> ScriptFunctionCall:
     if not isinstance(script, ScriptFunction):
         raise ValueError("Unexpected transaction payload")
@@ -1489,6 +2042,15 @@ def decode_unstake_vote_script_function(script: TransactionPayload) -> ScriptFun
         proposer_address=bcs.deserialize(
             script.args[0], starcoin_types.AccountAddress),
         proposal_id=bcs.deserialize(script.args[1], st.uint64),
+    )
+
+
+def decode_update_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__Update(
+        oracle_t=script.ty_args[0],
+        value=bcs.deserialize(script.args[0], st.uint128),
     )
 
 
@@ -1505,6 +2067,27 @@ def decode_upgrade_from_v2_to_v3_script_function(script: TransactionPayload) -> 
         raise ValueError("Unexpected transaction payload")
     return ScriptFunctionCall__UpgradeFromV2ToV3(
         total_stc_amount=bcs.deserialize(script.args[0], st.uint128),
+    )
+
+
+def decode_upgrade_from_v5_to_v6_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__UpgradeFromV5ToV6(
+    )
+
+
+def decode_upgrade_from_v6_to_v7_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__UpgradeFromV6ToV7(
+    )
+
+
+def decode_upgrade_from_v7_to_v8_script_function(script: TransactionPayload) -> ScriptFunctionCall:
+    if not isinstance(script, ScriptFunction):
+        raise ValueError("Unexpected transaction payload")
+    return ScriptFunctionCall__UpgradeFromV7ToV8(
     )
 
 
@@ -1535,19 +2118,28 @@ TRANSACTION_SCRIPT_ENCODER_MAP: typing.Dict[typing.Type[ScriptCall], typing.Call
 
 # pyre-ignore
 SCRIPT_FUNCTION_ENCODER_MAP: typing.Dict[typing.Type[ScriptFunctionCall], typing.Callable[[ScriptFunctionCall], TransactionPayload]] = {
+    ScriptFunctionCall__Accept: encode_accept_script_function,
     ScriptFunctionCall__AcceptToken: encode_accept_token_script_function,
     ScriptFunctionCall__CancelUpgradePlan: encode_cancel_upgrade_plan_script_function,
     ScriptFunctionCall__CastVote: encode_cast_vote_script_function,
     ScriptFunctionCall__ConvertTwoPhaseUpgradeToTwoPhaseUpgradeV2: encode_convert_TwoPhaseUpgrade_to_TwoPhaseUpgradeV2_script_function,
     ScriptFunctionCall__CreateAccountWithInitialAmount: encode_create_account_with_initial_amount_script_function,
     ScriptFunctionCall__CreateAccountWithInitialAmountV2: encode_create_account_with_initial_amount_v2_script_function,
+    ScriptFunctionCall__DestroyEmpty: encode_destroy_empty_script_function,
     ScriptFunctionCall__DestroyTerminatedProposal: encode_destroy_terminated_proposal_script_function,
+    ScriptFunctionCall__DisableAutoAcceptToken: encode_disable_auto_accept_token_script_function,
     ScriptFunctionCall__EmptyScript: encode_empty_script_script_function,
+    ScriptFunctionCall__EnableAutoAcceptToken: encode_enable_auto_accept_token_script_function,
     ScriptFunctionCall__Execute: encode_execute_script_function,
+    ScriptFunctionCall__ExecuteModuleUpgradePlanPropose: encode_execute_module_upgrade_plan_propose_script_function,
     ScriptFunctionCall__ExecuteOnChainConfigProposal: encode_execute_on_chain_config_proposal_script_function,
+    ScriptFunctionCall__ExecuteOnChainConfigProposalV2: encode_execute_on_chain_config_proposal_v2_script_function,
     ScriptFunctionCall__ExecuteWithdrawProposal: encode_execute_withdraw_proposal_script_function,
+    ScriptFunctionCall__FlipVote: encode_flip_vote_script_function,
+    ScriptFunctionCall__InitDataSource: encode_init_data_source_script_function,
     ScriptFunctionCall__Initialize: encode_initialize_script_function,
     ScriptFunctionCall__InitializeV2: encode_initialize_v2_script_function,
+    ScriptFunctionCall__Mint: encode_mint_script_function,
     ScriptFunctionCall__PeerToPeer: encode_peer_to_peer_script_function,
     ScriptFunctionCall__PeerToPeerBatch: encode_peer_to_peer_batch_script_function,
     ScriptFunctionCall__PeerToPeerV2: encode_peer_to_peer_v2_script_function,
@@ -1556,20 +2148,29 @@ SCRIPT_FUNCTION_ENCODER_MAP: typing.Dict[typing.Type[ScriptFunctionCall], typing
     ScriptFunctionCall__Propose: encode_propose_script_function,
     ScriptFunctionCall__ProposeModuleUpgradeV2: encode_propose_module_upgrade_v2_script_function,
     ScriptFunctionCall__ProposeUpdateConsensusConfig: encode_propose_update_consensus_config_script_function,
+    ScriptFunctionCall__ProposeUpdateMoveLanguageVersion: encode_propose_update_move_language_version_script_function,
     ScriptFunctionCall__ProposeUpdateRewardConfig: encode_propose_update_reward_config_script_function,
     ScriptFunctionCall__ProposeUpdateTxnPublishOption: encode_propose_update_txn_publish_option_script_function,
     ScriptFunctionCall__ProposeUpdateTxnTimeoutConfig: encode_propose_update_txn_timeout_config_script_function,
     ScriptFunctionCall__ProposeUpdateVmConfig: encode_propose_update_vm_config_script_function,
     ScriptFunctionCall__ProposeWithdraw: encode_propose_withdraw_script_function,
     ScriptFunctionCall__QueueProposalAction: encode_queue_proposal_action_script_function,
+    ScriptFunctionCall__RegisterOracle: encode_register_oracle_script_function,
     ScriptFunctionCall__RevokeVote: encode_revoke_vote_script_function,
+    ScriptFunctionCall__RevokeVoteOfPower: encode_revoke_vote_of_power_script_function,
     ScriptFunctionCall__RotateAuthenticationKey: encode_rotate_authentication_key_script_function,
     ScriptFunctionCall__SubmitModuleUpgradePlan: encode_submit_module_upgrade_plan_script_function,
+    ScriptFunctionCall__SubmitUpgradePlan: encode_submit_upgrade_plan_script_function,
     ScriptFunctionCall__TakeLinearWithdrawCapability: encode_take_linear_withdraw_capability_script_function,
     ScriptFunctionCall__TakeOffer: encode_take_offer_script_function,
+    ScriptFunctionCall__Transfer: encode_transfer_script_function,
     ScriptFunctionCall__UnstakeVote: encode_unstake_vote_script_function,
+    ScriptFunctionCall__Update: encode_update_script_function,
     ScriptFunctionCall__UpdateModuleUpgradeStrategy: encode_update_module_upgrade_strategy_script_function,
     ScriptFunctionCall__UpgradeFromV2ToV3: encode_upgrade_from_v2_to_v3_script_function,
+    ScriptFunctionCall__UpgradeFromV5ToV6: encode_upgrade_from_v5_to_v6_script_function,
+    ScriptFunctionCall__UpgradeFromV6ToV7: encode_upgrade_from_v6_to_v7_script_function,
+    ScriptFunctionCall__UpgradeFromV7ToV8: encode_upgrade_from_v7_to_v8_script_function,
     ScriptFunctionCall__WithdrawAndSplitLtWithdrawCap: encode_withdraw_and_split_lt_withdraw_cap_script_function,
     ScriptFunctionCall__WithdrawTokenWithLinearWithdrawCapability: encode_withdraw_token_with_linear_withdraw_capability_script_function,
 }
@@ -1580,19 +2181,28 @@ TRANSACTION_SCRIPT_DECODER_MAP: typing.Dict[bytes, typing.Callable[[Script], Scr
 
 
 SCRIPT_FUNCTION_DECODER_MAP: typing.Dict[str, typing.Callable[[TransactionPayload], ScriptFunctionCall]] = {
+    "NFTGalleryScriptsaccept": decode_accept_script_function,
     "Accountaccept_token": decode_accept_token_script_function,
     "ModuleUpgradeScriptscancel_upgrade_plan": decode_cancel_upgrade_plan_script_function,
     "DaoVoteScriptscast_vote": decode_cast_vote_script_function,
     "PackageTxnManagerconvert_TwoPhaseUpgrade_to_TwoPhaseUpgradeV2": decode_convert_TwoPhaseUpgrade_to_TwoPhaseUpgradeV2_script_function,
     "Accountcreate_account_with_initial_amount": decode_create_account_with_initial_amount_script_function,
     "Accountcreate_account_with_initial_amount_v2": decode_create_account_with_initial_amount_v2_script_function,
+    "IdentifierNFTScriptsdestroy_empty": decode_destroy_empty_script_function,
     "Daodestroy_terminated_proposal": decode_destroy_terminated_proposal_script_function,
+    "AccountScriptsdisable_auto_accept_token": decode_disable_auto_accept_token_script_function,
     "EmptyScriptsempty_script": decode_empty_script_script_function,
+    "AccountScriptsenable_auto_accept_token": decode_enable_auto_accept_token_script_function,
     "ModifyDaoConfigProposalexecute": decode_execute_script_function,
+    "ModuleUpgradeScriptsexecute_module_upgrade_plan_propose": decode_execute_module_upgrade_plan_propose_script_function,
     "OnChainConfigScriptsexecute_on_chain_config_proposal": decode_execute_on_chain_config_proposal_script_function,
+    "OnChainConfigScriptsexecute_on_chain_config_proposal_v2": decode_execute_on_chain_config_proposal_v2_script_function,
     "TreasuryScriptsexecute_withdraw_proposal": decode_execute_withdraw_proposal_script_function,
+    "DaoVoteScriptsflip_vote": decode_flip_vote_script_function,
+    "PriceOracleScriptsinit_data_source": decode_init_data_source_script_function,
     "Genesisinitialize": decode_initialize_script_function,
     "Genesisinitialize_v2": decode_initialize_v2_script_function,
+    "DummyTokenScriptsmint": decode_mint_script_function,
     "TransferScriptspeer_to_peer": decode_peer_to_peer_script_function,
     "TransferScriptspeer_to_peer_batch": decode_peer_to_peer_batch_script_function,
     "TransferScriptspeer_to_peer_v2": decode_peer_to_peer_v2_script_function,
@@ -1601,20 +2211,29 @@ SCRIPT_FUNCTION_DECODER_MAP: typing.Dict[str, typing.Callable[[TransactionPayloa
     "ModifyDaoConfigProposalpropose": decode_propose_script_function,
     "ModuleUpgradeScriptspropose_module_upgrade_v2": decode_propose_module_upgrade_v2_script_function,
     "OnChainConfigScriptspropose_update_consensus_config": decode_propose_update_consensus_config_script_function,
+    "OnChainConfigScriptspropose_update_move_language_version": decode_propose_update_move_language_version_script_function,
     "OnChainConfigScriptspropose_update_reward_config": decode_propose_update_reward_config_script_function,
     "OnChainConfigScriptspropose_update_txn_publish_option": decode_propose_update_txn_publish_option_script_function,
     "OnChainConfigScriptspropose_update_txn_timeout_config": decode_propose_update_txn_timeout_config_script_function,
     "OnChainConfigScriptspropose_update_vm_config": decode_propose_update_vm_config_script_function,
     "TreasuryScriptspropose_withdraw": decode_propose_withdraw_script_function,
     "Daoqueue_proposal_action": decode_queue_proposal_action_script_function,
+    "PriceOracleScriptsregister_oracle": decode_register_oracle_script_function,
     "DaoVoteScriptsrevoke_vote": decode_revoke_vote_script_function,
+    "DaoVoteScriptsrevoke_vote_of_power": decode_revoke_vote_of_power_script_function,
     "Accountrotate_authentication_key": decode_rotate_authentication_key_script_function,
     "ModuleUpgradeScriptssubmit_module_upgrade_plan": decode_submit_module_upgrade_plan_script_function,
+    "ModuleUpgradeScriptssubmit_upgrade_plan": decode_submit_upgrade_plan_script_function,
     "StdlibUpgradeScriptstake_linear_withdraw_capability": decode_take_linear_withdraw_capability_script_function,
     "Offertake_offer": decode_take_offer_script_function,
+    "NFTGalleryScriptstransfer": decode_transfer_script_function,
     "DaoVoteScriptsunstake_vote": decode_unstake_vote_script_function,
+    "PriceOracleScriptsupdate": decode_update_script_function,
     "ModuleUpgradeScriptsupdate_module_upgrade_strategy": decode_update_module_upgrade_strategy_script_function,
     "StdlibUpgradeScriptsupgrade_from_v2_to_v3": decode_upgrade_from_v2_to_v3_script_function,
+    "StdlibUpgradeScriptsupgrade_from_v5_to_v6": decode_upgrade_from_v5_to_v6_script_function,
+    "StdlibUpgradeScriptsupgrade_from_v6_to_v7": decode_upgrade_from_v6_to_v7_script_function,
+    "StdlibUpgradeScriptsupgrade_from_v7_to_v8": decode_upgrade_from_v7_to_v8_script_function,
     "TreasuryScriptswithdraw_and_split_lt_withdraw_cap": decode_withdraw_and_split_lt_withdraw_cap_script_function,
     "TreasuryScriptswithdraw_token_with_linear_withdraw_capability": decode_withdraw_token_with_linear_withdraw_capability_script_function,
 }
