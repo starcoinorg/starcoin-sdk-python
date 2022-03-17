@@ -1,4 +1,4 @@
-numpy
-requests
-cryptography
-pytest
+requests==2.20.0
+cryptography==3.3.2
+numpy==1.18
+pytest>=6.2.5

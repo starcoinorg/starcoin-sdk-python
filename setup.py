@@ -8,8 +8,8 @@ with open(os.path.join(this_directory, 'README.md')) as f:
     long_description = f.read()
 
 setup(
-    name="starcoin",
-    version="0.1",
+    name="starcoin-sdk-python",
+    version="1.4.0",
     description="The Python Client SDK for Starcoin",
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -20,5 +20,5 @@ setup(
     package_dir={"": "./"},
     include_package_data=True,  # see MANIFEST.in
     zip_safe=True,
-    install_requires=['requests', 'cryptography', 'numpy'],
+    install_requires=["requests>=2.20.0", "cryptography>=2.8", "numpy>=1.18"],
 )

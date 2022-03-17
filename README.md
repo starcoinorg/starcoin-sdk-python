@@ -1,11 +1,12 @@
 # starcoin-sdk-python
 ## Document
+
 The document of starcoin sdk for python: [documents site](https://starcoin-sdk-python.readthedocs.io/en/latest/).
-## Dependency
-$python -V
-Python 3.8.5
-## Install
-python setup.py install
+
+## Pypi package
+
+https://pypi.org/project/starcoin-sdk-python/
+
 ## Usage
 ``` python
 from starcoin import starcoin_types as types
