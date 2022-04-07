@@ -22,7 +22,7 @@ def transfer(cli: client.Client, sender: local_account.LocalAccount, receipt: st
     now_seconds = int(node_info.get('now_seconds'))
     # expired after 12 hours
     expiration_timestamp_secs = now_seconds + 43200
-    raw_txn = types.RawTransaction(
+    raw_txn = types.RawUserTransaction(
         sender=sender.account_address,
         sequence_number=seq_num,
         payload=script,

@@ -13,7 +13,7 @@ def send_txn(cli, sender, script_funtion):
     expiration_timestamp_secs = now_seconds + 43200
     seq_num = cli.get_account_sequence(
         "0x"+sender.account_address.bcs_serialize().hex())
-    raw_txn = RawTransaction(
+    raw_txn = RawUserTransaction(
         sender=sender.account_address,
         sequence_number=seq_num,
         payload=script_funtion,

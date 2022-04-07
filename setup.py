@@ -9,7 +9,7 @@ with open(os.path.join(this_directory, 'README.md')) as f:
 
 setup(
     name="starcoin-sdk-python",
-    version="1.4.0",
+    version="1.4.1",
     description="The Python Client SDK for Starcoin",
     long_description=long_description,
     long_description_content_type='text/markdown',

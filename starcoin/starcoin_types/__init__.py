@@ -34,6 +34,11 @@ class AccountAddress:
         if buffer:
             raise st.DeserializationError("Some input bytes were not read")
         return v
+    
+    @staticmethod
+    def from_hex(addr: str) -> 'AccountAddress':
+        """Create an account address from bytes."""
+        return AccountAddress(tuple(st.uint8(x) for x in bytes.fromhex(addr)))
 
 
 @dataclass(frozen=True)
@@ -280,7 +285,7 @@ class Ed25519Signature:
 @dataclass(frozen=True)
 class EventHandle:
     count: st.uint64
-    key: "EventKey"
+    key: bytes
 
     def bcs_serialize(self) -> bytes:
         return bcs.serialize(self, EventHandle)
@@ -295,8 +300,9 @@ class EventHandle:
 
 @dataclass(frozen=True)
 class EventKey:
-    value: bytes
-
+    salt: st.uint64
+    address: AccountAddress
+    
     def bcs_serialize(self) -> bytes:
         return bcs.serialize(self, EventKey)
 
@@ -966,6 +972,20 @@ class WriteSetMut:
     @staticmethod
     def bcs_deserialize(input: bytes) -> 'WriteSetMut':
         v, buffer = bcs.deserialize(input, WriteSetMut)
+        if buffer:
+            raise st.DeserializationError("Some input bytes were not read")
+        return v
+    
+@dataclass(frozen=True)
+class BalanceResource:
+    token: st.uint128
+
+    def bcs_serialize(self) -> bytes:
+        return bcs.serialize(self, BalanceResource)
+
+    @staticmethod
+    def bcs_deserialize(input: bytes) -> 'BalanceResource':
+        v, buffer = bcs.deserialize(input, BalanceResource)
         if buffer:
             raise st.DeserializationError("Some input bytes were not read")
         return v

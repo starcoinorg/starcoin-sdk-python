@@ -97,12 +97,12 @@ def public_key_bytes(public_key: ed25519.Ed25519PublicKey) -> bytes:
 def currency_code(code: str) -> starcoin_types.TypeTag:
     """converts currency code string to starcoin_types.TypeTag"""
     if isinstance(code, str):
-        return starcoin_types.TypeTag__Struct(
+        return starcoin_types.TypeTag__struct(
             value=starcoin_types.StructTag(
                 address=account_address(CORE_CODE_ADDRESS),
                 module=starcoin_types.Identifier(code),
                 name=starcoin_types.Identifier(code),
-                type_params=[],
+                type_args=[],
             )
         )
 
@@ -112,12 +112,12 @@ def currency_code(code: str) -> starcoin_types.TypeTag:
 def currency_user_code(address: str, code: str) -> starcoin_types.TypeTag:
     """converts currency code string to starcoin_types.TypeTag"""
     if isinstance(code, str):
-        return starcoin_types.TypeTag__Struct(
+        return starcoin_types.TypeTag__struct(
             value=starcoin_types.StructTag(
                 address=account_address(address),
                 module=starcoin_types.Identifier(code),
                 name=starcoin_types.Identifier(code),
-                type_params=[],
+                type_args=[],
             )
         )
 
@@ -127,15 +127,15 @@ def currency_user_code(address: str, code: str) -> starcoin_types.TypeTag:
 def type_tag_to_str(code: starcoin_types.TypeTag) -> str:
     """converts currency code TypeTag into string"""
 
-    if isinstance(code, starcoin_types.TypeTag__Struct):
-        if isinstance(self, TypeTag__Struct):
+    if isinstance(code, starcoin_types.TypeTag__struct):
+        if isinstance(self, TypeTag__struct):
             return self.value.name.value
         raise TypeError(f"unknown currency code type: {self}")
     raise TypeError(f"unknown currency code type: {code}")
 
 
 def create_signed_transaction(
-    txn: starcoin_types.RawTransaction, public_key: bytes, signature: bytes
+    txn: starcoin_types.RawUserTransaction, public_key: bytes, signature: bytes
 ) -> starcoin_types.SignedUserTransaction:
     """create single signed `starcoin_types.SignedTransaction`"""
     return starcoin_types.SignedUserTransaction(
@@ -147,8 +147,8 @@ def create_signed_transaction(
     )
 
 
-def raw_transaction_signing_msg(txn: starcoin_types.RawTransaction) -> bytes:
-    """create signing message from given `starcoin_types.RawTransaction`"""
+def raw_transaction_signing_msg(txn: starcoin_types.RawUserTransaction) -> bytes:
+    """create signing message from given `starcoin_types.RawUserTransaction`"""
     return starcoin_hash_seed(b"RawUserTransaction") + txn.bcs_serialize()
 
 
@@ -188,7 +188,7 @@ def verify_signed_message(signed_message_hex: str) -> starcoin_types.SignedMessa
         public_key = signed_message.authenticator.public_key.value
         signature = signed_message.authenticator.signature.value
         data = starcoin_hash_seed(b"SigningMessage") + \
-            signed_message.signing_message.bcs_serialize()
+            signed_message.message.bcs_serialize()
         ed = ed25519.Ed25519PublicKey.from_public_bytes(public_key)
         ed.verify(signature, data)
     except Exception as e:

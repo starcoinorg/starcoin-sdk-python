@@ -72,8 +72,8 @@ class LocalAccount:
     def compliance_public_key_bytes(self) -> bytes:
         return utils.public_key_bytes(self.compliance_key.public_key())
 
-    def sign(self, txn: starcoin_types.RawTransaction) -> starcoin_types.SignedUserTransaction:
-        """Create signed transaction for given raw transaction"""
+    def sign(self, txn: starcoin_types.RawUserTransaction) -> starcoin_types.SignedUserTransaction:
+        """Create signed transaction for given raw user transaction"""
         signature = self.private_key.sign(
             utils.raw_transaction_signing_msg(txn))
         return utils.create_signed_transaction(txn, self.public_key_bytes, signature)

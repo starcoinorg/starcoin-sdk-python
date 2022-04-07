@@ -10,7 +10,7 @@ import time
 def rotate_key(cli: client.Client, account: local_account.LocalAccount, auth_key: auth_key.AuthKey):
     seq_num = cli.get_account_sequence(account.account_address)
     script = stdlib.encode_rotate_authentication_key_script(new_auth_key.data)
-    raw_txn = types.RawTransaction(
+    raw_txn = types.RawUserTransaction(
         sender=account.account_address,
         sequence_number=seq_num,
         payload=types.TransactionPayload__Script(script),
